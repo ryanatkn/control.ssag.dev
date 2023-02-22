@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>felt-template</title>
+	<title>control.ssag.dev</title>
 </svelte:head>
 
 <slot />
