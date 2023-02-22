@@ -11,6 +11,7 @@ import {
 	type EntityCircle,
 	type EntityPolygon,
 	type Renderer,
+	hslToHex,
 } from '@feltcoop/dealt';
 import {COLOR_DANGER} from './constants';
 
@@ -40,7 +41,8 @@ export class Stage0 extends Stage {
 			collisions.createCircle(100, 147, this.playerRadius) as EntityCircle,
 		));
 		player.speed = 0.2;
-		player.color = COLOR_PLAYER;
+		player.graphicsFillColor = hslToHex(...COLOR_PLAYER);
+		player.graphicsFillAlpha = 1;
 		this.addEntity(player);
 
 		// create the bounds around the stage edges
