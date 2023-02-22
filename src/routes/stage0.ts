@@ -64,15 +64,14 @@ export class Stage0 extends Stage {
 		const obstacle = new Entity(
 			collisions.createCircle(150, 110, player.radius * 4) as EntityCircle,
 		);
+		obstacle.color = COLOR_DANGER;
 		obstacle.speed = 0.03;
 		this.addEntity(obstacle);
 
 		// create danger
-		const danger1 = new Entity(
-			collisions.createCircle(120, 100, player.radius / 3) as EntityCircle,
-		);
-		danger1.color = COLOR_DANGER;
-		this.addEntity(danger1);
+		const exit = new Entity(collisions.createCircle(120, 100, player.radius / 3) as EntityCircle);
+		exit.speed = 0.09;
+		this.addEntity(exit);
 		console.log('set up');
 	}
 
