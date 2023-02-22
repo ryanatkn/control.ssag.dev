@@ -4,6 +4,7 @@ import {
 	Simulation,
 	Entity,
 	COLOR_PLAYER,
+	COLOR_EXIT,
 	updateEntityDirection,
 	collide,
 	collisionResult,
@@ -30,6 +31,9 @@ export class Stage0 extends Stage {
 	// these are instantiated in `setup`
 	player!: Entity<EntityCircle>;
 	bounds!: Entity<EntityPolygon>;
+	target!: Entity<EntityCircle>;
+
+	controlled: Entity<EntityCircle>; // TODO BLOCK set this
 
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
@@ -62,23 +66,49 @@ export class Stage0 extends Stage {
 
 		// TODO create these programmatically from data
 
+		const target = (this.target = new Entity(
+			collisions.createCircle(230, 15, player.radius * 2) as EntityCircle,
+		));
+		target.color = COLOR_EXIT;
+		target.speed = 0.03;
+		this.addEntity(target);
+
 		// create some things
-		const obstacle = new Entity(
+		const obstacle1 = new Entity(
 			collisions.createCircle(150, 110, player.radius * 4) as EntityCircle,
 		);
-		obstacle.color = COLOR_DANGER;
-		obstacle.speed = 0.03;
-		this.addEntity(obstacle);
+		obstacle1.color = COLOR_DANGER;
+		obstacle1.speed = 0.03;
+		this.addEntity(obstacle1);
+		const obstacle2 = new Entity(
+			collisions.createCircle(200, 35, player.radius * 3) as EntityCircle,
+		);
+		obstacle2.color = COLOR_DANGER;
+		obstacle2.speed = 0.03;
+		this.addEntity(obstacle2);
+		const obstacle3 = new Entity(
+			collisions.createCircle(250, 70, player.radius * 8) as EntityCircle,
+		);
+		obstacle3.color = COLOR_DANGER;
+		obstacle3.speed = 0.03;
+		this.addEntity(obstacle3);
+		const obstacle4 = new Entity(
+			collisions.createCircle(150, -70, player.radius * 20) as EntityCircle,
+		);
+		obstacle4.color = COLOR_DANGER;
+		obstacle4.speed = 0.03;
+		this.addEntity(obstacle4);
 
-		// create danger
-		const exit = new Entity(collisions.createCircle(120, 100, player.radius / 3) as EntityCircle);
-		exit.speed = 0.09;
-		this.addEntity(exit);
+		const entity0 = new Entity(
+			collisions.createCircle(120, 100, player.radius / 3) as EntityCircle,
+		);
+		entity0.speed = 0.09;
+		this.addEntity(entity0);
 		console.log('set up');
 	}
 
 	override update(dt: number): void {
-		const {controller, player} = this;
+		const {controller, player, target} = this;
 
 		super.update(dt);
 
@@ -89,6 +119,11 @@ export class Stage0 extends Stage {
 				(entityB === player && entityA.color === COLOR_DANGER)
 			) {
 				this.restart();
+			} else if (
+				(entityA === player && entityB === target) ||
+				(entityB === player && entityA === target)
+			) {
+				alert('todo you win'); // TODO BLOCK maybe go to `/in`?
 			}
 			collide(entityA, entityB, result);
 		});
