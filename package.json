@@ -1,6 +1,7 @@
 {
   "name": "control.ssag.dev",
   "description": "control.ssag.dev",
+  "license": "Unlicense",
   "version": "0.0.1",
   "homepage": "https://control.ssag.dev/",
   "author": {
