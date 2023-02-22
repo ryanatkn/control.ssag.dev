@@ -11,9 +11,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryanatkn/ssag.git"
+    "url": "git+https://github.com/ryanatkn/control.ssag.dev.git"
   },
-  "bugs": "https://github.com/ryanatkn/ssag/issues",
+  "bugs": "https://github.com/ryanatkn/control.ssag.dev/issues",
   "type": "module",
   "engines": {
     "node": ">=18.6"
