@@ -92,7 +92,7 @@ export class Stage0 extends Stage {
 		this.addEntity(obstacle1);
 		const obstacle2 = new Entity(collisions.createCircle(200, 35, RADIUS * 3) as EntityCircle);
 		obstacle2.color = COLOR_DANGER;
-		obstacle2.speed = 0.03;
+		obstacle2.speed = 0.13;
 		this.addEntity(obstacle2);
 		const obstacle3 = new Entity(collisions.createCircle(250, 70, RADIUS * 8) as EntityCircle);
 		obstacle3.color = COLOR_DANGER;
