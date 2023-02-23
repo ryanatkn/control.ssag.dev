@@ -129,8 +129,9 @@ export class Stage0 extends Stage {
 				(entityB === controlled && entityA.color === COLOR_DEFAULT)
 			) {
 				const entity = (entityA === controlled ? entityB : entityA) as Entity<EntityCircle>;
-				this.swapControl(entity);
-				controlled = entity;
+				if (this.swapControl(entity)) {
+					controlled = entity;
+				}
 			}
 			collide(entityA, entityB, result);
 		});
@@ -162,12 +163,12 @@ export class Stage0 extends Stage {
 
 	timeLastSwapped = 0;
 
-	swapControl(entity: Entity<EntityCircle>): void {
+	swapControl(entity: Entity<EntityCircle>): boolean {
 		const {controlled} = this;
-		if (controlled === entity) return;
+		if (controlled === entity) return false;
 		if (controlled) {
 			const timeElapsed = this.time - this.timeLastSwapped;
-			if (timeElapsed < CONTROL_SWAP_COOLDOWN) return;
+			if (timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
 			controlled.graphicsFillColor = 0;
 			controlled.graphicsFillAlpha = 0;
 			controlled.directionX = 0;
@@ -178,6 +179,7 @@ export class Stage0 extends Stage {
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
 		this.freezeCamera = entity.radius < RADIUS * 3;
+		return true;
 	}
 
 	collideWithTarget(): void {
