@@ -51,14 +51,14 @@ export class Stage0 extends Stage {
 		const entity0 = (this.entity0 = new Entity(
 			collisions.createCircle(100, 147, RADIUS) as EntityCircle,
 		));
-		entity0.speed = 0.2;
+		entity0.speed = 0.1;
 		this.swapControl(entity0);
 		this.addEntity(entity0);
 
 		const entity1 = (this.entity1 = new Entity(
 			collisions.createCircle(120, 100, RADIUS / 3) as EntityCircle,
 		));
-		entity1.speed = 0.09;
+		entity1.speed = 0.045;
 		this.addEntity(entity1);
 
 		// create the bounds around the stage edges
@@ -96,11 +96,11 @@ export class Stage0 extends Stage {
 		this.addEntity(obstacle2);
 		const obstacle3 = new Entity(collisions.createCircle(250, 70, RADIUS * 8) as EntityCircle);
 		obstacle3.color = COLOR_DANGER;
-		obstacle3.speed = 0.03;
+		obstacle3.speed = 0.022;
 		this.addEntity(obstacle3);
 		const obstacle4 = new Entity(collisions.createCircle(150, -70, RADIUS * 20) as EntityCircle);
 		obstacle4.color = COLOR_DANGER;
-		obstacle4.speed = 0.03;
+		obstacle4.speed = 0.007;
 		this.addEntity(obstacle4);
 
 		console.log('set up');
