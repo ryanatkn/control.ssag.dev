@@ -137,8 +137,12 @@ export class Stage0 extends Stage {
 
 		updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
 
-		if (!this.bounds.body.collides(this.controlled.body, collisionResult)) {
-			this.restart();
+		if (this.freezeCamera) {
+			if (!this.bounds.body.collides(controlled.body, collisionResult)) {
+				this.restart();
+			}
+		} else {
+			this.camera.setPosition(controlled.x, controlled.y);
 		}
 
 		if (this.shouldRestart) {
@@ -173,6 +177,7 @@ export class Stage0 extends Stage {
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
+		this.freezeCamera = entity.radius < RADIUS * 3;
 	}
 
 	collideWithTarget(): void {
