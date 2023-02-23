@@ -13,6 +13,8 @@ import {
 	type EntityPolygon,
 	type Renderer,
 	hslToHex,
+	COLOR_DEFAULT,
+	COLOR_ROOTED,
 } from '@feltcoop/dealt';
 import {COLOR_DANGER} from './constants';
 
@@ -105,7 +107,8 @@ export class Stage0 extends Stage {
 	}
 
 	override update(dt: number): void {
-		const {controller, controlled, target, entity0, entity1} = this;
+		const {controller, target} = this;
+		let {controlled} = this;
 
 		super.update(dt);
 
@@ -120,20 +123,14 @@ export class Stage0 extends Stage {
 				(entityA === controlled && entityB === target) ||
 				(entityB === controlled && entityA === target)
 			) {
-				// eslint-disable-next-line no-alert
-				alert('you win!!'); // TODO  maybe go to `/in`?
-				target.ghostly = true;
-				// this.restart();
+				this.collideWithTarget();
 			} else if (
-				(entityA === controlled && entityB === entity0) ||
-				(entityB === controlled && entityA === entity0)
+				(entityA === controlled && entityB.color === COLOR_DEFAULT) ||
+				(entityB === controlled && entityA.color === COLOR_DEFAULT)
 			) {
-				this.swapControl(entity0);
-			} else if (
-				(entityA === controlled && entityB === entity1) ||
-				(entityB === controlled && entityA === entity1)
-			) {
-				this.swapControl(entity1);
+				const entity = (entityA === controlled ? entityB : entityA) as Entity<EntityCircle>;
+				this.swapControl(entity);
+				controlled = entity;
 			}
 			collide(entityA, entityB, result);
 		});
@@ -169,10 +166,22 @@ export class Stage0 extends Stage {
 			if (timeElapsed < CONTROL_SWAP_COOLDOWN) return;
 			controlled.graphicsFillColor = 0;
 			controlled.graphicsFillAlpha = 0;
+			controlled.directionX = 0;
+			controlled.directionY = 0;
 		}
 		this.timeLastSwapped = this.time;
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
+	}
+
+	collideWithTarget(): void {
+		for (const entity of this.sim.entities) {
+			if (entity.color === COLOR_DANGER) {
+				entity.color = COLOR_DEFAULT;
+			} else if (entity === this.target) {
+				entity.color = COLOR_ROOTED;
+			}
+		}
 	}
 }
