@@ -186,9 +186,8 @@ export class Stage0 extends Stage {
 		for (const entity of this.sim.entities) {
 			if (entity.color === COLOR_DANGER) {
 				entity.color = COLOR_DEFAULT;
-			} else if (entity === this.target) {
-				entity.color = COLOR_ROOTED;
 			}
 		}
+		this.target.color = COLOR_ROOTED;
 	}
 }
