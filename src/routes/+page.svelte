@@ -1,23 +1,17 @@
 <script lang="ts">
-	const title = 'control.ssag.dev';
+	import {Portal} from '@feltcoop/dealt';
+	import ControlScene from '$routes/ControlScene.svelte';
 </script>
 
-<main class="markup column">
-	<section>
-		<header class="centered-hz">
-			<h1><a href="https://github.com/ryanatkn/control.ssag.dev">{title}</a></h1>
-		</header>
-	</section>
+<main>
+	<Portal>
+		<ControlScene />
+	</Portal>
 </main>
 
 <style>
 	main {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin: 0 auto;
-	}
-	h1 {
-		text-align: center;
+		position: absolute;
+		inset: 0;
 	}
 </style>
