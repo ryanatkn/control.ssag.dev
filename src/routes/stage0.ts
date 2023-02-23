@@ -25,15 +25,18 @@ const meta: StageMeta = {
 	icon: '🐭',
 };
 
+const RADIUS = 5;
+
 export class Stage0 extends Stage {
 	static override meta = meta;
 
 	// these are instantiated in `setup`
-	player!: Entity<EntityCircle>;
+	entity0!: Entity<EntityCircle>;
+	entity1!: Entity<EntityCircle>;
 	bounds!: Entity<EntityPolygon>;
 	target!: Entity<EntityCircle>;
 
-	controlled: Entity<EntityCircle>; // TODO BLOCK set this
+	controlled!: Entity<EntityCircle>;
 
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
@@ -41,13 +44,18 @@ export class Stage0 extends Stage {
 		this.sim = new Simulation(collisions);
 
 		// create the controllable player
-		const player = (this.player = new Entity(
-			collisions.createCircle(100, 147, this.playerRadius) as EntityCircle,
+		const entity0 = (this.entity0 = new Entity(
+			collisions.createCircle(100, 147, RADIUS) as EntityCircle,
 		));
-		player.speed = 0.2;
-		player.graphicsFillColor = hslToHex(...COLOR_PLAYER);
-		player.graphicsFillAlpha = 1;
-		this.addEntity(player);
+		entity0.speed = 0.2;
+		this.swapControl(entity0);
+		this.addEntity(entity0);
+
+		const entity1 = (this.entity1 = new Entity(
+			collisions.createCircle(120, 100, RADIUS / 3) as EntityCircle,
+		));
+		entity1.speed = 0.09;
+		this.addEntity(entity1);
 
 		// create the bounds around the stage edges
 		const bounds = (this.bounds = new Entity(
@@ -67,70 +75,67 @@ export class Stage0 extends Stage {
 		// TODO create these programmatically from data
 
 		const target = (this.target = new Entity(
-			collisions.createCircle(230, 15, player.radius * 2) as EntityCircle,
+			collisions.createCircle(230, 15, RADIUS * 2) as EntityCircle,
 		));
 		target.color = COLOR_EXIT;
 		target.speed = 0.03;
 		this.addEntity(target);
 
 		// create some things
-		const obstacle1 = new Entity(
-			collisions.createCircle(150, 110, player.radius * 4) as EntityCircle,
-		);
+		const obstacle1 = new Entity(collisions.createCircle(150, 110, RADIUS * 4) as EntityCircle);
 		obstacle1.color = COLOR_DANGER;
 		obstacle1.speed = 0.03;
 		this.addEntity(obstacle1);
-		const obstacle2 = new Entity(
-			collisions.createCircle(200, 35, player.radius * 3) as EntityCircle,
-		);
+		const obstacle2 = new Entity(collisions.createCircle(200, 35, RADIUS * 3) as EntityCircle);
 		obstacle2.color = COLOR_DANGER;
 		obstacle2.speed = 0.03;
 		this.addEntity(obstacle2);
-		const obstacle3 = new Entity(
-			collisions.createCircle(250, 70, player.radius * 8) as EntityCircle,
-		);
+		const obstacle3 = new Entity(collisions.createCircle(250, 70, RADIUS * 8) as EntityCircle);
 		obstacle3.color = COLOR_DANGER;
 		obstacle3.speed = 0.03;
 		this.addEntity(obstacle3);
-		const obstacle4 = new Entity(
-			collisions.createCircle(150, -70, player.radius * 20) as EntityCircle,
-		);
+		const obstacle4 = new Entity(collisions.createCircle(150, -70, RADIUS * 20) as EntityCircle);
 		obstacle4.color = COLOR_DANGER;
 		obstacle4.speed = 0.03;
 		this.addEntity(obstacle4);
 
-		const entity0 = new Entity(
-			collisions.createCircle(120, 100, player.radius / 3) as EntityCircle,
-		);
-		entity0.speed = 0.09;
-		this.addEntity(entity0);
 		console.log('set up');
 	}
 
 	override update(dt: number): void {
-		const {controller, player, target} = this;
+		const {controller, controlled, target, entity0, entity1} = this;
 
 		super.update(dt);
 
 		this.sim.update(dt, (entityA, entityB, result) => {
 			// TODO make a better system
 			if (
-				(entityA === player && entityB.color === COLOR_DANGER) ||
-				(entityB === player && entityA.color === COLOR_DANGER)
+				(entityA === controlled && entityB.color === COLOR_DANGER) ||
+				(entityB === controlled && entityA.color === COLOR_DANGER)
 			) {
 				this.restart();
 			} else if (
-				(entityA === player && entityB === target) ||
-				(entityB === player && entityA === target)
+				(entityA === controlled && entityB === target) ||
+				(entityB === controlled && entityA === target)
 			) {
 				alert('todo you win'); // TODO BLOCK maybe go to `/in`?
+			} else if (
+				(entityA === controlled && entityB === entity0) ||
+				(entityB === controlled && entityA === entity0)
+			) {
+				this.swapControl(entity0);
+			} else if (
+				(entityA === controlled && entityB === entity1) ||
+				(entityB === controlled && entityA === entity1)
+			) {
+				this.swapControl(entity1);
 			}
 			collide(entityA, entityB, result);
 		});
 
-		updateEntityDirection(controller, player, this.$camera, this.$viewport, this.$layout);
+		updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
 
-		if (!this.bounds.body.collides(this.player.body, collisionResult)) {
+		if (!this.bounds.body.collides(this.entity0.body, collisionResult)) {
 			this.restart();
 		}
 
@@ -147,5 +152,17 @@ export class Stage0 extends Stage {
 	shouldRestart = false; // this is a flag because we want to do it after updating, otherwise disposed entities get updated and throw errors
 	restart(): void {
 		this.shouldRestart = true;
+	}
+
+	swapControl(entity: Entity<EntityCircle>): void {
+		const {controlled} = this;
+		if (controlled === entity) return;
+		if (controlled) {
+			controlled.graphicsFillColor = 0;
+			controlled.graphicsFillAlpha = 0;
+		}
+		this.controlled = entity;
+		entity.graphicsFillColor = hslToHex(...COLOR_PLAYER);
+		entity.graphicsFillAlpha = 1;
 	}
 }
