@@ -27,6 +27,7 @@ const meta: StageMeta = {
 
 const RADIUS = 5;
 const CONTROL_SWAP_COOLDOWN = 1000;
+const COLOR_PLAYER_HEX = hslToHex(...COLOR_PLAYER);
 
 export class Stage0 extends Stage {
 	static override meta = meta;
@@ -171,7 +172,7 @@ export class Stage0 extends Stage {
 		}
 		this.timeLastSwapped = this.time;
 		this.controlled = entity;
-		entity.graphicsFillColor = hslToHex(...COLOR_PLAYER);
+		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
 	}
 }
