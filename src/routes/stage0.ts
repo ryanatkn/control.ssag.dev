@@ -26,6 +26,7 @@ const meta: StageMeta = {
 };
 
 const RADIUS = 5;
+const CONTROL_SWAP_COOLDOWN = 1000;
 
 export class Stage0 extends Stage {
 	static override meta = meta;
@@ -118,7 +119,10 @@ export class Stage0 extends Stage {
 				(entityA === controlled && entityB === target) ||
 				(entityB === controlled && entityA === target)
 			) {
-				alert('todo you win'); // TODO BLOCK maybe go to `/in`?
+				// eslint-disable-next-line no-alert
+				alert('you win!!'); // TODO  maybe go to `/in`?
+				target.ghostly = true;
+				// this.restart();
 			} else if (
 				(entityA === controlled && entityB === entity0) ||
 				(entityB === controlled && entityA === entity0)
@@ -135,7 +139,7 @@ export class Stage0 extends Stage {
 
 		updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
 
-		if (!this.bounds.body.collides(this.entity0.body, collisionResult)) {
+		if (!this.bounds.body.collides(this.controlled.body, collisionResult)) {
 			this.restart();
 		}
 
@@ -154,13 +158,18 @@ export class Stage0 extends Stage {
 		this.shouldRestart = true;
 	}
 
+	timeLastSwapped = 0;
+
 	swapControl(entity: Entity<EntityCircle>): void {
 		const {controlled} = this;
 		if (controlled === entity) return;
 		if (controlled) {
+			const timeElapsed = this.time - this.timeLastSwapped;
+			if (timeElapsed < CONTROL_SWAP_COOLDOWN) return;
 			controlled.graphicsFillColor = 0;
 			controlled.graphicsFillAlpha = 0;
 		}
+		this.timeLastSwapped = this.time;
 		this.controlled = entity;
 		entity.graphicsFillColor = hslToHex(...COLOR_PLAYER);
 		entity.graphicsFillAlpha = 1;
