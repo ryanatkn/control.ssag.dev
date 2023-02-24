@@ -184,7 +184,6 @@ export class Stage0 extends Stage {
 		if (controlled) {
 			if (this.timeLastSwapped !== undefined) {
 				const timeElapsed = this.time - this.timeLastSwapped;
-				console.log(`timeElapsed < CONTROL_SWAP_COOLDOWN`, timeElapsed, CONTROL_SWAP_COOLDOWN);
 				if (timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
 			}
 			controlled.graphicsFillColor = 0;
@@ -193,7 +192,6 @@ export class Stage0 extends Stage {
 			controlled.directionY = 0;
 		}
 		this.timeLastSwapped = this.time;
-		console.log(`timeLastSwapped`, this.timeLastSwapped);
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
