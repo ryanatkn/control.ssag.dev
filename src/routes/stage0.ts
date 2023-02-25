@@ -195,7 +195,7 @@ export class Stage0 extends Stage {
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
-		this.freezeCamera = entity.freezeCamera;
+		if (entity.freezeCamera !== undefined) this.freezeCamera = entity.freezeCamera;
 		return true;
 	}
 
