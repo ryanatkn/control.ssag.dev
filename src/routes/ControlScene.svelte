@@ -55,6 +55,7 @@
 		stage = new Stage0({exit, camera, viewport, layout});
 		void stage.setup({stageStates: []});
 		items = Array.from(stage.entityById.values()); // TODO BLOCK
+		$item_selection = writable(items[0]); // TODO BLOCK make reactive
 		setting_up = false;
 	};
 
@@ -76,10 +77,13 @@
 	{#key stage}
 		<World {stage} {pixi} />
 		<SurfaceWithController controller={stage.controller} />
-		<Pane {items} selected_item={$item_selection} let:item>
+		<Pane {items} selected_item={$item_selection} let:item let:selected>
 			<!-- TODO text-overflow -->
 			<div class="ellipsis">
 				{item.type} <small>{item.id.slice(0, 3)}..{item.id.slice(-3)}</small>
+				{#if selected}
+					selected
+				{/if}
 			</div>
 		</Pane>
 	{/key}

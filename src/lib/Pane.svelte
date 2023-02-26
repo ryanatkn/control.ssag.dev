@@ -70,8 +70,9 @@
 	style:--offset_y="{offset_y_clamped}px"
 >
 	{#each items as item (item)}
-		<li class:selected={item === $selected_item}>
-			<slot {item} />
+		{@const selected = item === $selected_item}
+		<li class:selected>
+			<slot {item} {selected} />
 		</li>
 	{/each}
 </div>
