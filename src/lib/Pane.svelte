@@ -1,11 +1,7 @@
 <script lang="ts">
-	import type {Writable} from 'svelte/store';
-	import {getLayout, type Item} from '@feltcoop/dealt';
+	import {getLayout} from '@feltcoop/dealt';
 	import {swallow} from '@feltjs/util/dom.js';
 
-	//
-	export let items: Item[];
-	export let selected_item: Writable<Item>;
 	export let width = 256; // TODO BLOCK
 
 	const layout = getLayout();
@@ -46,13 +42,13 @@
 		if (last_x !== null && current_x !== null) offset_x += current_x - last_x;
 		if (last_y !== null && current_y !== null) offset_y += current_y - last_y;
 	};
-	const dragBy = (dx: number, dy: number): void => {
-		if (current_x !== null) current_x += dx;
-		if (current_y !== null) current_y += dy;
-	};
+	// const dragBy = (dx: number, dy: number): void => {
+	// 	if (current_x !== null) current_x += dx;
+	// 	if (current_y !== null) current_y += dy;
+	// };
 </script>
 
-<!-- TODO draggable action -->
+<!-- TODO draggable action? or higher order component? -->
 <div
 	class="pane"
 	on:pointerdown={start_dragging}
@@ -69,12 +65,7 @@
 	style:--offset_x="{offset_x_clamped}px"
 	style:--offset_y="{offset_y_clamped}px"
 >
-	{#each items as item (item)}
-		{@const selected = item === $selected_item}
-		<li class:selected class="buttonlike">
-			<slot {item} {selected} />
-		</li>
-	{/each}
+	<slot />
 </div>
 
 <style>
@@ -85,11 +76,5 @@
 		top: 0;
 		width: var(--pane_width);
 		transform: translate3d(var(--offset_x, 0), var(--offset_y, 0), var(--offset_z, 0));
-	}
-	li {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: var(--spacing_sm) var(--spacing_lg);
 	}
 </style>

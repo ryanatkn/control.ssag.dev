@@ -1,9 +1,9 @@
 import {
 	Stage,
-	Entity,
+	Item,
 	COLOR_PLAYER,
 	COLOR_EXIT,
-	updateEntityDirection,
+	updateItemDirection,
 	collide,
 	collisionResult,
 	type StageMeta,
@@ -14,9 +14,9 @@ import {
 	COLOR_ROOTED,
 	SPEED_SLOW,
 	PLAYER_RADIUS,
-	type EntityData,
+	type ItemData,
 	type StageData,
-	createEntityId,
+	createItemId,
 } from '@feltcoop/dealt';
 
 import {COLOR_DANGER, WORLD_SIZE} from './constants';
@@ -37,27 +37,27 @@ export class Stage0 extends Stage {
 	static override meta = meta;
 
 	// these are instantiated in `setup`
-	bounds!: Entity<PolygonBody>;
-	target!: Entity<CircleBody>;
+	bounds!: Item<PolygonBody>;
+	target!: Item<CircleBody>;
 
 	static override createInitialData(): Partial<StageData> {
-		const entities: Array<Partial<EntityData>> = [];
-		const data: Partial<StageData> = {freezeCamera: true, entities};
+		const items: Array<Partial<ItemData>> = [];
+		const data: Partial<StageData> = {freezeCamera: true, items};
 
 		const controlled = {
 			type: 'circle', // TODO needs type safety, should error when omitted
-			id: createEntityId(),
+			id: createItemId(),
 			x: 100,
 			y: 147,
 			radius: PLAYER_RADIUS,
 			speed: SPEED_SLOW,
 			freezeCamera: true,
-		} satisfies Partial<EntityData>;
-		entities.push(controlled);
+		} satisfies Partial<ItemData>;
+		items.push(controlled);
 		data.controlled = controlled.id;
 
 		// create the little one
-		entities.push({
+		items.push({
 			type: 'circle',
 			x: 120,
 			y: 100,
@@ -67,7 +67,7 @@ export class Stage0 extends Stage {
 		});
 
 		// create the bounds
-		entities.push({
+		items.push({
 			type: 'polygon',
 			x: 0,
 			y: 0,
@@ -85,7 +85,7 @@ export class Stage0 extends Stage {
 		});
 
 		// create the target
-		entities.push({
+		items.push({
 			type: 'circle',
 			x: 230,
 			y: 15,
@@ -97,7 +97,7 @@ export class Stage0 extends Stage {
 		});
 
 		// create some things
-		entities.push({
+		items.push({
 			type: 'circle',
 			x: 150,
 			y: 110,
@@ -105,7 +105,7 @@ export class Stage0 extends Stage {
 			color: COLOR_DANGER,
 			speed: 0.03,
 		});
-		entities.push({
+		items.push({
 			type: 'circle',
 			x: 200,
 			y: 35,
@@ -113,7 +113,7 @@ export class Stage0 extends Stage {
 			color: COLOR_DANGER,
 			speed: 0.13,
 		});
-		entities.push({
+		items.push({
 			type: 'circle',
 			x: 250,
 			y: 70,
@@ -121,7 +121,7 @@ export class Stage0 extends Stage {
 			color: COLOR_DANGER,
 			speed: 0.022,
 		});
-		entities.push({
+		items.push({
 			type: 'circle',
 			x: 150,
 			y: -70,
@@ -138,11 +138,11 @@ export class Stage0 extends Stage {
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
 		// TODO do this better, maybe with `tags` automatically, same with `bounds`
-		for (const entity of this.entityById.values()) {
-			if (entity.tags?.has('bounds')) {
-				this.bounds = entity as Entity<PolygonBody>;
-			} else if (entity.tags?.has('target')) {
-				this.target = entity as Entity<CircleBody>;
+		for (const item of this.itemById.values()) {
+			if (item.tags?.has('bounds')) {
+				this.bounds = item as Item<PolygonBody>;
+			} else if (item.tags?.has('target')) {
+				this.target = item as Item<CircleBody>;
 			}
 		}
 		this.swapControl(this.controlled, true);
@@ -155,32 +155,32 @@ export class Stage0 extends Stage {
 
 		super.update(dt);
 
-		this.sim.update(dt, (entityA, entityB, result) => {
+		this.sim.update(dt, (itemA, itemB, result) => {
 			// TODO make a better system
 			if (
-				(entityA === controlled && entityB.color === COLOR_DANGER) ||
-				(entityB === controlled && entityA.color === COLOR_DANGER)
+				(itemA === controlled && itemB.color === COLOR_DANGER) ||
+				(itemB === controlled && itemA.color === COLOR_DANGER)
 			) {
 				this.restart();
 			} else if (
-				(entityA === controlled && entityB === target) ||
-				(entityB === controlled && entityA === target)
+				(itemA === controlled && itemB === target) ||
+				(itemB === controlled && itemA === target)
 			) {
 				this.collideWithTarget();
 			} else if (
-				(entityA === controlled && entityB.color === COLOR_DEFAULT) ||
-				(entityB === controlled && entityA.color === COLOR_DEFAULT)
+				(itemA === controlled && itemB.color === COLOR_DEFAULT) ||
+				(itemB === controlled && itemA.color === COLOR_DEFAULT)
 			) {
-				const entity = (entityA === controlled ? entityB : entityA) as Entity<CircleBody>;
-				if (this.swapControl(entity)) {
-					controlled = entity;
+				const item = (itemA === controlled ? itemB : itemA) as Item<CircleBody>;
+				if (this.swapControl(item)) {
+					controlled = item;
 				}
 			}
-			collide(entityA, entityB, result);
+			collide(itemA, itemB, result);
 		});
 
 		if (controlled) {
-			updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
+			updateItemDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
 
 			if (this.freezeCamera) {
 				if (!this.bounds.body.collides(controlled.body, collisionResult)) {
@@ -204,22 +204,22 @@ export class Stage0 extends Stage {
 
 	// TODO rethink - maybe a more generic API?
 	hasAnyDanger(): boolean {
-		for (const entity of this.sim.entities) {
-			if (entity.color === COLOR_DANGER) return true;
+		for (const item of this.sim.items) {
+			if (item.color === COLOR_DANGER) return true;
 		}
 		return false;
 	}
 
-	shouldRestart = false; // this is a flag because we want to do it after updating, otherwise disposed entities get updated and throw errors
+	shouldRestart = false; // this is a flag because we want to do it after updating, otherwise disposed items get updated and throw errors
 	restart(): void {
 		this.shouldRestart = true;
 	}
 
 	timeLastSwapped: number | undefined;
 
-	swapControl(entity: Entity | null, force = false): boolean {
+	swapControl(item: Item | null, force = false): boolean {
 		const {controlled} = this;
-		if (!force && controlled === entity) return false;
+		if (!force && controlled === item) return false;
 		if (controlled) {
 			if (this.timeLastSwapped !== undefined) {
 				const timeElapsed = this.time - this.timeLastSwapped;
@@ -231,19 +231,19 @@ export class Stage0 extends Stage {
 			controlled.directionY = 0;
 		}
 		this.timeLastSwapped = this.time;
-		this.controlled = entity;
-		if (entity) {
-			entity.graphicsFillColor = COLOR_PLAYER_HEX;
-			entity.graphicsFillAlpha = 1;
-			this.freezeCamera = entity.freezeCamera ?? false;
+		this.controlled = item;
+		if (item) {
+			item.graphicsFillColor = COLOR_PLAYER_HEX;
+			item.graphicsFillAlpha = 1;
+			this.freezeCamera = item.freezeCamera ?? false;
 		}
 		return true;
 	}
 
 	collideWithTarget(): void {
-		for (const entity of this.sim.entities) {
-			if (entity.color === COLOR_DANGER) {
-				entity.color = COLOR_DEFAULT;
+		for (const item of this.sim.items) {
+			if (item.color === COLOR_DANGER) {
+				item.color = COLOR_DEFAULT;
 			}
 		}
 		this.target.color = COLOR_ROOTED;

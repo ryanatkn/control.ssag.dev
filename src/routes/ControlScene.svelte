@@ -10,6 +10,7 @@
 		getLayout,
 		Stage,
 		type ExitStage,
+		type Item,
 	} from '@feltcoop/dealt';
 
 	import {Stage0} from '$routes/stage0';
@@ -20,13 +21,16 @@
 	export let layout = getLayout();
 
 	import type {Writable} from 'svelte/store';
-	import type {Item} from '@feltcoop/dealt';
 
 	// TODO BLOCK implement:
-	// TODO BLOCK show all entities in a list
-	// TODO BLOCK entity selection
+	// TODO BLOCK show all items in a list
+	// TODO BLOCK item selection
 	// TODO BLOCK draggable/resizable pane component
 	// TODO contextmenu to enable dragging on windows
+
+	// TODO BLOCK
+	type SceneMode = 'playing' | 'editing';
+	let mode: SceneMode = 'editing';
 
 	let viewportSize = Math.min($layout.width, $layout.height);
 	$: viewportSize = Math.min($layout.width, $layout.height);
@@ -42,6 +46,7 @@
 
 	let items: Item[] | undefined;
 	const item_selection: Writable<Writable<Item> | null> = writable(null);
+	$: selected_item = $item_selection;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -54,7 +59,7 @@
 		if (stage) destroy_stage();
 		stage = new Stage0({exit, camera, viewport, layout});
 		void stage.setup({stageStates: []});
-		items = Array.from(stage.entityById.values()); // TODO BLOCK
+		items = Array.from(stage.itemById.values()); // TODO BLOCK
 		$item_selection = writable(items[0]); // TODO BLOCK make reactive
 		setting_up = false;
 	};
@@ -77,14 +82,40 @@
 	{#key stage}
 		<World {stage} {pixi} />
 		<SurfaceWithController controller={stage.controller} />
-		<Pane {items} selected_item={$item_selection} let:item let:selected>
-			<!-- TODO text-overflow -->
-			<div class="ellipsis">
-				{item.type} <small>{item.id.slice(0, 3)}..{item.id.slice(-3)}</small>
-				{#if selected}
-					selected
+		{#if mode === 'editing'}
+			<Pane>
+				{#if items}
+					{#each items as item (item)}
+						{@const selected = item === $selected_item}
+						<li
+							class="item buttonlike"
+							class:selected
+							style:--color="hsl({item.color[0]}deg, {item.color[1] * 100}%, {item.color[2] *
+								100}%)"
+						>
+							{item.type} <small>{item.id.slice(0, 3)}..{item.id.slice(-3)}</small>
+							{#if selected}
+								selected
+							{/if}
+						</li>
+					{/each}
 				{/if}
-			</div>
-		</Pane>
+				<button on:click={() => alert('TODO')}>create item</button>
+				<!-- TODO text-overflow -->
+			</Pane>
+		{/if}
 	{/key}
 {/if}
+
+<style>
+	.item {
+		color: var(--color);
+	}
+
+	li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: var(--spacing_sm) var(--spacing_lg);
+	}
+</style>
