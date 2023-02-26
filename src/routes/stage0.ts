@@ -218,19 +218,22 @@ export class Stage0 extends Stage {
 	timeLastSwapped: number | undefined;
 
 	swapControl(item: Item | null, force = false): boolean {
-		const {controlled} = this;
-		if (!force && controlled === item) return false;
+		const {controlled, time} = this;
+		if (controlled === item) {
+			if (!force) return false;
+			this.timeLastSwapped = undefined;
+		}
 		if (controlled) {
 			if (this.timeLastSwapped !== undefined) {
-				const timeElapsed = this.time - this.timeLastSwapped;
-				if (timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
+				const timeElapsed = time - this.timeLastSwapped;
+				if (time > CONTROL_SWAP_COOLDOWN && timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
 			}
 			controlled.graphicsFillColor = 0;
 			controlled.graphicsFillAlpha = 0;
 			controlled.directionX = 0;
 			controlled.directionY = 0;
 		}
-		this.timeLastSwapped = this.time;
+		this.timeLastSwapped = time;
 		this.controlled = item;
 		if (item) {
 			item.graphicsFillColor = COLOR_PLAYER_HEX;
