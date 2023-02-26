@@ -53,18 +53,10 @@
 </script>
 
 <!-- TODO draggable action? or higher order component? -->
+<!-- TODO maybe `dragging` class for styling/children? -->
 <div
 	class="pane"
-	class:dragging
 	on:pointerdown={start_dragging}
-	on:pointerup={stop_dragging}
-	on:pointermove={dragging
-		? (e) => {
-				// TODO need to draw a surface behind the pane that fullscreens to capture events
-				swallow(e);
-				dragTo(e.clientX, e.clientY);
-		  }
-		: undefined}
 	on:pointercancel={stop_dragging}
 	style:--width="{width}px"
 	style:--height="{height}px"
@@ -73,9 +65,21 @@
 >
 	<slot />
 </div>
+<!-- TODO use `Surface`? -->
+{#if dragging}
+	<div
+		class="surface"
+		on:pointermove={(e) => {
+			swallow(e);
+			dragTo(e.clientX, e.clientY);
+		}}
+		on:pointerup={stop_dragging}
+	/>
+{/if}
 
 <style>
 	.pane {
+		z-index: 1;
 		--pane_width: var(--width, var(--column_width_sm));
 		--pane_height: var(--height, var(--pane_width));
 		position: absolute;
@@ -85,8 +89,11 @@
 		height: var(--pane_height);
 		transform: translate3d(var(--offset_x, 0), var(--offset_y, 0), var(--offset_z, 0));
 		overflow: auto;
-	}
-	.dragging {
 		cursor: move;
+	}
+	.surface {
+		z-index: 2;
+		position: fixed;
+		inset: 0;
 	}
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type {Item} from '@feltcoop/dealt';
+	import {type Item, hexToRgb} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
 
 	export let item: Writable<Item>;
@@ -42,7 +42,10 @@
 			<fieldset>
 				<label>
 					<div class="title">graphicsLineColor</div>
-					<input value={$selected_item.graphicsLineColor} />
+					<input
+						type="color"
+						value={$selected_item.graphicsLineColor && hexToRgb($selected_item.graphicsLineColor)}
+					/>
 				</label>
 			</fieldset>
 			<fieldset>
