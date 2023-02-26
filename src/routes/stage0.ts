@@ -40,7 +40,7 @@ export class Stage0 extends Stage {
 	bounds!: Entity<PolygonBody>;
 	target!: Entity<CircleBody>;
 
-	static override toInitialData(): Partial<StageData> {
+	static override createInitialData(): Partial<StageData> {
 		const entities: Array<Partial<EntityData>> = [];
 		const data: Partial<StageData> = {freezeCamera: true, entities};
 
