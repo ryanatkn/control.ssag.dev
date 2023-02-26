@@ -21,7 +21,9 @@
 			currentTarget: EventTarget & HTMLDivElement;
 		},
 	) => {
-		if (!enableGlobalHotkeys(e.target) || (e.target as Element).tagName === 'INPUT') {
+		// TODO extract this, maybe `enableGlobalPointer`?
+		const {tagName} = e.target as Element;
+		if (!enableGlobalHotkeys(e.target) || tagName === 'INPUT' || tagName === 'BUTTON') {
 			return;
 		}
 		swallow(e);
