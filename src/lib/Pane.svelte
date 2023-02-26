@@ -71,7 +71,7 @@
 >
 	{#each items as item (item)}
 		{@const selected = item === $selected_item}
-		<li class:selected>
+		<li class:selected class="buttonlike">
 			<slot {item} {selected} />
 		</li>
 	{/each}
@@ -85,5 +85,11 @@
 		top: 0;
 		width: var(--pane_width);
 		transform: translate3d(var(--offset_x, 0), var(--offset_y, 0), var(--offset_z, 0));
+	}
+	li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: var(--spacing_sm) var(--spacing_lg);
 	}
 </style>
