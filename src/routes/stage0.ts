@@ -19,7 +19,7 @@ import {
 	createEntityId,
 } from '@feltcoop/dealt';
 
-import {COLOR_DANGER} from './constants';
+import {COLOR_DANGER, WORLD_SIZE} from './constants';
 
 // TODO rewrite this to use a route Svelte component? `dealt.dev/membrane/home`
 
@@ -56,6 +56,7 @@ export class Stage0 extends Stage {
 		entities.push(controlled);
 		data.controlled = controlled.id;
 
+		// create the little one
 		entities.push({
 			type: 'circle',
 			x: 120,
@@ -63,6 +64,35 @@ export class Stage0 extends Stage {
 			radius: PLAYER_RADIUS / 3,
 			speed: 0.045,
 			freezeCamera: true,
+		});
+
+		// create the bounds
+		entities.push({
+			type: 'polygon',
+			x: 0,
+			y: 0,
+			points: [
+				[0, 0],
+				[1, 0],
+				[1, 1],
+				[0, 1],
+			],
+			invisible: true,
+			ghostly: true,
+			scale_x: WORLD_SIZE,
+			scale_y: WORLD_SIZE,
+			tags: ['bounds'],
+		});
+
+		// create the target
+		entities.push({
+			type: 'circle',
+			x: 230,
+			y: 15,
+			radius: PLAYER_RADIUS * 2,
+			color: COLOR_EXIT,
+			speed: 0.03,
+			tags: ['target'],
 		});
 
 		// create some things
@@ -106,37 +136,15 @@ export class Stage0 extends Stage {
 
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
-		const {collisions} = this;
-
-		// create the bounds around the stage edges
-		const bounds = (this.bounds = new Entity(collisions, {
-			type: 'polygon',
-			x: 0,
-			y: 0,
-			points: [
-				[0, 0],
-				[1, 0],
-				[1, 1],
-				[0, 1],
-			],
-			invisible: true,
-			ghostly: true,
-			scale_x: this.$camera.width,
-			scale_y: this.$camera.height,
-		}));
-		this.addEntity(bounds);
-
-		// TODO create these programmatically from data (tags?)
-
-		const target = (this.target = new Entity(collisions, {
-			x: 230,
-			y: 15,
-			radius: PLAYER_RADIUS * 2,
-		}));
-		target.color = COLOR_EXIT;
-		target.speed = 0.03;
-		this.addEntity(target);
-
+		// TODO do this better, maybe with `tags` automatically, same with `bounds`
+		for (const entity of this.entityById.values()) {
+			if (entity.tags?.has('bounds')) {
+				this.bounds = entity as Entity<PolygonBody>;
+			}
+			if (entity.tags?.has('target')) {
+				this.target = entity as Entity<CircleBody>;
+			}
+		}
 		console.log('set up');
 	}
 
