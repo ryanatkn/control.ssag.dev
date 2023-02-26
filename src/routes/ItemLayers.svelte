@@ -17,7 +17,7 @@
 			{/each}
 		{/if}
 	</ol>
-	<button on:click={() => alert('TODO')}>create item</button>
+	<button class="flush" on:click={() => alert('TODO')}>create item</button>
 </div>
 
 <style>

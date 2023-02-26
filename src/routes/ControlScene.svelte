@@ -11,14 +11,16 @@
 		Stage,
 		type ExitStage,
 		type Item,
+		enableGlobalHotkeys,
 	} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
+	import {swallow} from '@feltjs/util/dom.js';
 
 	import {Stage0} from '$routes/stage0';
 	import Pane from '$lib/Pane.svelte';
 	import {WORLD_SIZE} from '$routes/constants';
 	import ItemLayers from '$routes/ItemLayers.svelte';
-	import ItemDetails from './ItemDetails.svelte';
+	import ItemDetails from '$routes/ItemDetails.svelte';
 
 	export let pixi = getPixi();
 	export let layout = getLayout();
@@ -32,6 +34,10 @@
 	// TODO BLOCK
 	type SceneMode = 'playing' | 'editing';
 	let mode: SceneMode = 'editing';
+
+	const toggleEditMode = (enable = mode !== 'editing'): void => {
+		mode = enable ? 'editing' : 'playing';
+	};
 
 	let viewportSize = Math.min($layout.width, $layout.height);
 	$: viewportSize = Math.min($layout.width, $layout.height);
@@ -81,6 +87,15 @@
 	let pane_height = 384; // TODO
 	let pane_offset_y = $layout.height - pane_height;
 </script>
+
+<svelte:window
+	on:keydown|capture={(e) => {
+		if (e.key === 'Escape' && enableGlobalHotkeys(e)) {
+			swallow(e);
+			toggleEditMode();
+		}
+	}}
+/>
 
 {#if stage}
 	{#key stage}

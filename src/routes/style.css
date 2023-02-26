@@ -1,3 +1,8 @@
 :root {
 	--icon: '🟣';
 }
+
+/* TODO upstream? rename? */
+.flush {
+	border-radius: 0;
+}

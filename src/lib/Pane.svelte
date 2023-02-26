@@ -92,6 +92,7 @@
 		transform: translate3d(var(--offset_x, 0), var(--offset_y, 0), var(--offset_z, 0));
 		overflow: auto;
 		cursor: move;
+		border-radius: 0;
 	}
 	.surface {
 		z-index: 2;
