@@ -51,6 +51,7 @@ export class Stage0 extends Stage {
 			y: 147,
 			radius: PLAYER_RADIUS,
 			speed: SPEED_SLOW,
+			freezeCamera: true,
 		} satisfies Partial<EntityData>;
 		entities.push(controlled);
 		data.controlled = controlled.id;
@@ -61,6 +62,7 @@ export class Stage0 extends Stage {
 			y: 100,
 			radius: PLAYER_RADIUS / 3,
 			speed: 0.045,
+			freezeCamera: true,
 		});
 
 		// create some things
@@ -171,12 +173,13 @@ export class Stage0 extends Stage {
 		if (controlled) {
 			updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
 
-			if (this.freezeCamera) {
-				if (!this.bounds.body.collides(controlled.body, collisionResult)) {
+			if (this.freezeCamera && !this.bounds.body.collides(controlled.body, collisionResult)) {
+				if (this.hasAnyDanger()) {
 					this.restart();
+				} else {
+					this.freezeCamera = false;
+					controlled.freezeCamera = false;
 				}
-			} else {
-				this.camera.setPosition(controlled.x, controlled.y);
 			}
 		}
 
@@ -185,19 +188,29 @@ export class Stage0 extends Stage {
 		}
 	}
 
+	// TODO rethink - maybe a more generic API?
+	hasAnyDanger(): boolean {
+		for (const entity of this.sim.entities) {
+			if (entity.color === COLOR_DANGER) return true;
+		}
+		return false;
+	}
+
 	shouldRestart = false; // this is a flag because we want to do it after updating, otherwise disposed entities get updated and throw errors
 	restart(): void {
 		this.shouldRestart = true;
 	}
 
-	timeLastSwapped = 0;
+	timeLastSwapped: number | undefined;
 
 	swapControl(entity: Entity<CircleBody>): boolean {
 		const {controlled} = this;
 		if (controlled === entity) return false;
 		if (controlled) {
-			const timeElapsed = this.time - this.timeLastSwapped;
-			if (timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
+			if (this.timeLastSwapped !== undefined) {
+				const timeElapsed = this.time - this.timeLastSwapped;
+				if (timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
+			}
 			controlled.graphicsFillColor = 0;
 			controlled.graphicsFillAlpha = 0;
 			controlled.directionX = 0;
@@ -207,7 +220,7 @@ export class Stage0 extends Stage {
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
-		this.freezeCamera = entity.radius < PLAYER_RADIUS * 3;
+		if ((entity as any).freezeCamera !== undefined) this.freezeCamera = entity.freezeCamera;
 		return true;
 	}
 
