@@ -21,7 +21,9 @@
 			currentTarget: EventTarget & HTMLDivElement;
 		},
 	) => {
-		if (!enableGlobalHotkeys(e.target)) return;
+		if (!enableGlobalHotkeys(e.target) || (e.target as Element).tagName === 'INPUT') {
+			return;
+		}
 		swallow(e);
 		dragging = true;
 		last_x = null;
@@ -53,6 +55,7 @@
 <!-- TODO draggable action? or higher order component? -->
 <div
 	class="pane"
+	class:dragging
 	on:pointerdown={start_dragging}
 	on:pointerup={stop_dragging}
 	on:pointermove={dragging
@@ -82,5 +85,8 @@
 		height: var(--pane_height);
 		transform: translate3d(var(--offset_x, 0), var(--offset_y, 0), var(--offset_z, 0));
 		overflow: auto;
+	}
+	.dragging {
+		cursor: move;
 	}
 </style>
