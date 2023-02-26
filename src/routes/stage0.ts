@@ -1,7 +1,5 @@
-import {Collisions} from '@ryanatkn/collisions';
 import {
 	Stage,
-	Simulation,
 	Entity,
 	COLOR_PLAYER,
 	COLOR_EXIT,
@@ -9,13 +7,18 @@ import {
 	collide,
 	collisionResult,
 	type StageMeta,
-	type EntityCircle,
-	type EntityPolygon,
-	type Renderer,
+	type CircleBody,
+	type PolygonBody,
 	hslToHex,
 	COLOR_DEFAULT,
 	COLOR_ROOTED,
+	SPEED_SLOW,
+	PLAYER_RADIUS,
+	type EntityData,
+	type StageData,
+	createEntityId,
 } from '@feltcoop/dealt';
+
 import {COLOR_DANGER} from './constants';
 
 // TODO rewrite this to use a route Svelte component? `dealt.dev/membrane/home`
@@ -27,7 +30,6 @@ const meta: StageMeta = {
 	icon: '🐭',
 };
 
-const RADIUS = 5;
 const CONTROL_SWAP_COOLDOWN = 1000;
 const COLOR_PLAYER_HEX = hslToHex(...COLOR_PLAYER);
 
@@ -35,73 +37,104 @@ export class Stage0 extends Stage {
 	static override meta = meta;
 
 	// these are instantiated in `setup`
-	entity0!: Entity<EntityCircle>;
-	entity1!: Entity<EntityCircle>;
-	bounds!: Entity<EntityPolygon>;
-	target!: Entity<EntityCircle>;
+	bounds!: Entity<PolygonBody>;
+	target!: Entity<CircleBody>;
 
-	controlled!: Entity<EntityCircle>;
+	static override toInitialData(): Partial<StageData> {
+		const entities: Array<Partial<EntityData>> = [];
+		const data: Partial<StageData> = {freezeCamera: true, entities};
+
+		const controlled = {
+			type: 'circle', // TODO needs type safety, should error when omitted
+			id: createEntityId(),
+			x: 100,
+			y: 147,
+			radius: PLAYER_RADIUS,
+			speed: SPEED_SLOW,
+			color: COLOR_PLAYER,
+		} satisfies Partial<EntityData>;
+		entities.push(controlled);
+		data.controlled = controlled.id;
+
+		entities.push({
+			type: 'circle',
+			x: 120,
+			y: 100,
+			radius: PLAYER_RADIUS / 3,
+			speed: 0.045,
+		});
+
+		// create some things
+		entities.push({
+			type: 'circle',
+			x: 150,
+			y: 110,
+			radius: PLAYER_RADIUS * 4,
+			color: COLOR_DANGER,
+			speed: 0.03,
+		});
+		entities.push({
+			type: 'circle',
+			x: 200,
+			y: 35,
+			radius: PLAYER_RADIUS * 3,
+			color: COLOR_DANGER,
+			speed: 0.13,
+		});
+		entities.push({
+			type: 'circle',
+			x: 250,
+			y: 70,
+			radius: PLAYER_RADIUS * 8,
+			color: COLOR_DANGER,
+			speed: 0.022,
+		});
+		entities.push({
+			type: 'circle',
+			x: 150,
+			y: -70,
+			radius: PLAYER_RADIUS * 20,
+			color: COLOR_DANGER,
+			speed: 0.007,
+		});
+
+		console.log(`toInitialData`, data);
+
+		return data;
+	}
 
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
-		const collisions = (this.collisions = new Collisions());
-		this.sim = new Simulation(collisions);
-
-		// create the controllable player
-		const entity0 = (this.entity0 = new Entity(
-			collisions.createCircle(100, 147, RADIUS) as EntityCircle,
-		));
-		entity0.speed = 0.1;
-		this.swapControl(entity0);
-		this.addEntity(entity0);
-
-		const entity1 = (this.entity1 = new Entity(
-			collisions.createCircle(120, 100, RADIUS / 3) as EntityCircle,
-		));
-		entity1.speed = 0.045;
-		this.addEntity(entity1);
+		const {collisions} = this;
 
 		// create the bounds around the stage edges
-		const bounds = (this.bounds = new Entity(
-			collisions.createPolygon(0, 0, [
+		const bounds = (this.bounds = new Entity(collisions, {
+			type: 'polygon',
+			x: 0,
+			y: 0,
+			points: [
 				[0, 0],
 				[1, 0],
 				[1, 1],
 				[0, 1],
-			]) as EntityPolygon,
-		));
-		bounds.invisible = true;
-		bounds.ghostly = true;
-		bounds.body.scale_x = this.$camera.width;
-		bounds.body.scale_y = this.$camera.height;
+			],
+			invisible: true,
+			ghostly: true,
+			scale_x: this.$camera.width,
+			scale_y: this.$camera.height,
+		}));
 		this.addEntity(bounds);
 
-		// TODO create these programmatically from data
+		// TODO create these programmatically from data (tags?)
 
-		const target = (this.target = new Entity(
-			collisions.createCircle(230, 15, RADIUS * 2) as EntityCircle,
-		));
+		const target = (this.target = new Entity(collisions, {
+			x: 230,
+			y: 15,
+			radius: PLAYER_RADIUS * 2,
+		}));
 		target.color = COLOR_EXIT;
 		target.speed = 0.03;
 		this.addEntity(target);
-
-		// create some things
-		const obstacle1 = new Entity(collisions.createCircle(150, 110, RADIUS * 4) as EntityCircle);
-		obstacle1.color = COLOR_DANGER;
-		obstacle1.speed = 0.03;
-		this.addEntity(obstacle1);
-		const obstacle2 = new Entity(collisions.createCircle(200, 35, RADIUS * 3) as EntityCircle);
-		obstacle2.color = COLOR_DANGER;
-		obstacle2.speed = 0.13;
-		this.addEntity(obstacle2);
-		const obstacle3 = new Entity(collisions.createCircle(250, 70, RADIUS * 8) as EntityCircle);
-		obstacle3.color = COLOR_DANGER;
-		obstacle3.speed = 0.022;
-		this.addEntity(obstacle3);
-		const obstacle4 = new Entity(collisions.createCircle(150, -70, RADIUS * 20) as EntityCircle);
-		obstacle4.color = COLOR_DANGER;
-		obstacle4.speed = 0.007;
-		this.addEntity(obstacle4);
 
 		console.log('set up');
 	}
@@ -128,7 +161,7 @@ export class Stage0 extends Stage {
 				(entityA === controlled && entityB.color === COLOR_DEFAULT) ||
 				(entityB === controlled && entityA.color === COLOR_DEFAULT)
 			) {
-				const entity = (entityA === controlled ? entityB : entityA) as Entity<EntityCircle>;
+				const entity = (entityA === controlled ? entityB : entityA) as Entity<CircleBody>;
 				if (this.swapControl(entity)) {
 					controlled = entity;
 				}
@@ -136,24 +169,21 @@ export class Stage0 extends Stage {
 			collide(entityA, entityB, result);
 		});
 
-		updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
+		if (controlled) {
+			updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
 
-		if (this.freezeCamera) {
-			if (!this.bounds.body.collides(controlled.body, collisionResult)) {
-				this.restart();
+			if (this.freezeCamera) {
+				if (!this.bounds.body.collides(controlled.body, collisionResult)) {
+					this.restart();
+				}
+			} else {
+				this.camera.setPosition(controlled.x, controlled.y);
 			}
-		} else {
-			this.camera.setPosition(controlled.x, controlled.y);
 		}
 
 		if (this.shouldRestart) {
 			this.exit({next_stage: meta.name});
 		}
-	}
-
-	render(renderer: Renderer): void {
-		renderer.clear();
-		renderer.render(this.sim.entities);
 	}
 
 	shouldRestart = false; // this is a flag because we want to do it after updating, otherwise disposed entities get updated and throw errors
@@ -163,7 +193,7 @@ export class Stage0 extends Stage {
 
 	timeLastSwapped = 0;
 
-	swapControl(entity: Entity<EntityCircle>): boolean {
+	swapControl(entity: Entity<CircleBody>): boolean {
 		const {controlled} = this;
 		if (controlled === entity) return false;
 		if (controlled) {
@@ -178,7 +208,7 @@ export class Stage0 extends Stage {
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
-		this.freezeCamera = entity.radius < RADIUS * 3;
+		this.freezeCamera = entity.radius < PLAYER_RADIUS * 3;
 		return true;
 	}
 
