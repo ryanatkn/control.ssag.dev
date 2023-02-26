@@ -18,6 +18,12 @@
 	export let pixi = getPixi();
 	export let layout = getLayout();
 
+	// TODO BLOCK implement:
+	// TODO BLOCK show all entities in a list
+	// TODO BLOCK entity selection
+	// TODO BLOCK draggable/resizable pane component
+	// TODO contextmenu to enable dragging on windows
+
 	let viewportSize = Math.min($layout.width, $layout.height);
 	$: viewportSize = Math.min($layout.width, $layout.height);
 
