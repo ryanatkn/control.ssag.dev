@@ -13,6 +13,7 @@
 </script>
 
 {#if $selected_item}
+	<h2>item details</h2>
 	<form>
 		<div>
 			<fieldset>
@@ -74,6 +75,16 @@
 {/if}
 
 <style>
+	h2 {
+		/* TODO refactor, 2 places */
+		position: sticky;
+		top: 0;
+		background-color: var(--bg);
+		padding: 0 var(--spacing_md);
+		font-weight: 200;
+		font-size: var(--font_size_lg);
+		text-align: center;
+	}
 	fieldset {
 		margin-bottom: var(--spacing_md);
 	}

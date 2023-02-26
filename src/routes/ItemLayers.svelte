@@ -9,6 +9,7 @@
 </script>
 
 <div class="items">
+	<h2>items</h2>
 	<ol>
 		{#if items}
 			{#each items as item (item)}
@@ -24,6 +25,17 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+	}
+
+	h2 {
+		/* TODO refactor, 2 places */
+		position: sticky;
+		top: 0;
+		background-color: var(--bg);
+		padding: 0 var(--spacing_md);
+		font-weight: 200;
+		font-size: var(--font_size_lg);
+		text-align: center;
 	}
 
 	ol {
