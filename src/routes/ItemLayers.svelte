@@ -10,7 +10,7 @@
 
 <div class="items">
 	<h2>items</h2>
-	<ol>
+	<ol class="scrollbar">
 		{#if items}
 			{#each items as item (item)}
 				<ItemLayer {item} {item_selection} />
@@ -32,8 +32,8 @@
 		position: sticky;
 		top: 0;
 		background-color: var(--bg);
-		padding: 0 var(--spacing_md);
-		font-weight: 200;
+		padding: var(--spacing_xs3) var(--spacing_md);
+		font-weight: 300;
 		font-size: var(--font_size_md);
 		text-align: center;
 		text-transform: uppercase;

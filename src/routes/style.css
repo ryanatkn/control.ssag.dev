@@ -9,3 +9,9 @@
 	--button_color_active: hsl(23, 37%, 3%);
 	--button_color_disabled: transparent;
 }
+
+/* TODO fix */
+.scrollbar {
+	scrollbar-color: rebeccapurple green;
+	scrollbar-width: thin;
+}
