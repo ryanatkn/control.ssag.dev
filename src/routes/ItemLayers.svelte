@@ -10,7 +10,7 @@
 
 <div class="items">
 	<h2>items</h2>
-	<ol class="scrollbar">
+	<ol>
 		{#if items}
 			{#each items as item (item)}
 				<ItemLayer {item} {item_selection} />

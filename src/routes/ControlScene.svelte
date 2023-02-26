@@ -79,6 +79,7 @@
 
 	const pane_width = 256; // TODO
 	const pane_height = 256; // TODO
+	const pane_heigth_lg = 384; // TODO
 </script>
 
 {#if stage}
@@ -89,7 +90,7 @@
 			<Pane>
 				<ItemLayers {items} {item_selection} />
 			</Pane>
-			<Pane width={pane_width} offset_y={$layout.height - pane_height}>
+			<Pane width={pane_width} height={pane_heigth_lg} offset_y={$layout.height - pane_height}>
 				{#if $item_selection}
 					<ItemDetails item={$item_selection} {item_selection} />
 				{/if}

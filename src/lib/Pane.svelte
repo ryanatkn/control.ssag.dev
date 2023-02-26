@@ -52,7 +52,7 @@
 
 <!-- TODO draggable action? or higher order component? -->
 <div
-	class="pane scrollbar"
+	class="pane"
 	on:pointerdown={start_dragging}
 	on:pointerup={stop_dragging}
 	on:pointermove={dragging
