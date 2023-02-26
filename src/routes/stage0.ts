@@ -91,7 +91,8 @@ export class Stage0 extends Stage {
 			y: 15,
 			radius: PLAYER_RADIUS * 2,
 			color: COLOR_EXIT,
-			speed: 0.03,
+			speed: 0,
+			strength: 100_000_000,
 			tags: ['target'],
 		});
 
@@ -140,11 +141,11 @@ export class Stage0 extends Stage {
 		for (const entity of this.entityById.values()) {
 			if (entity.tags?.has('bounds')) {
 				this.bounds = entity as Entity<PolygonBody>;
-			}
-			if (entity.tags?.has('target')) {
+			} else if (entity.tags?.has('target')) {
 				this.target = entity as Entity<CircleBody>;
 			}
 		}
+		this.swapControl(this.controlled, true);
 		console.log('set up');
 	}
 
@@ -216,9 +217,9 @@ export class Stage0 extends Stage {
 
 	timeLastSwapped: number | undefined;
 
-	swapControl(entity: Entity<CircleBody>): boolean {
+	swapControl(entity: Entity | null, force = false): boolean {
 		const {controlled} = this;
-		if (controlled === entity) return false;
+		if (!force && controlled === entity) return false;
 		if (controlled) {
 			if (this.timeLastSwapped !== undefined) {
 				const timeElapsed = this.time - this.timeLastSwapped;
@@ -231,9 +232,11 @@ export class Stage0 extends Stage {
 		}
 		this.timeLastSwapped = this.time;
 		this.controlled = entity;
-		entity.graphicsFillColor = COLOR_PLAYER_HEX;
-		entity.graphicsFillAlpha = 1;
-		this.freezeCamera = entity.freezeCamera ?? false;
+		if (entity) {
+			entity.graphicsFillColor = COLOR_PLAYER_HEX;
+			entity.graphicsFillAlpha = 1;
+			this.freezeCamera = entity.freezeCamera ?? false;
+		}
 		return true;
 	}
 
