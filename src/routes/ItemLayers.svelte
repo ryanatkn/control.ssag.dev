@@ -34,8 +34,9 @@
 		background-color: var(--bg);
 		padding: 0 var(--spacing_md);
 		font-weight: 200;
-		font-size: var(--font_size_lg);
+		font-size: var(--font_size_md);
 		text-align: center;
+		text-transform: uppercase;
 	}
 
 	ol {
