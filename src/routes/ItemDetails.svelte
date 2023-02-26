@@ -7,8 +7,6 @@
 
 	$: selected_item = $item_selection;
 
-	$: console.log(`$selected_item`, $selected_item);
-
 	// TODO BLOCK destroy is bugged, do we need `stage.destroy_item`? or `item.stage`?
 </script>
 
@@ -81,8 +79,7 @@
 		top: 0;
 		background-color: var(--bg);
 		padding: var(--spacing_xs3) var(--spacing_md);
-		font-weight: 300;
-		font-size: var(--font_size_md);
+		font-size: var(--font_size_sm);
 		text-align: center;
 		text-transform: uppercase;
 	}

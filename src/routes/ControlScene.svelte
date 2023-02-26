@@ -77,9 +77,9 @@
 	};
 	onDestroy(destroy_stage);
 
-	const pane_width = 256; // TODO
-	const pane_height = 256; // TODO
-	const pane_heigth_lg = 384; // TODO
+	let pane_width = 256; // TODO
+	let pane_height = 384; // TODO
+	let pane_offset_y = $layout.height - pane_height;
 </script>
 
 {#if stage}
@@ -90,7 +90,7 @@
 			<Pane>
 				<ItemLayers {items} {item_selection} />
 			</Pane>
-			<Pane width={pane_width} height={pane_heigth_lg} offset_y={$layout.height - pane_height}>
+			<Pane bind:width={pane_width} bind:height={pane_height} bind:offset_y={pane_offset_y}>
 				{#if $item_selection}
 					<ItemDetails item={$item_selection} {item_selection} />
 				{/if}

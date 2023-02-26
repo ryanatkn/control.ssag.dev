@@ -33,8 +33,7 @@
 		top: 0;
 		background-color: var(--bg);
 		padding: var(--spacing_xs3) var(--spacing_md);
-		font-weight: 300;
-		font-size: var(--font_size_md);
+		font-size: var(--font_size_sm);
 		text-align: center;
 		text-transform: uppercase;
 	}

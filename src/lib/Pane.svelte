@@ -4,8 +4,8 @@
 
 	const layout = getLayout();
 
-	export let width = 256; // TODO BLOCK where to source these from?
-	export let height = 256; // TODO BLOCK where to source these from?
+	export let width = 256;
+	export let height = 256;
 	export let offset_x = 0;
 	export let offset_y = 0;
 
