@@ -33,5 +33,8 @@
 	.item button {
 		width: 100%;
 		justify-content: space-between;
+		--border_radius: 0;
+		--input_height: var(--input_height_sm);
+		padding: 0 var(--spacing_md);
 	}
 </style>

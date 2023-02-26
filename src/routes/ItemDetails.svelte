@@ -14,7 +14,6 @@
 
 {#if $selected_item}
 	<form>
-		(TODO bind these)
 		<div>
 			<fieldset>
 				<label>
