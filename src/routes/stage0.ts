@@ -173,13 +173,18 @@ export class Stage0 extends Stage {
 		if (controlled) {
 			updateEntityDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
 
-			if (this.freezeCamera && !this.bounds.body.collides(controlled.body, collisionResult)) {
-				if (this.hasAnyDanger()) {
-					this.restart();
-				} else {
-					this.freezeCamera = false;
-					controlled.freezeCamera = false;
+			if (this.freezeCamera) {
+				if (!this.bounds.body.collides(controlled.body, collisionResult)) {
+					if (this.hasAnyDanger()) {
+						this.restart();
+					} else {
+						this.freezeCamera = false;
+						controlled.freezeCamera = false;
+					}
 				}
+			} else {
+				// TODO different algorithms for tracking the player with the camera (`camera.follow` option?)
+				this.camera.setPosition(controlled.x, controlled.y);
 			}
 		}
 
