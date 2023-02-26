@@ -51,7 +51,6 @@ export class Stage0 extends Stage {
 			y: 147,
 			radius: PLAYER_RADIUS,
 			speed: SPEED_SLOW,
-			color: COLOR_PLAYER,
 		} satisfies Partial<EntityData>;
 		entities.push(controlled);
 		data.controlled = controlled.id;
