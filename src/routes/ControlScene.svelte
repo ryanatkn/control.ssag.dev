@@ -12,15 +12,16 @@
 		type ExitStage,
 		type Item,
 	} from '@feltcoop/dealt';
+	import type {Writable} from 'svelte/store';
 
 	import {Stage0} from '$routes/stage0';
 	import Pane from '$lib/Pane.svelte';
-	import {WORLD_SIZE} from './constants';
+	import {WORLD_SIZE} from '$routes/constants';
+	import ItemLayers from '$routes/ItemLayers.svelte';
+	import ItemDetails from './ItemDetails.svelte';
 
 	export let pixi = getPixi();
 	export let layout = getLayout();
-
-	import type {Writable} from 'svelte/store';
 
 	// TODO BLOCK implement:
 	// TODO BLOCK show all items in a list
@@ -44,9 +45,8 @@
 	let stage: Stage | undefined | null;
 	let setting_up: boolean | undefined;
 
-	let items: Item[] | undefined;
+	let items: Array<Writable<Item>> | undefined;
 	const item_selection: Writable<Writable<Item> | null> = writable(null);
-	$: selected_item = $item_selection;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -59,8 +59,8 @@
 		if (stage) destroy_stage();
 		stage = new Stage0({exit, camera, viewport, layout});
 		void stage.setup({stageStates: []});
-		items = Array.from(stage.itemById.values()); // TODO BLOCK
-		$item_selection = writable(items[0]); // TODO BLOCK make reactive
+		items = Array.from(stage.itemById.values(), (v) => writable(v)); // TODO BLOCK
+		$item_selection = items[0]; // TODO BLOCK make reactive
 		setting_up = false;
 	};
 
@@ -76,6 +76,9 @@
 		stage = null;
 	};
 	onDestroy(destroy_stage);
+
+	const pane_width = 256; // TODO
+	const pane_height = 256; // TODO
 </script>
 
 {#if stage}
@@ -84,38 +87,14 @@
 		<SurfaceWithController controller={stage.controller} />
 		{#if mode === 'editing'}
 			<Pane>
-				{#if items}
-					{#each items as item (item)}
-						{@const selected = item === $selected_item}
-						<li
-							class="item buttonlike"
-							class:selected
-							style:--color="hsl({item.color[0]}deg, {item.color[1] * 100}%, {item.color[2] *
-								100}%)"
-						>
-							{item.type} <small>{item.id.slice(0, 3)}..{item.id.slice(-3)}</small>
-							{#if selected}
-								selected
-							{/if}
-						</li>
-					{/each}
+				<ItemLayers {items} {item_selection} />
+			</Pane>
+			<Pane width={pane_width} offset_y={$layout.height - pane_height}>
+				{#if $item_selection}
+					<ItemDetails item={$item_selection} {item_selection} />
 				{/if}
-				<button on:click={() => alert('TODO')}>create item</button>
 				<!-- TODO text-overflow -->
 			</Pane>
 		{/if}
 	{/key}
 {/if}
-
-<style>
-	.item {
-		color: var(--color);
-	}
-
-	li {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: var(--spacing_sm) var(--spacing_lg);
-	}
-</style>

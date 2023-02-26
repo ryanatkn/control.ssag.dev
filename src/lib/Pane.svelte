@@ -1,16 +1,17 @@
 <script lang="ts">
-	import {getLayout} from '@feltcoop/dealt';
+	import {enableGlobalHotkeys, getLayout} from '@feltcoop/dealt';
 	import {swallow} from '@feltjs/util/dom.js';
-
-	export let width = 256; // TODO BLOCK
 
 	const layout = getLayout();
 
+	export let width = 256; // TODO BLOCK where to source these from?
+	export let height = 256; // TODO BLOCK where to source these from?
+	export let offset_x = 0;
+	export let offset_y = 0;
+
 	let dragging = false;
-	let offset_x = $layout.width - width;
-	let offset_y = 0;
-	$: offset_x_clamped = Math.max(0, Math.min(offset_x, $layout.width));
-	$: offset_y_clamped = Math.max(0, Math.min(offset_y, $layout.height));
+	$: offset_x_clamped = Math.max(0, Math.min(offset_x, $layout.width - width));
+	$: offset_y_clamped = Math.max(0, Math.min(offset_y, $layout.height - height));
 	let current_x: number | null = null;
 	let current_y: number | null = null;
 	let last_x: number | null = null;
@@ -20,6 +21,7 @@
 			currentTarget: EventTarget & HTMLDivElement;
 		},
 	) => {
+		if (!enableGlobalHotkeys(e.target)) return;
 		swallow(e);
 		dragging = true;
 		last_x = null;
@@ -62,6 +64,7 @@
 		: undefined}
 	on:pointercancel={stop_dragging}
 	style:--width="{width}px"
+	style:--height="{height}px"
 	style:--offset_x="{offset_x_clamped}px"
 	style:--offset_y="{offset_y_clamped}px"
 >
@@ -71,10 +74,13 @@
 <style>
 	.pane {
 		--pane_width: var(--width, var(--column_width_sm));
+		--pane_height: var(--height, var(--pane_width));
 		position: absolute;
 		left: 0;
 		top: 0;
 		width: var(--pane_width);
+		height: var(--pane_height);
 		transform: translate3d(var(--offset_x, 0), var(--offset_y, 0), var(--offset_z, 0));
+		overflow: auto;
 	}
 </style>

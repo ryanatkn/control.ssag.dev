@@ -19,7 +19,7 @@ import {
 	createItemId,
 } from '@feltcoop/dealt';
 
-import {COLOR_DANGER, WORLD_SIZE} from './constants';
+import {COLOR_DANGER, WORLD_SIZE} from '$routes/constants';
 
 // TODO rewrite this to use a route Svelte component? `dealt.dev/membrane/home`
 
