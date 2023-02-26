@@ -58,6 +58,7 @@
 <!-- TODO maybe `dragging` class for styling/children? -->
 <div
 	class="pane"
+	class:dragging
 	on:pointerdown={start_dragging}
 	on:pointercancel={stop_dragging}
 	style:--width="{width}px"
@@ -93,6 +94,10 @@
 		overflow: auto;
 		cursor: move;
 		border-radius: 0;
+		outline: var(--border_width) var(--border_style) var(--shadow_border_color);
+	}
+	.dragging {
+		outline-width: var(--border_width_3);
 	}
 	.surface {
 		z-index: 2;
