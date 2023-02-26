@@ -52,6 +52,7 @@ export class Stage0 extends Stage {
 			collisions.createCircle(100, 147, RADIUS) as EntityCircle,
 		));
 		entity0.speed = 0.1;
+		(entity0 as any).freezeCamera = true;
 		this.swapControl(entity0);
 		this.addEntity(entity0);
 
@@ -59,6 +60,7 @@ export class Stage0 extends Stage {
 			collisions.createCircle(120, 100, RADIUS / 3) as EntityCircle,
 		));
 		entity1.speed = 0.045;
+		(entity1 as any).freezeCamera = true;
 		this.addEntity(entity1);
 
 		// create the bounds around the stage edges
@@ -140,7 +142,12 @@ export class Stage0 extends Stage {
 
 		if (this.freezeCamera) {
 			if (!this.bounds.body.collides(controlled.body, collisionResult)) {
-				this.restart();
+				if (this.hasAnyDanger()) {
+					this.restart();
+				} else {
+					this.freezeCamera = false;
+					(controlled as any).freezeCamera = false;
+				}
 			}
 		} else {
 			this.camera.setPosition(controlled.x, controlled.y);
@@ -149,6 +156,14 @@ export class Stage0 extends Stage {
 		if (this.shouldRestart) {
 			this.exit({next_stage: meta.name});
 		}
+	}
+
+	// TODO rethink - maybe a more generic API?
+	hasAnyDanger(): boolean {
+		for (const entity of this.sim.entities) {
+			if (entity.color === COLOR_DANGER) return true;
+		}
+		return false;
 	}
 
 	render(renderer: Renderer): void {
@@ -161,14 +176,16 @@ export class Stage0 extends Stage {
 		this.shouldRestart = true;
 	}
 
-	timeLastSwapped = 0;
+	timeLastSwapped: number | undefined;
 
 	swapControl(entity: Entity<EntityCircle>): boolean {
 		const {controlled} = this;
 		if (controlled === entity) return false;
 		if (controlled) {
-			const timeElapsed = this.time - this.timeLastSwapped;
-			if (timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
+			if (this.timeLastSwapped !== undefined) {
+				const timeElapsed = this.time - this.timeLastSwapped;
+				if (timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
+			}
 			controlled.graphicsFillColor = 0;
 			controlled.graphicsFillAlpha = 0;
 			controlled.directionX = 0;
@@ -178,7 +195,8 @@ export class Stage0 extends Stage {
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
-		this.freezeCamera = entity.radius < RADIUS * 3;
+		if ((entity as any).freezeCamera !== undefined)
+			this.freezeCamera = (entity as any).freezeCamera;
 		return true;
 	}
 
