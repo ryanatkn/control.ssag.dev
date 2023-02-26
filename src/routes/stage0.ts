@@ -52,7 +52,7 @@ export class Stage0 extends Stage {
 			collisions.createCircle(100, 147, RADIUS) as EntityCircle,
 		));
 		entity0.speed = 0.1;
-		entity0.freezeCamera = true;
+		(entity0 as any).freezeCamera = true;
 		this.swapControl(entity0);
 		this.addEntity(entity0);
 
@@ -60,7 +60,7 @@ export class Stage0 extends Stage {
 			collisions.createCircle(120, 100, RADIUS / 3) as EntityCircle,
 		));
 		entity1.speed = 0.045;
-		entity1.freezeCamera = true;
+		(entity1 as any).freezeCamera = true;
 		this.addEntity(entity1);
 
 		// create the bounds around the stage edges
@@ -146,7 +146,7 @@ export class Stage0 extends Stage {
 					this.restart();
 				} else {
 					this.freezeCamera = false;
-					controlled.freezeCamera = false;
+					(controlled as any).freezeCamera = false;
 				}
 			}
 		} else {
@@ -195,7 +195,8 @@ export class Stage0 extends Stage {
 		this.controlled = entity;
 		entity.graphicsFillColor = COLOR_PLAYER_HEX;
 		entity.graphicsFillAlpha = 1;
-		if (entity.freezeCamera !== undefined) this.freezeCamera = entity.freezeCamera;
+		if ((entity as any).freezeCamera !== undefined)
+			this.freezeCamera = (entity as any).freezeCamera;
 		return true;
 	}
 
