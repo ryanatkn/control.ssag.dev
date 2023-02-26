@@ -5,14 +5,14 @@
 		<link rel="icon" href="./favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		<meta http-equiv="content-security-policy" content="">
-		<link rel="preload" as="script" crossorigin="anonymous" href="./_app/immutable/entry/start.53f65c7c.mjs">
-		<link rel="preload" as="script" crossorigin="anonymous" href="./_app/immutable/chunks/index.aebcd463.mjs">
-		<link rel="preload" as="script" crossorigin="anonymous" href="./_app/immutable/chunks/singletons.91e81bf5.mjs">
-		<link rel="preload" as="script" crossorigin="anonymous" href="./_app/immutable/entry/app.466ee9f5.mjs">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.3ba3e5de.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.2cd0f807.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.fcb3ac73.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.6ae31d5c.js">
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<noscript>
-			JavaScript is required but it's probably worth it! The source code is at
+			JavaScript is required but it could be worth it! The source code is at
 			<a href="https://github.com/ryanatkn/control.ssag.dev"
 				>github.com/ryanatkn/control.ssag.dev</a
 			>
@@ -20,17 +20,17 @@
 		<div style="display: contents">
 			<script>
 				{
-					__sveltekit_zol8mv = {
+					__sveltekit_nxj6dz = {
 						env: {},
 						assets: new URL(".", location.href).pathname.replace(/^\/$/, ''),
 						element: document.currentScript.parentElement
 					};
 
 					Promise.all([
-						import("./_app/immutable/entry/start.53f65c7c.mjs"),
-						import("./_app/immutable/entry/app.466ee9f5.mjs")
+						import("./_app/immutable/entry/start.3ba3e5de.js"),
+						import("./_app/immutable/entry/app.6ae31d5c.js")
 					]).then(([kit, app]) => {
-						kit.start(app, __sveltekit_zol8mv.element);
+						kit.start(app, __sveltekit_nxj6dz.element);
 					});
 				}
 			</script>
