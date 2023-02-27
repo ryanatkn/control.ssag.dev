@@ -96,7 +96,7 @@
 				</fieldset>
 			</div>
 		</form>
-		<button class="flush" on:click={() => $item.destroy()}>delete {$selected_item.type}</button>
+		<button class="flush" on:click={() => $item.destroy()}>destroy {$selected_item.type}</button>
 	</div>
 {/if}
 
