@@ -8,7 +8,7 @@
 	export let item_selection: Writable<Writable<Item> | null>;
 </script>
 
-<div class="items">
+<div class="item-layers">
 	<h2 class="pane-title">items</h2>
 	<ol>
 		{#if items}
@@ -21,7 +21,7 @@
 </div>
 
 <style>
-	.items {
+	.item-layers {
 		height: 100%;
 		display: flex;
 		flex-direction: column;

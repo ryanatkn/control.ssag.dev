@@ -1,8 +1,6 @@
 <script lang="ts">
-	import type {Item} from '@feltcoop/dealt';
+	import {type Item, hslToStr} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
-
-	import {toHslCss} from '$lib/util';
 
 	export let item: Writable<Item>;
 	export let item_selection: Writable<Writable<Item> | null>;
@@ -10,11 +8,11 @@
 	$: selected = item === $item_selection;
 </script>
 
-<li class="item" class:selected>
+<li class="item-layer" class:selected>
 	<button
 		class:selected
 		on:click={() => ($item_selection = item)}
-		style:--text_color={toHslCss($item.color)}
+		style:--text_color={hslToStr(...$item.color)}
 	>
 		{#if selected}
 			⇒
@@ -24,13 +22,13 @@
 </li>
 
 <style>
-	.item {
+	.item-layer {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
 
-	.item button {
+	.item-layer button {
 		width: 100%;
 		justify-content: space-between;
 		--border_radius: 0;
