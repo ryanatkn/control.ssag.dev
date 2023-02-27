@@ -12,7 +12,7 @@
 
 {#if $selected_item}
 	<div class="item-details">
-		<h2>item details</h2>
+		<h2 class="pane-title">item details</h2>
 		<form>
 			<div>
 				<fieldset class="row">
@@ -105,17 +105,6 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
-	}
-
-	h2 {
-		/* TODO refactor, 2 places */
-		position: sticky;
-		top: 0;
-		background-color: var(--bg);
-		padding: var(--spacing_xs3) var(--spacing_md);
-		font-size: var(--font_size_sm);
-		text-align: center;
-		text-transform: uppercase;
 	}
 
 	form {

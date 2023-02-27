@@ -95,6 +95,11 @@
 		cursor: move;
 		border-radius: 0;
 		outline: var(--border_width) var(--border_style) var(--shadow_border_color);
+		opacity: 0.79;
+	}
+	.pane:hover,
+	.pane:focus-within {
+		opacity: unset;
 	}
 	.dragging {
 		outline-width: var(--border_width_3);

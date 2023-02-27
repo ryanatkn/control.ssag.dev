@@ -22,6 +22,7 @@
 	import {WORLD_SIZE} from '$routes/constants';
 	import ItemLayers from '$routes/ItemLayers.svelte';
 	import ItemDetails from '$routes/ItemDetails.svelte';
+	import SceneDetails from '$routes/SceneDetails.svelte';
 
 	export let pixi = getPixi();
 	export let layout = getLayout();
@@ -84,9 +85,13 @@
 	};
 	onDestroy(destroy_stage);
 
-	let pane_width = 256; // TODO
-	let pane_height = 384; // TODO
-	let pane_offset_y = $layout.height - pane_height;
+	// TODO refactor to be data-driven
+	let pane2_width = 256;
+	let pane2_height = 256;
+	let pane2_offset_y = $layout.height - pane2_height;
+	let pane3_width = 256;
+	let pane3_height = 384;
+	let pane3_offset_y = $layout.height - pane3_height - pane2_height - 20;
 </script>
 
 <svelte:window
@@ -106,7 +111,10 @@
 			<Pane>
 				<ItemLayers {items} {item_selection} />
 			</Pane>
-			<Pane bind:width={pane_width} bind:height={pane_height} bind:offset_y={pane_offset_y}>
+			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_y={pane2_offset_y}>
+				<SceneDetails {stage} />
+			</Pane>
+			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
 				{#if $item_selection}
 					<ItemDetails item={$item_selection} {item_selection} />
 				{/if}
