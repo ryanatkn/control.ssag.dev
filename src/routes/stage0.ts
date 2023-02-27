@@ -20,6 +20,7 @@ import {
 } from '@feltcoop/dealt';
 
 import {COLOR_DANGER, WORLD_SIZE} from '$routes/constants';
+import type {Writable} from 'svelte/store';
 
 // TODO rewrite this to use a route Svelte component? `dealt.dev/membrane/home`
 

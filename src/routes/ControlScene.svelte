@@ -8,7 +8,6 @@
 		getPixi,
 		createCamera,
 		getLayout,
-		Stage,
 		type ExitStage,
 		type Item,
 		enableGlobalHotkeys,
@@ -27,13 +26,10 @@
 	export let pixi = getPixi();
 	export let layout = getLayout();
 
-	// TODO BLOCK implement:
-	// TODO BLOCK show all items in a list
-	// TODO BLOCK item selection
-	// TODO BLOCK draggable/resizable pane component
+	// TODO resizable pane component
 	// TODO contextmenu to enable dragging on windows
 
-	// TODO BLOCK
+	// TODO BLOCK where does this belong?
 	type SceneMode = 'playing' | 'editing';
 	let mode: SceneMode = dev ? 'editing' : 'playing';
 
@@ -50,7 +46,7 @@
 	const camera = createCamera();
 	$: camera.setDimensions(WORLD_SIZE, WORLD_SIZE, $viewport.width, $viewport.height);
 
-	let stage: Stage | undefined | null;
+	let stage: Stage0 | undefined | null;
 	let setting_up: boolean | undefined;
 
 	let items: Array<Writable<Item>> | undefined;
@@ -66,7 +62,7 @@
 		setting_up = true;
 		if (stage) destroy_stage();
 		stage = new Stage0({exit, camera, viewport, layout});
-		void stage.setup({stageStates: []});
+		void stage.setup();
 		items = Array.from(stage.itemById.values(), (v) => writable(v)); // TODO BLOCK
 		$item_selection = items[0]; // TODO BLOCK make reactive
 		setting_up = false;
@@ -84,6 +80,18 @@
 		stage = null;
 	};
 	onDestroy(destroy_stage);
+
+	// TODO do something like this for storage, but user helpers
+	// const loadData = () => {
+	// 	localStorage.data
+	// }
+	// $: stage, updateFromData(loadData());
+	// const updateFromData = (data: Partial<StageData> | null) => {
+	// 	console.log(`updateFromData`, data);
+	// 	if (data) {
+	// 		stage.loadData(data);
+	// 	}
+	// };
 
 	// TODO refactor to be data-driven
 	let pane1_height = 256;

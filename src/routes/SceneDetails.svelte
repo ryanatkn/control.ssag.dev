@@ -1,23 +1,13 @@
 <script lang="ts">
-	import type {StageData, Stage} from '@feltcoop/dealt';
+	import type {Stage0} from '$routes/stage0';
 
-	export let stage: Stage; // TODO should this be a store? a component instance? refactor this component instead?
-	export let data: Partial<StageData> | null = null;
+	export let stage: Stage0; // TODO should this be a store? a component instance? refactor this component instead?
 
 	// TODO sohuld this be `StageDetails` or `SceneDetails` or something else?
 
-	let cameraUnlocked = !(data?.freezeCamera ?? false); // TODO see elsewhere too
+	$: ({freezeCamera} = stage);
 
-	$: stage, updateFromData(data);
-	const updateFromData = (data: Partial<StageData> | null) => {
-		console.log(`updateFromData`, data);
-		cameraUnlocked = !(data?.freezeCamera ?? false); // TODO see elsewhere too
-		if (data) {
-			stage.loadData(data);
-		}
-	};
-
-	$: meta = (stage.constructor as typeof Stage).meta;
+	$: meta = (stage.constructor as typeof Stage0).meta;
 </script>
 
 <div class="scene-details">
@@ -37,13 +27,16 @@
 			<fieldset>
 				<label class="row">
 					<div class="title">freezeCamera</div>
-					<input type="checkbox" bind:checked={cameraUnlocked} />
+					<!-- <input type="checkbox" bind:checked={$freezeCamera} /> -->
 				</label>
 			</fieldset>
 		</div>
 	</form>
 	<!-- TODO restart stage button -->
-	<button class="flush" on:click={() => stage.destroy()}>destroy stage</button>
+	<div class="row">
+		<button class="flush" on:click={() => stage.destroy()}>destroy stage</button>
+		<button class="flush" on:click={() => stage.restart()}>restart stage</button>
+	</div>
 </div>
 
 <style>
