@@ -15,6 +15,7 @@
 	} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
 	import {swallow} from '@feltjs/util/dom.js';
+	import {dev} from '$app/environment';
 
 	import {Stage0} from '$routes/stage0';
 	import Pane from '$lib/Pane.svelte';
@@ -33,7 +34,7 @@
 
 	// TODO BLOCK
 	type SceneMode = 'playing' | 'editing';
-	let mode: SceneMode = 'editing';
+	let mode: SceneMode = dev ? 'editing' : 'playing';
 
 	const toggleEditMode = (enable = mode !== 'editing'): void => {
 		mode = enable ? 'editing' : 'playing';
