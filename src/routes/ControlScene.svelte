@@ -97,7 +97,7 @@
 
 <svelte:window
 	on:keydown|capture={(e) => {
-		if (e.key === 'Escape' && enableGlobalHotkeys(e)) {
+		if (e.key === 'Escape' && enableGlobalHotkeys(e.target)) {
 			swallow(e);
 			toggleEditMode();
 		}
