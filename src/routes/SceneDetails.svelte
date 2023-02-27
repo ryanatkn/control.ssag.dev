@@ -16,16 +16,22 @@
 			stage.loadData(data);
 		}
 	};
+
+	$: meta = (stage.constructor as typeof Stage).meta;
 </script>
 
 <div class="scene-details">
 	<h2 class="pane-title">scene details</h2>
 	<form>
 		<div>
-			<fieldset>
+			<fieldset class="row">
 				<label>
 					<div class="title">stage name</div>
-					<input value={stage.constructor.name} />
+					<input value={meta.name} />
+				</label>
+				<label>
+					<div class="title">stage icon</div>
+					<input value={meta.icon} />
 				</label>
 			</fieldset>
 			<fieldset>

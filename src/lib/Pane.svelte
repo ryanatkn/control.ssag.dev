@@ -95,7 +95,7 @@
 		cursor: move;
 		border-radius: 0;
 		outline: var(--border_width) var(--border_style) var(--shadow_border_color);
-		opacity: 0.79;
+		opacity: 0.83;
 	}
 	.pane:hover,
 	.pane:focus-within {

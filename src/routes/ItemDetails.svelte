@@ -26,10 +26,10 @@
 					<label>
 						{#if $selected_item.type === 'polygon'}
 							<div class="title">points</div>
-							<input type="points" value={JSON.stringify($selected_item.points)} />
+							<input value={JSON.stringify($selected_item.points)} />
 						{:else if $selected_item.type === 'circle'}
 							<div class="title">radius</div>
-							<input type="radius" value={$selected_item.radius} />
+							<input type="number" value={$selected_item.radius} />
 						{:else}
 							TODO handle type {$selected_item.type}
 						{/if}
@@ -38,22 +38,22 @@
 				<fieldset class="row">
 					<label>
 						<div class="title">x</div>
-						<input type="x" value={$selected_item.x} />
+						<input type="number" value={$selected_item.x} />
 					</label>
 					<label>
 						<div class="title">y</div>
-						<input type="y" value={$selected_item.y} />
+						<input type="number" value={$selected_item.y} />
 					</label>
 				</fieldset>
 				{#if $selected_item.type === 'polygon'}
 					<fieldset class="row">
 						<label>
 							<div class="title">scale_x</div>
-							<input type="scale_x" value={JSON.stringify($selected_item.scale_x)} />
+							<input type="number" value={JSON.stringify($selected_item.scale_x)} />
 						</label>
 						<label>
 							<div class="title">scale_y</div>
-							<input type="scale_y" value={JSON.stringify($selected_item.scale_y)} />
+							<input type="number" value={JSON.stringify($selected_item.scale_y)} />
 						</label>
 					</fieldset>
 				{/if}
@@ -114,5 +114,9 @@
 
 	fieldset {
 		margin-bottom: var(--spacing_md);
+	}
+
+	fieldset.row > label {
+		flex: 1;
 	}
 </style>
