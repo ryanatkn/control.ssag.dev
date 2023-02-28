@@ -2,14 +2,13 @@
 	import {
 		type Item,
 		hexToRgb,
-		hslToHex,
 		rgbToHsl,
 		hexStringToRgb,
-		hslToStr,
 		rgbToHex,
 		rgbToHexString,
 		hslToRgb,
 	} from '@feltcoop/dealt';
+	import {swallow} from '@feltjs/util/dom.js';
 	import type {Stage0} from './stage0';
 
 	export let item: Item;
@@ -44,6 +43,14 @@
 	} = item);
 
 	// TODO BLOCK destroy is bugged, do we need `stage.destroy_item`? or `item.stage`?
+
+	// TODO upstream to @feltjs/util/dom.js?
+	const handleTargetValue =
+		(cb: (value: any, e: any) => void) =>
+		(e: any): void => {
+			swallow(e);
+			cb(e.target.value, e);
+		};
 </script>
 
 <div class="item-details">
@@ -103,25 +110,21 @@
 					<input
 						type="color"
 						value={rgbToHexString(...hslToRgb(...$color))}
-						on:input={(e) => {
-							$color = rgbToHsl(...hexStringToRgb(e.target.value));
-						}}
+						on:input={handleTargetValue((value) => {
+							$color = rgbToHsl(...hexStringToRgb(value));
+						})}
 					/>
 				</label>
 			</fieldset>
 			<fieldset>
 				<label>
 					<div class="title">graphicsLineColor</div>
-					<!-- TODO how to bind value? refactor this -->
 					<input
 						type="color"
 						value={rgbToHexString(...hexToRgb($graphicsLineColor))}
-						on:input={(e) => {
-							console.log(`$color before`, $color);
-							console.log(`e.target.value`, e.target.value);
-							$graphicsLineColor = rgbToHex(...hexStringToRgb(e.target.value));
-							console.log(`$color`, $color);
-						}}
+						on:input={handleTargetValue((value) => {
+							$graphicsLineColor = rgbToHex(...hexStringToRgb(value));
+						})}
 					/>
 				</label>
 			</fieldset>
