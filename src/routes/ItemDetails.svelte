@@ -1,5 +1,15 @@
 <script lang="ts">
-	import {type Item, hexToRgb, hslToHex, rgbToHsl, hslToStr} from '@feltcoop/dealt';
+	import {
+		type Item,
+		hexToRgb,
+		hslToHex,
+		rgbToHsl,
+		hexStringToRgb,
+		hslToStr,
+		rgbToHex,
+		rgbToHexString,
+		hslToRgb,
+	} from '@feltcoop/dealt';
 	import type {Stage0} from './stage0';
 
 	export let item: Item;
@@ -92,11 +102,33 @@
 					<div class="title">color</div>
 					<input
 						type="color"
-						value={hslToHex(...$color)}
-						on:change={(e) => {
-							$color = rgbToHsl(...hexToRgb(e.target.value));
+						value={rgbToHexString(...hslToRgb(...$color))}
+						on:input={(e) => {
+							$color = rgbToHsl(...hexStringToRgb(e.target.value));
 						}}
 					/>
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<div class="title">graphicsLineColor</div>
+					<!-- TODO how to bind value? refactor this -->
+					<input
+						type="color"
+						value={rgbToHexString(...hexToRgb($graphicsLineColor))}
+						on:input={(e) => {
+							console.log(`$color before`, $color);
+							console.log(`e.target.value`, e.target.value);
+							$graphicsLineColor = rgbToHex(...hexStringToRgb(e.target.value));
+							console.log(`$color`, $color);
+						}}
+					/>
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<div class="title">graphicsLineAlpha</div>
+					<input type="range" min={0} max={1} step={0.01} bind:value={$graphicsLineAlpha} />
 				</label>
 			</fieldset>
 			<fieldset class="row">
@@ -121,28 +153,6 @@
 					</label>
 				</fieldset>
 			{/if}
-			<fieldset>
-				<label>
-					<div class="title">graphicsLineColor</div>
-					<!-- TODO how to bind value? refactor this -->
-					<input
-						type="color"
-						value={hslToStr(...rgbToHsl(...hexToRgb($graphicsLineColor)))}
-						on:change={(e) => {
-							console.log(`$color before`, $color);
-							console.log(`e.target.value`, e.target.value);
-							$color = rgbToHsl(...hexToRgb(e.target.value));
-							console.log(`$color`, $color);
-						}}
-					/>
-				</label>
-			</fieldset>
-			<fieldset>
-				<label>
-					<div class="title">graphicsLineAlpha</div>
-					<input type="range" min={0} max={1} step={0.01} bind:value={$graphicsLineAlpha} />
-				</label>
-			</fieldset>
 			<fieldset class="row">
 				<label>
 					<div class="title">text</div>
