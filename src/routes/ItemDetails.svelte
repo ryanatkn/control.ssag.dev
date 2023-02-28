@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {type Item, hexToRgb, hslToHex, rgbToHsl} from '@feltcoop/dealt';
+	import {type Item, hexToRgb, hslToHex, rgbToHsl, hslToStr} from '@feltcoop/dealt';
 	import type {Stage0} from './stage0';
 
 	export let item: Item;
@@ -123,16 +123,18 @@
 			{/if}
 			<fieldset>
 				<label>
-					<div class="title">id</div>
-					<!-- TODO enable editing -->
-					<input value={id} disabled={true} />
-				</label>
-			</fieldset>
-			<fieldset>
-				<label>
 					<div class="title">graphicsLineColor</div>
-					<!-- TODO how to bind value? -->
-					<input type="color" value={hexToRgb($graphicsLineColor)} />
+					<!-- TODO how to bind value? refactor this -->
+					<input
+						type="color"
+						value={hslToStr(...rgbToHsl(...hexToRgb($graphicsLineColor)))}
+						on:change={(e) => {
+							console.log(`$color before`, $color);
+							console.log(`e.target.value`, e.target.value);
+							$color = rgbToHsl(...hexToRgb(e.target.value));
+							console.log(`$color`, $color);
+						}}
+					/>
 				</label>
 			</fieldset>
 			<fieldset>
@@ -172,6 +174,13 @@
 				</label>
 			</fieldset>
 		</div>
+		<fieldset>
+			<label>
+				<div class="title">id</div>
+				<!-- TODO enable editing -->
+				<input value={id} disabled={true} />
+			</label>
+		</fieldset>
 	</form>
 	<button class="flush" on:click={() => stage.removeItem(item)}>destroy {$type}</button>
 </div>
