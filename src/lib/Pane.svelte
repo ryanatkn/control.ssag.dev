@@ -9,6 +9,8 @@
 	export let offset_x = 0;
 	export let offset_y = 0;
 
+	// TODO set z-index based on most recently clicked
+
 	let dragging = false;
 	$: offset_x_clamped = Math.max(0, Math.min(offset_x, $layout.width - width));
 	$: offset_y_clamped = Math.max(0, Math.min(offset_y, $layout.height - height));
