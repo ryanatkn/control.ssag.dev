@@ -11,13 +11,15 @@
 
 	$: ({
 		type,
-		points,
-		radius,
+		id,
+		speed,
+		strength,
 		x,
 		y,
+		radius,
+		points,
 		scale_x,
 		scale_y,
-		id,
 		graphicsLineColor,
 		graphicsLineAlpha,
 		text,
@@ -49,6 +51,16 @@
 					{:else}
 						TODO handle type {$type}
 					{/if}
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">speed</div>
+					<input type="number" bind:value={$speed} />
+				</label>
+				<label>
+					<div class="title">strength</div>
+					<input type="number" bind:value={$strength} />
 				</label>
 			</fieldset>
 			<fieldset class="row">
