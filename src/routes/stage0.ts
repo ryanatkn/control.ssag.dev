@@ -150,7 +150,7 @@ export class Stage0 extends Stage {
 	}
 
 	override update(dt: number): void {
-		const {controlled, controller, target} = this;
+		const {controller, target} = this;
 		let {$controlled} = this;
 
 		super.update(dt);
@@ -178,7 +178,6 @@ export class Stage0 extends Stage {
 			) {
 				const item = (itemA === $controlled ? itemB : itemA) as Item<CircleBody>;
 				if (this.swapControl(item)) {
-					controlled.set(item);
 					$controlled = this.$controlled; // is a bit hacky
 				}
 			}
