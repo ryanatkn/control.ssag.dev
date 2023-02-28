@@ -15,7 +15,8 @@
 <li class="item-layer" class:selected>
 	<button
 		class:selected
-		on:click={() => ($item_selection = item)}
+		class="deselectable"
+		on:click={() => ($item_selection = selected ? null : item)}
 		style:--text_color={hslToStr(...$color)}
 	>
 		{#if controlling}

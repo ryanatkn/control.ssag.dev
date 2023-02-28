@@ -49,10 +49,11 @@
 	let stage: Stage0 | undefined | null;
 	let setting_up: boolean | undefined;
 
-	let items: Item[] | undefined;
+	let items: Writable<Item[]> | undefined;
 	const item_selection: Writable<Item | null> = writable(null);
 
 	$: controlled = stage?.controlled;
+	$: items = stage?.items;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -65,8 +66,6 @@
 		if (stage) destroy_stage();
 		stage = new Stage0({exit, camera, viewport, layout});
 		void stage.setup();
-		items = Array.from(stage.itemById.values()); // TODO BLOCK
-		$item_selection = items[0]; // TODO BLOCK make reactive
 		setting_up = false;
 	};
 
