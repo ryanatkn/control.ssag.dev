@@ -127,7 +127,7 @@
 			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
 				{#if $item_selection}
-					<ItemDetails item={$item_selection} {controlled} />
+					<ItemDetails item={$item_selection} {stage} />
 				{/if}
 				<!-- TODO text-overflow -->
 			</Pane>

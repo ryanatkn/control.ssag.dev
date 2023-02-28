@@ -1,9 +1,11 @@
 <script lang="ts">
 	import {type Item, hexToRgb} from '@feltcoop/dealt';
-	import type {Writable} from 'svelte/store';
+	import type {Stage0} from './stage0';
 
 	export let item: Item;
-	export let controlled: Writable<Item | null> | undefined = undefined;
+	export let stage: Stage0;
+
+	$: ({controlled} = stage);
 
 	$: controlling = item === $controlled;
 
@@ -61,8 +63,8 @@
 			</fieldset>
 			{#if controlled !== undefined}
 				<fieldset>
-					<label class="row">
-						<input type="checkbox" checked={controlling} disabled={true} />
+					<label class="row" on:input={() => stage.swapControl(controlling ? null : item)}>
+						<input type="checkbox" checked={controlling} />
 						<div class="title">controlling</div>
 					</label>
 				</fieldset>
