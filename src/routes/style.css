@@ -7,13 +7,7 @@
 	border-radius: 0;
 }
 
-/* TODO rename? */
-.pane-title {
-	position: sticky;
-	top: 0;
-	background-color: var(--bg);
-	padding: var(--spacing_xs3) var(--spacing_md);
-	font-size: var(--font_size_sm);
-	text-align: center;
-	text-transform: uppercase;
+/* TODO upstream to dealt? */
+.plain-button {
+	--button_color_hover: var(--tint_light_2) !important;
 }

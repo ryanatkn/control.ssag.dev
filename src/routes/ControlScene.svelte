@@ -119,12 +119,15 @@
 		<SurfaceWithController controller={stage.controller} />
 		{#if mode === 'editing'}
 			<Pane bind:height={pane1_height}>
+				<svelte:fragment slot="header">items</svelte:fragment>
 				<ItemLayers {items} {item_selection} {controlled} />
 			</Pane>
 			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_y={pane2_offset_y}>
+				<svelte:fragment slot="header">scene details</svelte:fragment>
 				<SceneDetails {stage} />
 			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
+				<svelte:fragment slot="header">item details</svelte:fragment>
 				{#if $item_selection}
 					<ItemDetails item={$item_selection} {stage} />
 				{/if}

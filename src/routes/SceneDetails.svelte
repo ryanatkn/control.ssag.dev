@@ -11,7 +11,6 @@
 </script>
 
 <div class="scene-details">
-	<h2 class="pane-title">scene details</h2>
 	<form>
 		<div>
 			<fieldset class="row">

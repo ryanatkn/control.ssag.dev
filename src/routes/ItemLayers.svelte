@@ -10,7 +10,6 @@
 </script>
 
 <div class="item-layers">
-	<h2 class="pane-title">items</h2>
 	<ol>
 		{#if $items}
 			{#each $items as item (item)}

@@ -59,6 +59,14 @@
 	// 	if (current_x !== null) current_x += dx;
 	// 	if (current_y !== null) current_y += dy;
 	// };
+
+	let toggled = true;
+	const toggle = (): void => {
+		toggled = !toggled;
+	};
+
+	$: finalHeight = toggled ? height + 'px' : 'var(--input_height_sm)';
+	$: console.log(`finalHeight`, finalHeight);
 </script>
 
 <!-- TODO draggable action? or higher order component? -->
@@ -69,11 +77,18 @@
 	on:pointerdown={start_dragging}
 	on:pointercancel={stop_dragging}
 	style:--width="{width}px"
-	style:--height="{height}px"
+	style:--height={finalHeight}
 	style:--offset_x="{offset_x_clamped}px"
 	style:--offset_y="{offset_y_clamped}px"
 >
-	<slot />
+	<h2>
+		<button class="plain-button" on:click={toggle}>
+			<slot name="header" />
+		</button>
+	</h2>
+	{#if toggled}
+		<slot />
+	{/if}
 </div>
 <!-- TODO use `Surface`? -->
 {#if dragging}
@@ -107,6 +122,18 @@
 	.pane:hover,
 	.pane:focus-within {
 		opacity: unset;
+	}
+	h2 {
+		position: sticky;
+		top: 0;
+		background-color: var(--bg);
+		display: flex;
+		justify-content: center;
+	}
+	h2 button {
+		font-size: var(--font_size_sm);
+		text-transform: uppercase;
+		--input_height: var(--input_height_sm);
 	}
 	.dragging {
 		outline-width: var(--border_width_3);

@@ -35,7 +35,6 @@
 </script>
 
 <div class="item-details">
-	<h2 class="pane-title">item details</h2>
 	<form>
 		<div>
 			<fieldset class="row">
