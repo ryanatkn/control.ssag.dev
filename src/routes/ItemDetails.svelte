@@ -23,6 +23,11 @@
 		graphicsLineColor,
 		graphicsLineAlpha,
 		text,
+		textFill,
+		fontSize,
+		fontFamily,
+		textOffsetX,
+		textOffsetY,
 		color,
 	} = item);
 
@@ -118,6 +123,32 @@
 					<div class="title">text</div>
 					<input bind:value={$text} />
 				</label>
+				<label>
+					<div class="title">textFill</div>
+					<input type="color" bind:value={$textFill} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">fontSize</div>
+					<input type="number" bind:value={$fontSize} />
+				</label>
+				<label>
+					<div class="title">fontFamily</div>
+					<input bind:value={$fontFamily} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">textOffsetX</div>
+					<input type="number" bind:value={$textOffsetX} />
+				</label>
+				<label>
+					<div class="title">textOffsetY</div>
+					<input type="number" bind:value={$textOffsetY} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
 				<label>
 					<div class="title">color</div>
 					<input type="color" bind:value={$color} />
