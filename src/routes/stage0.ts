@@ -158,10 +158,15 @@ export class Stage0 extends Stage {
 		this.sim.update(dt, (itemA, itemB, result) => {
 			// TODO make a better system
 			if (
-				(itemA === $controlled && itemB.$color === COLOR_DANGER) ||
-				(itemB === $controlled && itemA.$color === COLOR_DANGER)
+				(itemA.$color === COLOR_DEFAULT && itemB.$color === COLOR_DANGER) ||
+				(itemB.$color === COLOR_DEFAULT && itemA.$color === COLOR_DANGER)
 			) {
-				this.restart();
+				const destroyed = itemA.$color === COLOR_DANGER ? itemB : itemA;
+				if (destroyed === $controlled) {
+					this.restart();
+				} else {
+					destroyed.destroy();
+				}
 			} else if (
 				(itemA === $controlled && itemB === target) ||
 				(itemB === $controlled && itemA === target)
