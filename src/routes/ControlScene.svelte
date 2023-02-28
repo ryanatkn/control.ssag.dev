@@ -49,8 +49,10 @@
 	let stage: Stage0 | undefined | null;
 	let setting_up: boolean | undefined;
 
-	let items: Array<Writable<Item>> | undefined;
-	const item_selection: Writable<Writable<Item> | null> = writable(null);
+	let items: Item[] | undefined;
+	const item_selection: Writable<Item | null> = writable(null);
+
+	$: controlled = stage?.controlled;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -63,7 +65,7 @@
 		if (stage) destroy_stage();
 		stage = new Stage0({exit, camera, viewport, layout});
 		void stage.setup();
-		items = Array.from(stage.itemById.values(), (v) => writable(v)); // TODO BLOCK
+		items = Array.from(stage.itemById.values()); // TODO BLOCK
 		$item_selection = items[0]; // TODO BLOCK make reactive
 		setting_up = false;
 	};
@@ -118,14 +120,14 @@
 		<SurfaceWithController controller={stage.controller} />
 		{#if mode === 'editing'}
 			<Pane bind:height={pane1_height}>
-				<ItemLayers {items} {item_selection} />
+				<ItemLayers {items} {item_selection} {controlled} />
 			</Pane>
 			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_y={pane2_offset_y}>
 				<SceneDetails {stage} />
 			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
 				{#if $item_selection}
-					<ItemDetails item={$item_selection} {item_selection} />
+					<ItemDetails item={$item_selection} {controlled} />
 				{/if}
 				<!-- TODO text-overflow -->
 			</Pane>

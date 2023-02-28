@@ -20,7 +20,6 @@ import {
 } from '@feltcoop/dealt';
 
 import {COLOR_DANGER, WORLD_SIZE} from '$routes/constants';
-import type {Writable} from 'svelte/store';
 
 // TODO rewrite this to use a route Svelte component? `dealt.dev/membrane/home`
 
@@ -146,55 +145,56 @@ export class Stage0 extends Stage {
 				this.target = item as Item<CircleBody>;
 			}
 		}
-		this.swapControl(this.controlled, true);
+		this.swapControl(this.$controlled, true);
 		console.log('set up');
 	}
 
 	override update(dt: number): void {
-		const {controller, target} = this;
-		let {controlled} = this;
+		const {controlled, controller, target} = this;
+		let {$controlled} = this;
 
 		super.update(dt);
 
 		this.sim.update(dt, (itemA, itemB, result) => {
 			// TODO make a better system
 			if (
-				(itemA === controlled && itemB.color === COLOR_DANGER) ||
-				(itemB === controlled && itemA.color === COLOR_DANGER)
+				(itemA === $controlled && itemB.$color === COLOR_DANGER) ||
+				(itemB === $controlled && itemA.$color === COLOR_DANGER)
 			) {
 				this.restart();
 			} else if (
-				(itemA === controlled && itemB === target) ||
-				(itemB === controlled && itemA === target)
+				(itemA === $controlled && itemB === target) ||
+				(itemB === $controlled && itemA === target)
 			) {
 				this.collideWithTarget();
 			} else if (
-				(itemA === controlled && itemB.color === COLOR_DEFAULT) ||
-				(itemB === controlled && itemA.color === COLOR_DEFAULT)
+				(itemA === $controlled && itemB.$color === COLOR_DEFAULT) ||
+				(itemB === $controlled && itemA.$color === COLOR_DEFAULT)
 			) {
-				const item = (itemA === controlled ? itemB : itemA) as Item<CircleBody>;
+				const item = (itemA === $controlled ? itemB : itemA) as Item<CircleBody>;
 				if (this.swapControl(item)) {
-					controlled = item;
+					controlled.set(item);
+					$controlled = this.$controlled; // is a bit hacky
 				}
 			}
 			collide(itemA, itemB, result);
 		});
 
-		if (controlled) {
-			updateItemDirection(controller, controlled, this.$camera, this.$viewport, this.$layout);
+		if ($controlled) {
+			updateItemDirection(controller, $controlled, this.$camera, this.$viewport, this.$layout);
 
-			if (this.freezeCamera) {
-				if (!this.bounds.body.collides(controlled.body, collisionResult)) {
+			if (this.$freezeCamera) {
+				if (!this.bounds.body.collides($controlled.body, collisionResult)) {
 					if (this.hasAnyDanger()) {
 						this.restart();
 					} else {
-						this.freezeCamera = false;
-						controlled.freezeCamera = false;
+						this.freezeCamera.set(false);
+						$controlled.freezeCamera.set(false);
 					}
 				}
 			} else {
 				// TODO different algorithms for tracking the player with the camera (`camera.follow` option?)
-				this.camera.setPosition(controlled.x, controlled.y);
+				this.camera.setPosition($controlled.$x, $controlled.$y);
 			}
 		}
 
@@ -206,7 +206,7 @@ export class Stage0 extends Stage {
 	// TODO rethink - maybe a more generic API?
 	hasAnyDanger(): boolean {
 		for (const item of this.sim.items) {
-			if (item.color === COLOR_DANGER) return true;
+			if (item.$color === COLOR_DANGER) return true;
 		}
 		return false;
 	}
@@ -219,37 +219,37 @@ export class Stage0 extends Stage {
 	timeLastSwapped: number | undefined;
 
 	swapControl(item: Item | null, force = false): boolean {
-		const {controlled, time} = this;
-		if (controlled === item) {
+		const {$controlled, time} = this;
+		if ($controlled === item) {
 			if (!force) return false;
 			this.timeLastSwapped = undefined;
 		}
-		if (controlled) {
+		if ($controlled) {
 			if (this.timeLastSwapped !== undefined) {
 				const timeElapsed = time - this.timeLastSwapped;
 				if (time > CONTROL_SWAP_COOLDOWN && timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
 			}
-			controlled.graphicsFillColor = 0;
-			controlled.graphicsFillAlpha = 0;
-			controlled.directionX = 0;
-			controlled.directionY = 0;
+			$controlled.graphicsFillColor.set(0);
+			$controlled.graphicsFillAlpha.set(0);
+			$controlled.directionX = 0;
+			$controlled.directionY = 0;
 		}
 		this.timeLastSwapped = time;
-		this.controlled = item;
+		this.controlled.set(item);
 		if (item) {
-			item.graphicsFillColor = COLOR_PLAYER_HEX;
-			item.graphicsFillAlpha = 1;
-			this.freezeCamera = item.freezeCamera ?? false;
+			item.graphicsFillColor.set(COLOR_PLAYER_HEX);
+			item.graphicsFillAlpha.set(1);
+			this.freezeCamera.set(item.$freezeCamera ?? false);
 		}
 		return true;
 	}
 
 	collideWithTarget(): void {
 		for (const item of this.sim.items) {
-			if (item.color === COLOR_DANGER) {
-				item.color = COLOR_DEFAULT;
+			if (item.$color === COLOR_DANGER) {
+				item.color.set(COLOR_DEFAULT);
 			}
 		}
-		this.target.color = COLOR_ROOTED;
+		this.target.color.set(COLOR_ROOTED);
 	}
 }

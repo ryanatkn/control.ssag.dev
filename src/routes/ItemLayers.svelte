@@ -4,8 +4,9 @@
 
 	import ItemLayer from '$routes/ItemLayer.svelte';
 
-	export let items: Array<Writable<Item>> | undefined;
-	export let item_selection: Writable<Writable<Item> | null>;
+	export let items: Item[] | undefined;
+	export let item_selection: Writable<Item | null>;
+	export let controlled: Writable<Item | null> | undefined = undefined;
 </script>
 
 <div class="item-layers">
@@ -13,7 +14,7 @@
 	<ol>
 		{#if items}
 			{#each items as item (item)}
-				<ItemLayer {item} {item_selection} />
+				<ItemLayer {item} {item_selection} {controlled} />
 			{/each}
 		{/if}
 	</ol>
