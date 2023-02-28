@@ -165,7 +165,7 @@ export class Stage0 extends Stage {
 				if (destroyed === $controlled) {
 					this.restart();
 				} else {
-					destroyed.destroy();
+					this.removeItem(destroyed);
 				}
 			} else if (
 				(itemA === $controlled && itemB === target) ||
