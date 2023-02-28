@@ -24,7 +24,7 @@
 			@
 		{/if}
 		{#if selected}
-			⇒
+			↳
 		{/if}
 		{$type}
 		<small>
