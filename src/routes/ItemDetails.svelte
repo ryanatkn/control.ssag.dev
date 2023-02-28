@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {type Item, hexToRgb} from '@feltcoop/dealt';
+	import {type Item, hexToRgb, hslToHex, rgbToHsl} from '@feltcoop/dealt';
 	import type {Stage0} from './stage0';
 
 	export let item: Item;
@@ -14,6 +14,8 @@
 		id,
 		speed,
 		strength,
+		ghostly,
+		invisible,
 		x,
 		y,
 		radius,
@@ -60,11 +62,41 @@
 			<fieldset class="row">
 				<label>
 					<div class="title">speed</div>
-					<input type="number" bind:value={$speed} />
+					<input type="number" bind:value={$speed} step={0.05} />
 				</label>
 				<label>
 					<div class="title">strength</div>
 					<input type="number" bind:value={$strength} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">ghostly</div>
+					<input type="checkbox" bind:checked={$ghostly} />
+				</label>
+				<label>
+					<div class="title">invisible</div>
+					<input type="checkbox" bind:checked={$invisible} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">controlling</div>
+					<input
+						type="checkbox"
+						checked={controlling}
+						on:change={() => stage.swapControl(controlling ? null : item)}
+					/>
+				</label>
+				<label>
+					<div class="title">color</div>
+					<input
+						type="color"
+						value={hslToHex(...$color)}
+						on:change={(e) => {
+							$color = rgbToHsl(...hexToRgb(e.target.value));
+						}}
+					/>
 				</label>
 			</fieldset>
 			<fieldset class="row">
@@ -77,14 +109,6 @@
 					<input type="number" bind:value={$y} />
 				</label>
 			</fieldset>
-			{#if controlled !== undefined}
-				<fieldset>
-					<label class="row" on:input={() => stage.swapControl(controlling ? null : item)}>
-						<input type="checkbox" checked={controlling} />
-						<div class="title">controlling</div>
-					</label>
-				</fieldset>
-			{/if}
 			{#if $type === 'polygon'}
 				<fieldset class="row">
 					<label>
@@ -108,7 +132,7 @@
 				<label>
 					<div class="title">graphicsLineColor</div>
 					<!-- TODO how to bind value? -->
-					<input type="color" value={$graphicsLineColor && hexToRgb($graphicsLineColor)} />
+					<input type="color" value={hexToRgb($graphicsLineColor)} />
 				</label>
 			</fieldset>
 			<fieldset>
@@ -145,12 +169,6 @@
 				<label>
 					<div class="title">textOffsetY</div>
 					<input type="number" bind:value={$textOffsetY} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">color</div>
-					<input type="color" bind:value={$color} />
 				</label>
 			</fieldset>
 		</div>
