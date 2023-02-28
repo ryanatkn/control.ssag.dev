@@ -82,18 +82,6 @@
 	};
 	onDestroy(destroy_stage);
 
-	// TODO do something like this for storage, but user helpers
-	// const loadData = () => {
-	// 	localStorage.data
-	// }
-	// $: stage, updateFromData(loadData());
-	// const updateFromData = (data: Partial<StageData> | null) => {
-	// 	console.log(`updateFromData`, data);
-	// 	if (data) {
-	// 		stage.loadData(data);
-	// 	}
-	// };
-
 	// TODO refactor to be data-driven
 	let pane1_height = 256;
 	let pane2_width = 256;
