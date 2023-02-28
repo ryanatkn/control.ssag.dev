@@ -26,8 +26,8 @@
 			</fieldset>
 			<fieldset>
 				<label class="row">
-					<div class="title">freezeCamera</div>
 					<input type="checkbox" bind:checked={$freezeCamera} />
+					<div class="title">freezeCamera</div>
 				</label>
 			</fieldset>
 		</div>

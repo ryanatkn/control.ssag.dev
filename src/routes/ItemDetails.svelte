@@ -59,14 +59,12 @@
 					<input type="number" bind:value={$y} />
 				</label>
 			</fieldset>
-			{#if controlling}
-				<fieldset>
-					<label class="row">
-						<div class="title">controlling</div>
-						<input type="checkbox" checked={true} disabled={true} />
-					</label>
-				</fieldset>
-			{/if}
+			<fieldset>
+				<label class="row">
+					<input type="checkbox" checked={controlling} disabled={true} />
+					<div class="title">controlling</div>
+				</label>
+			</fieldset>
 			{#if $type === 'polygon'}
 				<fieldset class="row">
 					<label>
