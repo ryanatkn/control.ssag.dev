@@ -97,7 +97,7 @@
 	// TODO refactor to be data-driven
 	let pane1_height = 256;
 	let pane2_width = 256;
-	let pane2_height = 256;
+	let pane2_height = 205;
 	let pane2_offset_y = $layout.height - pane2_height;
 	let pane3_width = 256;
 	let pane3_height = 384;

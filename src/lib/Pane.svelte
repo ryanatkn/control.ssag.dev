@@ -66,7 +66,6 @@
 	};
 
 	$: finalHeight = toggled ? height + 'px' : 'var(--input_height_sm)';
-	$: console.log(`finalHeight`, finalHeight);
 </script>
 
 <!-- TODO draggable action? or higher order component? -->

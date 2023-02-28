@@ -160,13 +160,11 @@
 
 <style>
 	.item-details {
-		height: 100%;
 		display: flex;
 		flex-direction: column;
 	}
 
 	form {
-		overflow: auto;
 		flex: 1;
 	}
 

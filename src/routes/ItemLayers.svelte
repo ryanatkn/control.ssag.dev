@@ -7,9 +7,14 @@
 	export let items: Writable<Item[]> | undefined;
 	export let item_selection: Writable<Item | null>;
 	export let controlled: Writable<Item | null> | undefined = undefined;
+
+	const create = () => alert('TODO');
 </script>
 
 <div class="item-layers">
+	{#if $items && $items.length > 5}
+		<button class="flush" on:click={create}>create item</button>
+	{/if}
 	<ol>
 		{#if $items}
 			{#each $items as item (item)}
@@ -17,18 +22,16 @@
 			{/each}
 		{/if}
 	</ol>
-	<button class="flush" on:click={() => alert('TODO')}>create item</button>
+	<button class="flush" on:click={create}>create item</button>
 </div>
 
 <style>
 	.item-layers {
-		height: 100%;
 		display: flex;
 		flex-direction: column;
 	}
 
 	ol {
-		overflow: auto;
 		flex: 1;
 	}
 </style>
