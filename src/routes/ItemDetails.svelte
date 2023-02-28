@@ -20,7 +20,7 @@
 		graphicsLineAlpha,
 		text,
 		color,
-	} = $item);
+	} = item);
 
 	// TODO BLOCK destroy is bugged, do we need `stage.destroy_item`? or `item.stage`?
 </script>
@@ -111,7 +111,7 @@
 			</fieldset>
 		</div>
 	</form>
-	<button class="flush" on:click={() => $item.destroy()}>destroy {$type}</button>
+	<button class="flush" on:click={() => item.destroy()}>destroy {$type}</button>
 </div>
 
 <style>
