@@ -29,7 +29,7 @@
 	// TODO resizable pane component
 	// TODO contextmenu to enable dragging on windows
 
-	// TODO BLOCK where does this belong?
+	// TODO where does this belong?
 	type SceneMode = 'playing' | 'editing';
 	let mode: SceneMode = dev ? 'editing' : 'playing';
 
