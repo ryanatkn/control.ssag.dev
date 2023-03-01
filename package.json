@@ -26,13 +26,13 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "devDependencies": {
-    "@feltcoop/dealt": "^0.13.3",
+    "@feltcoop/dealt": "^0.14.0",
     "@feltjs/eslint-config": "^0.2.1",
-    "@feltjs/felt-ui": "^0.49.0",
+    "@feltjs/felt-ui": "^0.50.0",
     "@feltjs/gro": "^0.71.0",
-    "@feltjs/util": "^0.7.2",
+    "@feltjs/util": "^0.7.3",
     "@sveltejs/adapter-static": "^2.0.1",
-    "@sveltejs/kit": "^1.8.8",
+    "@sveltejs/kit": "^1.9.1",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.35.0",

@@ -52,7 +52,6 @@
 	let items: Writable<Item[]> | undefined;
 	const item_selection: Writable<Item | null> = writable(null);
 
-	$: controlled = stage?.controlled;
 	$: items = stage?.items;
 
 	const exit: ExitStage = (outcome) => {
@@ -108,7 +107,7 @@
 		{#if mode === 'editing'}
 			<Pane bind:height={pane1_height}>
 				<svelte:fragment slot="header">items</svelte:fragment>
-				<ItemLayers {items} {item_selection} {controlled} />
+				<ItemLayers {stage} {items} {item_selection} />
 			</Pane>
 			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_y={pane2_offset_y}>
 				<svelte:fragment slot="header">scene details</svelte:fragment>

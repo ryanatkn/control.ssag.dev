@@ -71,7 +71,6 @@
 </script>
 
 <!-- TODO draggable action? or higher order component? -->
-<!-- TODO maybe `dragging` class for styling/children? -->
 <div
 	class="pane"
 	class:dragging

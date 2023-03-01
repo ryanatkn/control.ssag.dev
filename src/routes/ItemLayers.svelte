@@ -3,12 +3,15 @@
 	import type {Writable} from 'svelte/store';
 
 	import ItemLayer from '$routes/ItemLayer.svelte';
+	import type {Stage0} from '$routes/stage0';
 
+	export let stage: Stage0;
 	export let items: Writable<Item[]> | undefined;
 	export let item_selection: Writable<Item | null>;
-	export let controlled: Writable<Item | null> | undefined = undefined;
 
-	const create = () => alert('TODO');
+	$: ({controlled} = stage);
+
+	const create = () => {};
 </script>
 
 <div class="item-layers">
