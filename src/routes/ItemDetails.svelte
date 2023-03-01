@@ -93,7 +93,7 @@
 			<fieldset class="centered">
 				<div class="title">tags</div>
 				<input
-					value={tags ? Array.from(tags).join(', ') : ''}
+					value={$tags ? $tags.join(', ') : ''}
 					disabled={true}
 					title="TODO enable editing this"
 				/>
