@@ -21,7 +21,7 @@ import {
 
 import {COLOR_DANGER, WORLD_SIZE} from '$routes/constants';
 
-// TODO rewrite this to use a route Svelte component? `dealt.dev/membrane/home`
+// TODO rewrite this to use a route Svelte component?
 
 // TODO what if this file were named `home.stage.ts` instead of `stage0.ts` ?
 
