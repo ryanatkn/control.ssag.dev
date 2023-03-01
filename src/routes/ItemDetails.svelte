@@ -15,6 +15,8 @@
 	export let item: Item;
 	export let stage: Stage0;
 
+	const GRAPHICS_LINE_WIDTH_MAX = 4;
+
 	$: ({controlled} = stage);
 
 	$: controlling = item === $controlled;
@@ -33,6 +35,7 @@
 		tags,
 		scale_x,
 		scale_y,
+		graphicsLineWidth,
 		graphicsLineColor,
 		graphicsLineAlpha,
 		text,
@@ -126,6 +129,27 @@
 							$color = rgbToHsl(...hexStringToRgb(value));
 						})}
 					/>
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<div class="title">graphicsLineWidth</div>
+					<div class="row">
+						<input
+							type="range"
+							min={0}
+							max={GRAPHICS_LINE_WIDTH_MAX}
+							step={1}
+							bind:value={$graphicsLineWidth}
+						/>
+						<input
+							type="number"
+							min={0}
+							max={GRAPHICS_LINE_WIDTH_MAX}
+							step={1}
+							bind:value={$graphicsLineWidth}
+						/>
+					</div>
 				</label>
 			</fieldset>
 			<fieldset>
