@@ -6,8 +6,7 @@
 	export let item_selection: Writable<Item | null>;
 	export let controlled: Writable<Item | null> | undefined = undefined;
 
-	$: ({type, color} = item);
-	$: tags = item.tags && Array.from(item.tags);
+	$: ({type, color, tags} = item);
 	$: selected = item === $item_selection;
 	$: controlling = item === $controlled;
 </script>
@@ -28,8 +27,8 @@
 		{/if}
 		{$type}
 		<small>
-			{#if tags}
-				{tags[0]}{#if tags.length > 1} +{tags.length - 1}{/if}
+			{#if $tags}
+				{$tags[0]}{#if $tags.length > 1} +{$tags.length - 1}{/if}
 			{:else}
 				{item.id.slice(0, 3)}..{item.id.slice(-3)}
 			{/if}
