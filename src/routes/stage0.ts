@@ -139,9 +139,9 @@ export class Stage0 extends Stage {
 	override async setup(): Promise<void> {
 		// TODO do this better, maybe with `tags` automatically, same with `bounds`
 		for (const item of this.itemById.values()) {
-			if (item.tags?.has('bounds')) {
+			if (item.$tags?.includes('bounds')) {
 				this.bounds = item as Item<PolygonBody>;
-			} else if (item.tags?.has('target')) {
+			} else if (item.$tags?.includes('target')) {
 				this.target = item as Item<CircleBody>;
 			}
 		}
@@ -188,7 +188,7 @@ export class Stage0 extends Stage {
 			updateItemDirection(controller, $controlled, this.$camera, this.$viewport, this.$layout);
 
 			if (this.$freezeCamera) {
-				if (!this.bounds.body.collides($controlled.body, collisionResult)) {
+				if (!this.bounds.$body.collides($controlled.$body, collisionResult)) {
 					if (this.hasAnyDanger()) {
 						this.restart();
 					} else {
