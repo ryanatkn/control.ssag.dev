@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type {Item} from '@feltcoop/dealt';
+	import {Item} from '@feltcoop/dealt';
+	import {omit} from '@feltjs/util';
 	import type {Writable} from 'svelte/store';
 
 	import ItemLayer from '$routes/ItemLayer.svelte';
@@ -11,7 +12,12 @@
 
 	$: ({controlled} = stage);
 
-	const create = () => {};
+	const create = (): void => {
+		// TODO for this initial data, what would be better than this for users?
+		const item = new Item(stage.collisions, omit($item_selection?.toData()));
+		stage.addItem(item);
+		$item_selection = item;
+	};
 </script>
 
 <div class="item-layers">
