@@ -43,6 +43,8 @@
 		textOffsetY,
 		color,
 	} = item);
+
+	let points_raw = JSON.stringify(item.$points);
 </script>
 
 <div class="item-details">
@@ -60,9 +62,15 @@
 					{#if $type === 'polygon'}
 						<div class="title">points</div>
 						<input
-							value={JSON.stringify($points)}
-							disabled={true}
-							title="TODO enable editing this"
+							value={points_raw}
+							on:input={handleTargetValue((value) => {
+								points_raw = value;
+								try {
+									$points = JSON.parse(value);
+								} catch (err) {
+									// TODO probably show its state as unsaved instead of ignoring altogether (.error class?)
+								}
+							})}
 						/>
 					{:else if $type === 'circle'}
 						<div class="title">radius</div>
