@@ -82,7 +82,7 @@
 					<input type="number" bind:value={$strength} />
 				</label>
 			</fieldset>
-			<fieldset class="row centered-hz">
+			<fieldset class="centered">
 				<div class="title">tags</div>
 				<input
 					value={tags ? Array.from(tags).join(', ') : ''}
