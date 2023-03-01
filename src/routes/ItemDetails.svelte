@@ -30,6 +30,7 @@
 		y,
 		radius,
 		points,
+		tags,
 		scale_x,
 		scale_y,
 		graphicsLineColor,
@@ -58,7 +59,11 @@
 				<label>
 					{#if $type === 'polygon'}
 						<div class="title">points</div>
-						<input value={JSON.stringify($points)} />
+						<input
+							value={JSON.stringify($points)}
+							disabled={true}
+							title="TODO enable editing this"
+						/>
 					{:else if $type === 'circle'}
 						<div class="title">radius</div>
 						<input type="number" bind:value={$radius} />
@@ -76,6 +81,14 @@
 					<div class="title">strength</div>
 					<input type="number" bind:value={$strength} />
 				</label>
+			</fieldset>
+			<fieldset class="row centered-hz">
+				<div class="title">tags</div>
+				<input
+					value={tags ? Array.from(tags).join(', ') : ''}
+					disabled={true}
+					title="TODO enable editing this"
+				/>
 			</fieldset>
 			<fieldset class="row">
 				<label>
