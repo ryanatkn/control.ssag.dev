@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {Item, type ItemData} from '@feltcoop/dealt';
-	import {omit} from '@feltjs/util';
+	import {omit} from '@feltjs/util/object.js';
 	import type {Writable} from 'svelte/store';
 
 	import ItemLayer from '$routes/ItemLayer.svelte';
