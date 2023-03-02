@@ -298,7 +298,7 @@ export class Stage0 extends Stage {
 	collideWithRabbit(): void {
 		const {rabbit, rabbit_message} = this;
 		if (rabbit.$color !== COLOR_ROOTED) {
-			// TODO it'd be nice to stop the clock here, but we don't have it in the stage interface, but `alert` isn't the best choice...
+			// TODO it'd be nice to stop the clock here, but we don't have it in the stage interface
 			rabbit.color.set(COLOR_ROOTED);
 			rabbit.directionX = 0;
 			rabbit.directionY = 0;
