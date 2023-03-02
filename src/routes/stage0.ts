@@ -18,6 +18,7 @@ import {
 	type ItemData,
 	type StageData,
 	createItemId,
+	hslToStr,
 } from '@feltcoop/dealt';
 
 import {WORLD_SIZE} from '$routes/constants';
@@ -40,6 +41,9 @@ export class Stage0 extends Stage {
 	// these are instantiated in `setup`
 	bounds!: Item<PolygonBody>;
 	target!: Item<CircleBody>;
+	rabbit!: Item<CircleBody>;
+	rabbit_message!: Item<CircleBody>;
+	chasing_rabbit = false;
 
 	static override createInitialData(): Partial<StageData> {
 		const items: Array<Partial<ItemData>> = [];
@@ -63,7 +67,7 @@ export class Stage0 extends Stage {
 			x: 120,
 			y: 100,
 			radius: PLAYER_RADIUS / 3,
-			speed: 0.045,
+			speed: SPEED_SLOW / 2,
 			freezeCamera: true,
 		});
 
@@ -95,6 +99,29 @@ export class Stage0 extends Stage {
 			speed: 0,
 			strength: 100_000_000,
 			tags: ['target'],
+		});
+
+		// create the rabbit
+		items.push({
+			type: 'circle',
+			x: 310,
+			y: -10,
+			radius: PLAYER_RADIUS * 5,
+			color: COLOR_EXIT,
+			speed: (SPEED_SLOW / 2) * 1.01, // unfair D:
+			strength: 1_000_000_000,
+			tags: ['rabbit'],
+			text: '🐰',
+			fontSize: 36,
+		});
+		items.push({
+			type: 'circle',
+			tags: ['rabbit_message'],
+			text: '',
+			fontSize: 24,
+			textFill: hslToStr(...COLOR_ROOTED),
+			ghostly: true,
+			invisible: true,
 		});
 
 		// create some things
@@ -144,6 +171,10 @@ export class Stage0 extends Stage {
 				this.bounds = item as Item<PolygonBody>;
 			} else if (item.$tags?.includes('target')) {
 				this.target = item as Item<CircleBody>;
+			} else if (item.$tags?.includes('rabbit')) {
+				this.rabbit = item as Item<CircleBody>;
+			} else if (item.$tags?.includes('rabbit_message')) {
+				this.rabbit_message = item as Item<CircleBody>;
 			}
 		}
 		this.swapControl(this.$controlled, true);
@@ -151,7 +182,7 @@ export class Stage0 extends Stage {
 	}
 
 	override update(dt: number): void {
-		const {controller, target} = this;
+		const {controller, target, rabbit} = this;
 		let {$controlled} = this;
 
 		super.update(dt);
@@ -173,6 +204,11 @@ export class Stage0 extends Stage {
 				(itemB === $controlled && itemA === target)
 			) {
 				this.collideWithTarget();
+			} else if (
+				(itemA === $controlled && itemB === rabbit) ||
+				(itemB === $controlled && itemA === rabbit)
+			) {
+				this.collideWithRabbit();
 			} else if (
 				(itemA === $controlled && itemB.$color === COLOR_DEFAULT) ||
 				(itemB === $controlled && itemA.$color === COLOR_DEFAULT)
@@ -201,6 +237,15 @@ export class Stage0 extends Stage {
 				// TODO different algorithms for tracking the player with the camera (`camera.follow` option?)
 				this.camera.setPosition($controlled.$x, $controlled.$y);
 			}
+		}
+
+		// TODO currently checks for `$freezeCamera` toggling on the rabbit's chase mode,
+		// would be better to check the rabbit against the camera, so it starts running away when onscreen,
+		// and so we'll have that reusable scriptable ability trigger, "when onscreen"
+		if (!this.$freezeCamera && !this.chasing_rabbit) {
+			this.chasing_rabbit = true;
+			rabbit.directionX = Math.SQRT1_2;
+			rabbit.directionY = -Math.SQRT1_2;
 		}
 
 		if (this.shouldRestart) {
@@ -247,6 +292,22 @@ export class Stage0 extends Stage {
 			this.freezeCamera.set(item.$freezeCamera ?? false);
 		}
 		return true;
+	}
+
+	// TODO refactor these into a good system
+	collideWithRabbit(): void {
+		const {rabbit, rabbit_message} = this;
+		if (rabbit.$color !== COLOR_ROOTED) {
+			// TODO it'd be nice to stop the clock here, but we don't have it in the stage interface
+			rabbit.color.set(COLOR_ROOTED);
+			rabbit.directionX = 0;
+			rabbit.directionY = 0;
+			rabbit_message.invisible.set(false);
+			rabbit_message.x.set(rabbit.$x + 80);
+			rabbit_message.y.set(rabbit.$y + 20);
+			rabbit_message.text.set('DONT\n  press\nEscape !!');
+			rabbit_message.graphicsLineWidth.set(0);
+		}
 	}
 
 	collideWithTarget(): void {
