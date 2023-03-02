@@ -12,6 +12,7 @@ import {
 	hslToHex,
 	COLOR_DEFAULT,
 	COLOR_ROOTED,
+	COLOR_DANGER,
 	SPEED_SLOW,
 	PLAYER_RADIUS,
 	type ItemData,
@@ -19,7 +20,7 @@ import {
 	createItemId,
 } from '@feltcoop/dealt';
 
-import {COLOR_DANGER, WORLD_SIZE} from '$routes/constants';
+import {WORLD_SIZE} from '$routes/constants';
 
 // TODO rewrite this to use a route Svelte component?
 
