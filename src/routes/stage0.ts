@@ -65,7 +65,7 @@ export class Stage0 extends Stage {
 			x: 120,
 			y: 100,
 			radius: PLAYER_RADIUS / 3,
-			speed: 0.045,
+			speed: SPEED_SLOW / 2,
 			freezeCamera: true,
 		});
 
@@ -106,7 +106,7 @@ export class Stage0 extends Stage {
 			y: -10,
 			radius: PLAYER_RADIUS * 5,
 			color: COLOR_EXIT,
-			speed: SPEED_SLOW * 1.1,
+			speed: (SPEED_SLOW / 2) * 1.01, // unfair D:
 			tags: ['rabbit'],
 			text: '🐰',
 			fontSize: 36,
@@ -226,11 +226,10 @@ export class Stage0 extends Stage {
 		}
 
 		// check the rabbit against the camera, so it starts running away when onscreen
-		if (!this.chasing_rabbit && this.bounds.$body.collides(rabbit.$body, collisionResult)) {
+		if (!this.$freezeCamera && !this.chasing_rabbit) {
 			this.chasing_rabbit = true;
-			rabbit.directionX = 1;
-			rabbit.directionY = -1;
-			console.log('OMH!');
+			rabbit.directionX = Math.SQRT1_2;
+			rabbit.directionY = -Math.SQRT1_2;
 		}
 
 		if (this.shouldRestart) {
@@ -280,8 +279,13 @@ export class Stage0 extends Stage {
 	}
 
 	collideWithRabbit(): void {
-		this.rabbit.color.set(COLOR_ROOTED);
-		alert('DONT press the escape key!!'); // eslint-disable-line no-alert
+		if (this.rabbit.$color !== COLOR_ROOTED) {
+			this.rabbit.color.set(COLOR_ROOTED);
+			// TODO it'd be nice to stop the clock here, but we don't have it in the stage interface, but `alert` isn't the best choice...
+			this.rabbit.directionX = 0;
+			this.rabbit.directionY = 0;
+			alert('DONT press the escape key!!'); // eslint-disable-line no-alert
+		}
 	}
 
 	collideWithTarget(): void {
