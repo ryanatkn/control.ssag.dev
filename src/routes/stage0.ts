@@ -242,7 +242,9 @@ export class Stage0 extends Stage {
 			}
 		}
 
-		// check the rabbit against the camera, so it starts running away when onscreen
+		// TODO currently checks for `$freezeCamera` toggling on the rabbit's chase mode,
+		// would be better to check the rabbit against the camera, so it starts running away when onscreen,
+		// and so we'll have that reusable scriptable ability trigger, "when onscreen"
 		if (!this.$freezeCamera && !this.chasing_rabbit) {
 			this.chasing_rabbit = true;
 			rabbit.directionX = Math.SQRT1_2;
