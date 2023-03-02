@@ -112,7 +112,7 @@ export class Stage0 extends Stage {
 			y: 35,
 			radius: PLAYER_RADIUS * 3,
 			color: COLOR_DANGER,
-			speed: 0.13,
+			speed: 0.17,
 		});
 		items.push({
 			type: 'circle',
