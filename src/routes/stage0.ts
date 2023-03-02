@@ -18,6 +18,7 @@ import {
 	type ItemData,
 	type StageData,
 	createItemId,
+	hslToStr,
 } from '@feltcoop/dealt';
 
 import {WORLD_SIZE} from '$routes/constants';
@@ -41,6 +42,7 @@ export class Stage0 extends Stage {
 	bounds!: Item<PolygonBody>;
 	target!: Item<CircleBody>;
 	rabbit!: Item<CircleBody>;
+	rabbit_message!: Item<CircleBody>;
 	chasing_rabbit = false;
 
 	static override createInitialData(): Partial<StageData> {
@@ -107,9 +109,22 @@ export class Stage0 extends Stage {
 			radius: PLAYER_RADIUS * 5,
 			color: COLOR_EXIT,
 			speed: (SPEED_SLOW / 2) * 1.01, // unfair D:
+			strength: 1_000_000_000,
 			tags: ['rabbit'],
 			text: '🐰',
 			fontSize: 36,
+		});
+		items.push({
+			type: 'circle',
+			x: 310,
+			y: -10,
+			radius: 1,
+			tags: ['rabbit_message'],
+			text: '',
+			fontSize: 24,
+			textFill: hslToStr(...COLOR_ROOTED),
+			ghostly: true,
+			invisible: true,
 		});
 
 		// create some things
@@ -161,6 +176,8 @@ export class Stage0 extends Stage {
 				this.target = item as Item<CircleBody>;
 			} else if (item.$tags?.includes('rabbit')) {
 				this.rabbit = item as Item<CircleBody>;
+			} else if (item.$tags?.includes('rabbit_message')) {
+				this.rabbit_message = item as Item<CircleBody>;
 			}
 		}
 		this.swapControl(this.$controlled, true);
@@ -278,13 +295,19 @@ export class Stage0 extends Stage {
 		return true;
 	}
 
+	// TODO refactor these into a good system
 	collideWithRabbit(): void {
-		if (this.rabbit.$color !== COLOR_ROOTED) {
-			this.rabbit.color.set(COLOR_ROOTED);
+		const {rabbit, rabbit_message} = this;
+		if (rabbit.$color !== COLOR_ROOTED) {
 			// TODO it'd be nice to stop the clock here, but we don't have it in the stage interface, but `alert` isn't the best choice...
-			this.rabbit.directionX = 0;
-			this.rabbit.directionY = 0;
-			alert('DONT press the escape key!!'); // eslint-disable-line no-alert
+			rabbit.color.set(COLOR_ROOTED);
+			rabbit.directionX = 0;
+			rabbit.directionY = 0;
+			rabbit_message.invisible.set(false);
+			rabbit_message.x.set(rabbit.$x + 100);
+			rabbit_message.y.set(rabbit.$y + 20);
+			rabbit_message.text.set('DONT\npress the\nescape key!!');
+			rabbit_message.graphicsLineWidth.set(0);
 		}
 	}
 
