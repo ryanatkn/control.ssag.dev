@@ -40,6 +40,8 @@ export class Stage0 extends Stage {
 	// these are instantiated in `setup`
 	bounds!: Item<PolygonBody>;
 	target!: Item<CircleBody>;
+	rabbit!: Item<CircleBody>;
+	chasing_rabbit = false;
 
 	static override createInitialData(): Partial<StageData> {
 		const items: Array<Partial<ItemData>> = [];
@@ -97,6 +99,19 @@ export class Stage0 extends Stage {
 			tags: ['target'],
 		});
 
+		// create the rabbit
+		items.push({
+			type: 'circle',
+			x: 310,
+			y: -10,
+			radius: PLAYER_RADIUS * 5,
+			color: COLOR_EXIT,
+			speed: SPEED_SLOW * 1.1,
+			tags: ['rabbit'],
+			text: '🐰',
+			fontSize: 36,
+		});
+
 		// create some things
 		items.push({
 			type: 'circle',
@@ -144,6 +159,8 @@ export class Stage0 extends Stage {
 				this.bounds = item as Item<PolygonBody>;
 			} else if (item.$tags?.includes('target')) {
 				this.target = item as Item<CircleBody>;
+			} else if (item.$tags?.includes('rabbit')) {
+				this.rabbit = item as Item<CircleBody>;
 			}
 		}
 		this.swapControl(this.$controlled, true);
@@ -151,7 +168,7 @@ export class Stage0 extends Stage {
 	}
 
 	override update(dt: number): void {
-		const {controller, target} = this;
+		const {controller, target, rabbit} = this;
 		let {$controlled} = this;
 
 		super.update(dt);
@@ -173,6 +190,11 @@ export class Stage0 extends Stage {
 				(itemB === $controlled && itemA === target)
 			) {
 				this.collideWithTarget();
+			} else if (
+				(itemA === $controlled && itemB === rabbit) ||
+				(itemB === $controlled && itemA === rabbit)
+			) {
+				this.collideWithRabbit();
 			} else if (
 				(itemA === $controlled && itemB.$color === COLOR_DEFAULT) ||
 				(itemB === $controlled && itemA.$color === COLOR_DEFAULT)
@@ -201,6 +223,14 @@ export class Stage0 extends Stage {
 				// TODO different algorithms for tracking the player with the camera (`camera.follow` option?)
 				this.camera.setPosition($controlled.$x, $controlled.$y);
 			}
+		}
+
+		// check the rabbit against the camera, so it starts running away when onscreen
+		if (!this.chasing_rabbit && this.bounds.$body.collides(rabbit.$body, collisionResult)) {
+			this.chasing_rabbit = true;
+			rabbit.directionX = 1;
+			rabbit.directionY = -1;
+			console.log('OMH!');
 		}
 
 		if (this.shouldRestart) {
@@ -247,6 +277,11 @@ export class Stage0 extends Stage {
 			this.freezeCamera.set(item.$freezeCamera ?? false);
 		}
 		return true;
+	}
+
+	collideWithRabbit(): void {
+		this.rabbit.color.set(COLOR_ROOTED);
+		alert('DONT press the escape key!!'); // eslint-disable-line no-alert
 	}
 
 	collideWithTarget(): void {
