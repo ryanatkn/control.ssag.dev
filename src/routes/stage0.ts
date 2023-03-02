@@ -116,9 +116,6 @@ export class Stage0 extends Stage {
 		});
 		items.push({
 			type: 'circle',
-			x: 310,
-			y: -10,
-			radius: 1,
 			tags: ['rabbit_message'],
 			text: '',
 			fontSize: 24,
@@ -306,9 +303,9 @@ export class Stage0 extends Stage {
 			rabbit.directionX = 0;
 			rabbit.directionY = 0;
 			rabbit_message.invisible.set(false);
-			rabbit_message.x.set(rabbit.$x + 100);
+			rabbit_message.x.set(rabbit.$x + 80);
 			rabbit_message.y.set(rabbit.$y + 20);
-			rabbit_message.text.set('DONT\npress the\nescape key!!');
+			rabbit_message.text.set('DONT\n  press\nEscape !!');
 			rabbit_message.graphicsLineWidth.set(0);
 		}
 	}
