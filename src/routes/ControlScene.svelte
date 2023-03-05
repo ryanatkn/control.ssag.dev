@@ -22,6 +22,7 @@
 	import ItemLayers from '$routes/ItemLayers.svelte';
 	import ItemDetails from '$routes/ItemDetails.svelte';
 	import SceneDetails from '$routes/SceneDetails.svelte';
+	import Hotkeys from '$lib/Hotkeys.svelte';
 
 	export let pixi = getPixi();
 	export let layout = getLayout();
@@ -122,4 +123,5 @@
 			</Pane>
 		{/if}
 	{/key}
+	<Hotkeys hotkeys={[{match: 'r,g', action: () => stage?.restart()}]} />
 {/if}
