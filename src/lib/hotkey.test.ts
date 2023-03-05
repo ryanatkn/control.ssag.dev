@@ -1,8 +1,8 @@
 import {test} from 'uvu';
 import * as assert from 'uvu/assert';
+import {noop} from '@feltjs/util';
 
 import {matchesHotkey, type Hotkey} from '$lib/hotkey';
-import {noop} from '@feltjs/util';
 
 test('matches a simple pattern', () => {
 	matchesHotkey({match: 'a', action: noop}, 'a');
