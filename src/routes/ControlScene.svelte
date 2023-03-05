@@ -123,5 +123,5 @@
 			</Pane>
 		{/if}
 	{/key}
-	<Hotkeys hotkeys={[{match: 'r,g', action: () => stage?.restart()}]} />
+	<Hotkeys hotkeys={[{match: 'r', action: () => stage?.restart()}]} />
 {/if}
