@@ -1,10 +1,10 @@
+// TODO improve, maybe `shift+a,b,ctrl+shift+c`
 export interface Hotkey {
 	match: string;
 	action: () => void;
 	parsed?: ParsedHotkeyMatch[];
 }
 
-// TODO improve, maybe `shift+a,b,ctrl+shift+c`
 export type ParsedHotkeyMatch = string;
 
 /**
