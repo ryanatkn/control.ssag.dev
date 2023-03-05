@@ -1,6 +1,6 @@
 import {test} from 'uvu';
 import * as assert from 'uvu/assert';
-import {noop} from '@feltjs/util';
+import {noop} from '@feltjs/util/function.js';
 
 import {matchesHotkey, type Hotkey} from '$lib/hotkey';
 
