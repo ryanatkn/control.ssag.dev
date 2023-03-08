@@ -98,6 +98,7 @@
 			dragTo(e.clientX, e.clientY);
 		}}
 		on:pointerup={stop_dragging}
+		on:pointercancel={stop_dragging}
 	/>
 {/if}
 
