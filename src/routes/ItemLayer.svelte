@@ -22,9 +22,6 @@
 			<!-- TODO improve this -->
 			@
 		{/if}
-		{#if selected}
-			↳
-		{/if}
 		{$type}
 		<small>
 			{#if $tags}
