@@ -24,9 +24,14 @@
 	import SceneDetails from '$routes/SceneDetails.svelte';
 	import CameraDetails from '$routes/CameraDetails.svelte';
 	import Hotkeys from '$lib/Hotkeys.svelte';
+	import ProjectDetails from '$routes/ProjectDetails.svelte';
+	import {Project} from '$lib/project';
 
 	export let pixi = getPixi();
 	export let layout = getLayout();
+
+	// TODO refactor
+	const project = new Project();
 
 	// TODO resizable pane component
 	// TODO contextmenu to enable dragging on windows
@@ -85,14 +90,15 @@
 
 	// TODO refactor to be data-driven
 	const PANE_MARGIN = 3;
-
+	let pane0_height = 160;
 	let pane1_height = 160;
+	let pane1_offset_y = pane0_height + PANE_MARGIN;
 	let pane2_width = 256;
 	let pane2_height = 384;
 	let pane2_offset_x = $layout.width - pane2_width;
 	let pane3_width = 256;
 	let pane3_height = 200;
-	let pane3_offset_y = pane1_height + PANE_MARGIN;
+	let pane3_offset_y = pane1_offset_y + pane1_height + PANE_MARGIN;
 	let pane4_width = 256;
 	let pane4_height = $layout.height - pane2_height - PANE_MARGIN;
 	let pane4_offset_x = pane2_offset_x;
@@ -113,7 +119,15 @@
 		<World {stage} {pixi} />
 		<SurfaceWithController controller={stage.controller} />
 		{#if mode === 'editing'}
-			<Pane bind:height={pane1_height}>
+			<Pane bind:height={pane0_height}>
+				<svelte:fragment slot="header">project</svelte:fragment>
+				<div class="mode-buttons">
+					<button class="selected"> edit </button>
+					<button on:click={() => (mode = 'playing')}> play </button>
+				</div>
+				<ProjectDetails {project} />
+			</Pane>
+			<Pane bind:height={pane1_height} bind:offset_y={pane1_offset_y}>
 				<svelte:fragment slot="header">scene</svelte:fragment>
 				<SceneDetails {stage} />
 			</Pane>
@@ -141,3 +155,17 @@
 	{/key}
 	<Hotkeys hotkeys={[{match: 'r', action: () => stage?.restart()}]} />
 {/if}
+
+<style>
+	.mode-buttons {
+		display: flex;
+		height: var(--input_height_sm);
+	}
+	.mode-buttons button {
+		flex: 1;
+		height: var(--input_height_sm);
+		min-height: var(--input_height_sm);
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+</style>
