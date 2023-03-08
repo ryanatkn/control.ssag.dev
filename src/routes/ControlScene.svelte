@@ -86,7 +86,7 @@
 	// TODO refactor to be data-driven
 	const PANE_MARGIN = 3;
 
-	let pane1_height = 256;
+	let pane1_height = 384;
 	let pane2_width = 256;
 	let pane2_height = 205;
 	let pane2_offset_x = $layout.width - pane2_width;
@@ -94,7 +94,7 @@
 	let pane3_height = $layout.height - pane1_height - PANE_MARGIN;
 	let pane3_offset_y = pane1_height + PANE_MARGIN;
 	let pane4_width = 256;
-	let pane4_height = $layout.height - pane2_height - PANE_MARGIN;
+	let pane4_height = 200;
 	let pane4_offset_x = pane2_offset_x;
 	let pane4_offset_y = pane2_height + PANE_MARGIN;
 </script>
