@@ -74,14 +74,13 @@
 <div
 	class="pane"
 	class:dragging
-	on:pointerdown={start_dragging}
 	on:pointercancel={stop_dragging}
 	style:--width="{width}px"
 	style:--height={finalHeight}
 	style:--offset_x="{offset_x_clamped}px"
 	style:--offset_y="{offset_y_clamped}px"
 >
-	<h2>
+	<h2 on:pointerdown={start_dragging}>
 		<button class="plain-button" on:click={toggle}>
 			<slot name="header" />
 		</button>
@@ -99,6 +98,7 @@
 			dragTo(e.clientX, e.clientY);
 		}}
 		on:pointerup={stop_dragging}
+		on:pointercancel={stop_dragging}
 	/>
 {/if}
 
@@ -114,7 +114,6 @@
 		height: var(--pane_height);
 		transform: translate3d(var(--offset_x, 0), var(--offset_y, 0), var(--offset_z, 0));
 		overflow: auto;
-		cursor: move;
 		border-radius: 0;
 		outline: var(--border_width) var(--border_style) var(--shadow_border_color);
 		opacity: 0.83;
@@ -129,6 +128,7 @@
 		background-color: var(--bg);
 		display: flex;
 		justify-content: center;
+		cursor: move;
 	}
 	h2 button {
 		font-size: var(--font_size_sm);

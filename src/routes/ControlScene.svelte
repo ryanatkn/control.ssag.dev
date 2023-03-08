@@ -94,7 +94,7 @@
 	let pane3_height = $layout.height - pane1_height - PANE_MARGIN;
 	let pane3_offset_y = pane1_height + PANE_MARGIN;
 	let pane4_width = 256;
-	let pane4_height = 200;
+	let pane4_height = 384;
 	let pane4_offset_x = pane2_offset_x;
 	let pane4_offset_y = pane2_height + PANE_MARGIN;
 </script>
@@ -118,11 +118,11 @@
 				<ItemLayers {stage} {items} {item_selection} />
 			</Pane>
 			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_x={pane2_offset_x}>
-				<svelte:fragment slot="header">scene details</svelte:fragment>
+				<svelte:fragment slot="header">scene</svelte:fragment>
 				<SceneDetails {stage} />
 			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
-				<svelte:fragment slot="header">item details</svelte:fragment>
+				<svelte:fragment slot="header">selected item</svelte:fragment>
 				{#if $item_selection}
 					<ItemDetails item={$item_selection} {stage} />
 				{/if}

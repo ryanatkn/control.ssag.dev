@@ -23,12 +23,11 @@
 			</fieldset>
 		</div>
 	</form>
-	<!-- TODO restart stage button -->
 	<div class="row">
-		<button class="flush" on:click={() => stage.destroy()}>destroy stage</button>
-		<button class="flush" on:click={() => stage.restart()} title="restart stage [r]"
-			>restart stage</button
-		>
+		<button class="flush" on:click={() => stage.restart()} title="restart stage [r]">
+			restart stage
+		</button>
+		<button class="flush" on:click={() => stage.destroy()}> destroy stage </button>
 	</div>
 </div>
 
