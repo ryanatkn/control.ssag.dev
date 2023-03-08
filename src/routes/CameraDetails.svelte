@@ -22,14 +22,12 @@
 					<div class="title">freezeCamera</div>
 				</label>
 			</fieldset>
-			<fieldset>
+			<fieldset class="row">
 				<label>
 					<span class="title">x</span>
 					<input type="number" value={x} on:input={updateX} />
 					<input type="range" value={x} on:input={updateX} min={0} max={WORLD_SIZE} />
 				</label>
-			</fieldset>
-			<fieldset>
 				<label>
 					<span class="title">y</span>
 					<input type="number" value={y} on:input={updateY} />
