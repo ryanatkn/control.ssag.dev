@@ -22,6 +22,7 @@
 	import ItemLayers from '$routes/ItemLayers.svelte';
 	import ItemDetails from '$routes/ItemDetails.svelte';
 	import SceneDetails from '$routes/SceneDetails.svelte';
+	import CameraDetails from '$routes/CameraDetails.svelte';
 	import Hotkeys from '$lib/Hotkeys.svelte';
 
 	export let pixi = getPixi();
@@ -83,13 +84,19 @@
 	onDestroy(destroy_stage);
 
 	// TODO refactor to be data-driven
+	const PANE_MARGIN = 3;
+
 	let pane1_height = 256;
 	let pane2_width = 256;
 	let pane2_height = 205;
-	let pane2_offset_y = $layout.height - pane2_height;
+	let pane2_offset_x = $layout.width - pane2_width;
 	let pane3_width = 256;
-	let pane3_height = 384;
-	let pane3_offset_y = pane1_height + 20;
+	let pane3_height = $layout.height - pane1_height - PANE_MARGIN;
+	let pane3_offset_y = pane1_height + PANE_MARGIN;
+	let pane4_width = 256;
+	let pane4_height = $layout.height - pane2_height - PANE_MARGIN;
+	let pane4_offset_x = pane2_offset_x;
+	let pane4_offset_y = pane2_height + PANE_MARGIN;
 </script>
 
 <svelte:window
@@ -110,7 +117,7 @@
 				<svelte:fragment slot="header">items</svelte:fragment>
 				<ItemLayers {stage} {items} {item_selection} />
 			</Pane>
-			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_y={pane2_offset_y}>
+			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_x={pane2_offset_x}>
 				<svelte:fragment slot="header">scene details</svelte:fragment>
 				<SceneDetails {stage} />
 			</Pane>
@@ -120,6 +127,15 @@
 					<ItemDetails item={$item_selection} {stage} />
 				{/if}
 				<!-- TODO text-overflow -->
+			</Pane>
+			<Pane
+				bind:width={pane4_width}
+				bind:height={pane4_height}
+				bind:offset_x={pane4_offset_x}
+				bind:offset_y={pane4_offset_y}
+			>
+				<svelte:fragment slot="header">camera</svelte:fragment>
+				<CameraDetails {stage} />
 			</Pane>
 		{/if}
 	{/key}

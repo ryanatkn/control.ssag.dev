@@ -5,8 +5,6 @@
 
 	// TODO sohuld this be `StageDetails` or `SceneDetails` or something else?
 
-	$: ({freezeCamera} = stage);
-
 	$: meta = (stage.constructor as typeof Stage0).meta;
 </script>
 
@@ -21,12 +19,6 @@
 				<label>
 					<div class="title">stage icon</div>
 					<input value={meta.icon} />
-				</label>
-			</fieldset>
-			<fieldset>
-				<label class="row">
-					<input type="checkbox" bind:checked={$freezeCamera} />
-					<div class="title">freezeCamera</div>
 				</label>
 			</fieldset>
 		</div>
