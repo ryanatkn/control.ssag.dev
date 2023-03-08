@@ -21,13 +21,17 @@
 					<div class="title">freezeCamera</div>
 				</label>
 			</fieldset>
-			<fieldset class="row">
-				<label
-					><span class="title">x</span><input type="number" value={x} on:input={updateX} /></label
-				>
-				<label
-					><span class="title">y</span><input type="number" value={y} on:input={updateY} /></label
-				>
+			<fieldset>
+				<label>
+					<span class="title">x</span>
+					<input type="number" value={x} on:input={updateX} />
+				</label>
+			</fieldset>
+			<fieldset>
+				<label>
+					<span class="title">y</span>
+					<input type="number" value={y} on:input={updateY} />
+				</label>
 			</fieldset>
 		</div>
 	</form>

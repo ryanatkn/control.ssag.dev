@@ -94,7 +94,7 @@
 	let pane3_height = $layout.height - pane1_height - PANE_MARGIN;
 	let pane3_offset_y = pane1_height + PANE_MARGIN;
 	let pane4_width = 256;
-	let pane4_height = 200;
+	let pane4_height = 384;
 	let pane4_offset_x = pane2_offset_x;
 	let pane4_offset_y = pane2_height + PANE_MARGIN;
 </script>
