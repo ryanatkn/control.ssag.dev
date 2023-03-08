@@ -88,7 +88,7 @@
 
 	let pane1_height = 384;
 	let pane2_width = 256;
-	let pane2_height = 205;
+	let pane2_height = 160;
 	let pane2_offset_x = $layout.width - pane2_width;
 	let pane3_width = 256;
 	let pane3_height = $layout.height - pane1_height - PANE_MARGIN;

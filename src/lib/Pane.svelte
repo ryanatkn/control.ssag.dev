@@ -49,7 +49,7 @@
 		last_x = null;
 		last_y = null;
 	};
-	const dragTo = (x_target: number, y_target: number): void => {
+	const drag_to = (x_target: number, y_target: number): void => {
 		last_x = current_x;
 		current_x = x_target;
 		last_y = current_y;
@@ -57,7 +57,7 @@
 		if (last_x !== null && current_x !== null) offset_x += current_x - last_x;
 		if (last_y !== null && current_y !== null) offset_y += current_y - last_y;
 	};
-	// const dragBy = (dx: number, dy: number): void => {
+	// const drag_by = (dx: number, dy: number): void => {
 	// 	if (current_x !== null) current_x += dx;
 	// 	if (current_y !== null) current_y += dy;
 	// };
@@ -67,7 +67,7 @@
 		toggled = !toggled;
 	};
 
-	$: finalHeight = toggled ? height + 'px' : 'var(--input_height_sm)';
+	$: final_height = toggled ? height + 'px' : 'var(--input_height_sm)';
 </script>
 
 <!-- TODO draggable action? or higher order component? -->
@@ -76,7 +76,7 @@
 	class:dragging
 	on:pointercancel={stop_dragging}
 	style:--width="{width}px"
-	style:--height={finalHeight}
+	style:--height={final_height}
 	style:--offset_x="{offset_x_clamped}px"
 	style:--offset_y="{offset_y_clamped}px"
 >
@@ -95,9 +95,10 @@
 		class="surface"
 		on:pointermove={(e) => {
 			swallow(e);
-			dragTo(e.clientX, e.clientY);
+			drag_to(e.clientX, e.clientY);
 		}}
 		on:pointerup={stop_dragging}
+		on:pointerleave={stop_dragging}
 		on:pointercancel={stop_dragging}
 	/>
 {/if}
