@@ -86,15 +86,15 @@
 	// TODO refactor to be data-driven
 	const PANE_MARGIN = 3;
 
-	let pane1_height = 384;
+	let pane1_height = 160;
 	let pane2_width = 256;
-	let pane2_height = 160;
+	let pane2_height = 384;
 	let pane2_offset_x = $layout.width - pane2_width;
 	let pane3_width = 256;
-	let pane3_height = $layout.height - pane1_height - PANE_MARGIN;
+	let pane3_height = 200;
 	let pane3_offset_y = pane1_height + PANE_MARGIN;
 	let pane4_width = 256;
-	let pane4_height = 384;
+	let pane4_height = $layout.height - pane2_height - PANE_MARGIN;
 	let pane4_offset_x = pane2_offset_x;
 	let pane4_offset_y = pane2_height + PANE_MARGIN;
 </script>
@@ -114,19 +114,16 @@
 		<SurfaceWithController controller={stage.controller} />
 		{#if mode === 'editing'}
 			<Pane bind:height={pane1_height}>
-				<svelte:fragment slot="header">items</svelte:fragment>
-				<ItemLayers {stage} {items} {item_selection} />
-			</Pane>
-			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_x={pane2_offset_x}>
 				<svelte:fragment slot="header">scene</svelte:fragment>
 				<SceneDetails {stage} />
 			</Pane>
+			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_x={pane2_offset_x}>
+				<svelte:fragment slot="header">items</svelte:fragment>
+				<ItemLayers {stage} {items} {item_selection} />
+			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
-				<svelte:fragment slot="header">selected item</svelte:fragment>
-				{#if $item_selection}
-					<ItemDetails item={$item_selection} {stage} />
-				{/if}
-				<!-- TODO text-overflow -->
+				<svelte:fragment slot="header">camera</svelte:fragment>
+				<CameraDetails {stage} />
 			</Pane>
 			<Pane
 				bind:width={pane4_width}
@@ -134,8 +131,11 @@
 				bind:offset_x={pane4_offset_x}
 				bind:offset_y={pane4_offset_y}
 			>
-				<svelte:fragment slot="header">camera</svelte:fragment>
-				<CameraDetails {stage} />
+				<svelte:fragment slot="header">selected item</svelte:fragment>
+				{#if $item_selection}
+					<ItemDetails item={$item_selection} {stage} />
+				{/if}
+				<!-- TODO text-overflow -->
 			</Pane>
 		{/if}
 	{/key}

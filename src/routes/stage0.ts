@@ -23,6 +23,8 @@ import {
 
 import {WORLD_SIZE} from '$routes/constants';
 
+// TODO BLOCK new panes - project
+
 // TODO rewrite this to use a route Svelte component?
 
 // TODO what if this file were named `home.stage.ts` instead of `stage0.ts` ?
