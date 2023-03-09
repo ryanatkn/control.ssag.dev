@@ -12,8 +12,11 @@
 	// TODO set z-index based on most recently clicked
 
 	let dragging = false;
-	$: offset_x_clamped = Math.max(0, Math.min(offset_x, $layout.width - width));
-	$: offset_y_clamped = Math.max(0, Math.min(offset_y, $layout.height - height));
+	// TODO refactor?
+	const clamp_offset_x = (value: number): number =>
+		Math.max(0, Math.min(value, $layout.width - width));
+	const clamp_offset_y = (value: number): number =>
+		Math.max(0, Math.min(value, $layout.height - height));
 	let current_x: number | null = null;
 	let current_y: number | null = null;
 	let last_x: number | null = null;
@@ -54,8 +57,10 @@
 		current_x = x_target;
 		last_y = current_y;
 		current_y = y_target;
-		if (last_x !== null && current_x !== null) offset_x += current_x - last_x;
-		if (last_y !== null && current_y !== null) offset_y += current_y - last_y;
+		if (last_x !== null && current_x !== null)
+			offset_x = clamp_offset_x(offset_x + (current_x - last_x));
+		if (last_y !== null && current_y !== null)
+			offset_y = clamp_offset_y(offset_y + (current_y - last_y));
 	};
 	// const drag_by = (dx: number, dy: number): void => {
 	// 	if (current_x !== null) current_x += dx;
@@ -77,8 +82,8 @@
 	on:pointercancel={stop_dragging}
 	style:--width="{width}px"
 	style:--height={final_height}
-	style:--offset_x="{offset_x_clamped}px"
-	style:--offset_y="{offset_y_clamped}px"
+	style:--offset_x="{offset_x}px"
+	style:--offset_y="{offset_y}px"
 >
 	<h2 on:pointerdown={start_dragging}>
 		<button class="plain-button" on:click={toggle}>
