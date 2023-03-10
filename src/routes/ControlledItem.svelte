@@ -1,11 +1,10 @@
 <script lang="ts">
 	import {hslToHexString, Item} from '@feltcoop/dealt';
-	import type {Writable} from 'svelte/store';
 
 	import type {Stage0} from '$routes/stage0';
 
 	export let stage: Stage0;
-	export let item_selection: Writable<Item | null>;
+	export let selected: Item | null;
 
 	$: ({controlled} = stage);
 
@@ -24,7 +23,8 @@
 		last_controlled_temp = item;
 	};
 
-	$: selected_is_controlled = !!$item_selection && $item_selection === $controlled;
+	$: selected_is_controlled = !!selected && selected === $controlled;
+	$: console.log(`selected_is_controlled`, selected_is_controlled);
 </script>
 
 <div class="item-details">
@@ -38,14 +38,24 @@
 			no item is controlled
 		{/if}
 	</div>
-	<button on:click={() => stage.swapControl(null, true)} disabled={!$controlled}
-		>release control</button
-	>
+	<div class="row">
+		<button on:click={() => stage.swapControl(null, true)} disabled={!$controlled}>
+			release control
+		</button>
+		<button
+			on:click={selected_is_controlled || !selected
+				? null
+				: () => stage.swapControl(selected, true)}
+			disabled={selected_is_controlled || !selected}
+		>
+			control selected
+		</button>
+	</div>
 	<div class="row">
 		<button
-			disabled={!$item_selection || selected_is_controlled}
-			on:click={$item_selection && !selected_is_controlled
-				? () => stage.swapControl($item_selection, true)
+			disabled={!selected || selected_is_controlled}
+			on:click={selected && !selected_is_controlled
+				? () => stage.swapControl(selected, true)
 				: undefined}
 		>
 			swap to selected
@@ -71,5 +81,8 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+	button {
+		flex: 1;
 	}
 </style>
