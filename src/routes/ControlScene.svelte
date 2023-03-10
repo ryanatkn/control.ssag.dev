@@ -25,6 +25,7 @@
 	import CameraDetails from '$routes/CameraDetails.svelte';
 	import Hotkeys from '$lib/Hotkeys.svelte';
 	import ProjectDetails from '$routes/ProjectDetails.svelte';
+	import ControlledItem from '$routes/ControlledItem.svelte';
 	import {Project} from '$lib/project';
 
 	export let pixi = getPixi();
@@ -90,19 +91,24 @@
 
 	// TODO refactor to be data-driven
 	const PANE_MARGIN = 3;
+	const PANE_WIDTH = 256;
 	let pane0_height = 160;
-	let pane1_height = 160;
+	let pane1_height = 214;
 	let pane1_offset_y = pane0_height + PANE_MARGIN;
-	let pane2_width = 256;
-	let pane2_height = 384;
-	let pane2_offset_x = $layout.width - pane2_width;
-	let pane3_width = 256;
+	let pane5_width = PANE_WIDTH;
+	let pane5_height = 202;
+	let pane5_offset_x = $layout.width - pane5_width;
+	let pane3_width = PANE_WIDTH;
 	let pane3_height = 200;
 	let pane3_offset_y = pane1_offset_y + pane1_height + PANE_MARGIN;
-	let pane4_width = 256;
-	let pane4_height = $layout.height - pane2_height - PANE_MARGIN;
+	let pane2_width = PANE_WIDTH;
+	let pane2_height = 384;
+	let pane2_offset_x = pane5_offset_x;
+	let pane2_offset_y = pane5_height + PANE_MARGIN;
+	let pane4_width = PANE_WIDTH;
+	let pane4_height = $layout.height - pane2_height - pane5_height - PANE_MARGIN;
 	let pane4_offset_x = pane2_offset_x;
-	let pane4_offset_y = pane2_height + PANE_MARGIN;
+	let pane4_offset_y = pane2_offset_y + pane2_height + PANE_MARGIN;
 </script>
 
 <svelte:window
@@ -131,13 +137,22 @@
 				<svelte:fragment slot="header">scene</svelte:fragment>
 				<SceneDetails {stage} />
 			</Pane>
-			<Pane bind:width={pane2_width} bind:height={pane2_height} bind:offset_x={pane2_offset_x}>
+			<Pane
+				bind:width={pane2_width}
+				bind:height={pane2_height}
+				bind:offset_x={pane2_offset_x}
+				bind:offset_y={pane2_offset_y}
+			>
 				<svelte:fragment slot="header">items</svelte:fragment>
 				<ItemLayers {stage} {items} {item_selection} />
 			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
 				<svelte:fragment slot="header">camera</svelte:fragment>
 				<CameraDetails {stage} />
+			</Pane>
+			<Pane bind:width={pane5_width} bind:height={pane5_height} bind:offset_x={pane5_offset_x}>
+				<svelte:fragment slot="header">controlled item</svelte:fragment>
+				<ControlledItem {stage} selected={$item_selection} />
 			</Pane>
 			<Pane
 				bind:width={pane4_width}

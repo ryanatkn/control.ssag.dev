@@ -18,7 +18,7 @@ import {
 	type ItemData,
 	type StageData,
 	createItemId,
-	hslToStr,
+	hslToHexString,
 } from '@feltcoop/dealt';
 
 import {WORLD_SIZE} from '$routes/constants';
@@ -119,7 +119,7 @@ export class Stage0 extends Stage {
 			tags: ['rabbit_message'],
 			text: '',
 			fontSize: 24,
-			textFill: hslToStr(...COLOR_ROOTED),
+			textFill: hslToHexString(...COLOR_ROOTED),
 			ghostly: true,
 			invisible: true,
 		});
@@ -275,9 +275,12 @@ export class Stage0 extends Stage {
 			this.timeLastSwapped = undefined;
 		}
 		if ($controlled) {
-			if (this.timeLastSwapped !== undefined) {
+			// respect the swap timer unless `force=true`
+			if (!force && this.timeLastSwapped !== undefined) {
 				const timeElapsed = time - this.timeLastSwapped;
-				if (time > CONTROL_SWAP_COOLDOWN && timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
+				if (time > CONTROL_SWAP_COOLDOWN && timeElapsed < CONTROL_SWAP_COOLDOWN) {
+					return false;
+				}
 			}
 			$controlled.graphicsFillColor.set(0);
 			$controlled.graphicsFillAlpha.set(0);

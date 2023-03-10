@@ -2,11 +2,11 @@
 	import {
 		type Item,
 		hexToRgb,
-		rgbToHsl,
 		hexStringToRgb,
 		rgbToHex,
 		rgbToHexString,
-		hslToRgb,
+		hexStringToHsl,
+		hslToHexString,
 	} from '@feltcoop/dealt';
 	import {handleTargetValue} from '@feltjs/util/dom.js';
 
@@ -85,6 +85,58 @@
 			</fieldset>
 			<fieldset class="row">
 				<label>
+					<div class="title">controlling</div>
+					<input
+						type="checkbox"
+						checked={controlling}
+						on:input={(e) => stage.swapControl(e.currentTarget.checked ? item : null, true)}
+					/>
+				</label>
+				<label>
+					<div class="title">color</div>
+					<input
+						type="color"
+						value={hslToHexString(...$color)}
+						on:input={handleTargetValue((value) => {
+							$color = hexStringToHsl(value);
+						})}
+					/>
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">ghostly</div>
+					<input type="checkbox" bind:checked={$ghostly} />
+				</label>
+				<label>
+					<div class="title">invisible</div>
+					<input type="checkbox" bind:checked={$invisible} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">x</div>
+					<input type="number" bind:value={$x} />
+				</label>
+				<label>
+					<div class="title">y</div>
+					<input type="number" bind:value={$y} />
+				</label>
+			</fieldset>
+			{#if $type === 'polygon'}
+				<fieldset class="row">
+					<label>
+						<div class="title">scale_x</div>
+						<input type="number" bind:value={$scale_x} />
+					</label>
+					<label>
+						<div class="title">scale_y</div>
+						<input type="number" bind:value={$scale_y} />
+					</label>
+				</fieldset>
+			{/if}
+			<fieldset class="row">
+				<label>
 					<div class="title">speed</div>
 					<input type="number" bind:value={$speed} step={0.05} />
 				</label>
@@ -103,32 +155,32 @@
 			</fieldset>
 			<fieldset class="row">
 				<label>
-					<div class="title">ghostly</div>
-					<input type="checkbox" bind:checked={$ghostly} />
+					<div class="title">text</div>
+					<input bind:value={$text} />
 				</label>
 				<label>
-					<div class="title">invisible</div>
-					<input type="checkbox" bind:checked={$invisible} />
+					<div class="title">textFill</div>
+					<input type="color" bind:value={$textFill} />
 				</label>
 			</fieldset>
 			<fieldset class="row">
 				<label>
-					<div class="title">controlling</div>
-					<input
-						type="checkbox"
-						checked={controlling}
-						on:change={() => stage.swapControl(controlling ? null : item)}
-					/>
+					<div class="title">fontSize</div>
+					<input type="number" bind:value={$fontSize} />
 				</label>
 				<label>
-					<div class="title">color</div>
-					<input
-						type="color"
-						value={rgbToHexString(...hslToRgb(...$color))}
-						on:input={handleTargetValue((value) => {
-							$color = rgbToHsl(...hexStringToRgb(value));
-						})}
-					/>
+					<div class="title">fontFamily</div>
+					<input bind:value={$fontFamily} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">textOffsetX</div>
+					<input type="number" bind:value={$textOffsetX} />
+				</label>
+				<label>
+					<div class="title">textOffsetY</div>
+					<input type="number" bind:value={$textOffsetY} />
 				</label>
 			</fieldset>
 			<fieldset>
@@ -168,58 +220,6 @@
 				<label>
 					<div class="title">graphicsLineAlpha</div>
 					<input type="range" min={0} max={1} step={0.01} bind:value={$graphicsLineAlpha} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">x</div>
-					<input type="number" bind:value={$x} />
-				</label>
-				<label>
-					<div class="title">y</div>
-					<input type="number" bind:value={$y} />
-				</label>
-			</fieldset>
-			{#if $type === 'polygon'}
-				<fieldset class="row">
-					<label>
-						<div class="title">scale_x</div>
-						<input type="number" bind:value={$scale_x} />
-					</label>
-					<label>
-						<div class="title">scale_y</div>
-						<input type="number" bind:value={$scale_y} />
-					</label>
-				</fieldset>
-			{/if}
-			<fieldset class="row">
-				<label>
-					<div class="title">text</div>
-					<input bind:value={$text} />
-				</label>
-				<label>
-					<div class="title">textFill</div>
-					<input type="color" bind:value={$textFill} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">fontSize</div>
-					<input type="number" bind:value={$fontSize} />
-				</label>
-				<label>
-					<div class="title">fontFamily</div>
-					<input bind:value={$fontFamily} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">textOffsetX</div>
-					<input type="number" bind:value={$textOffsetX} />
-				</label>
-				<label>
-					<div class="title">textOffsetY</div>
-					<input type="number" bind:value={$textOffsetY} />
 				</label>
 			</fieldset>
 		</div>
