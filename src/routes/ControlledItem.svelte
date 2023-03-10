@@ -23,7 +23,7 @@
 			</span>
 		</div>
 	{/if}
-	<button on:click={() => stage.swapControl(null)} disabled={!$controlled}
+	<button on:click={() => stage.swapControl(null, true)} disabled={!$controlled}
 		>{#if $controlled}release control{:else}no item is controlled{/if}</button
 	>
 </div>
