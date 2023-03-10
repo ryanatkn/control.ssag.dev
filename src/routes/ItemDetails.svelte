@@ -2,11 +2,11 @@
 	import {
 		type Item,
 		hexToRgb,
-		rgbToHsl,
 		hexStringToRgb,
 		rgbToHex,
 		rgbToHexString,
-		hslToRgb,
+		hexStringToHsl,
+		hslToHexString,
 	} from '@feltcoop/dealt';
 	import {handleTargetValue} from '@feltjs/util/dom.js';
 
@@ -85,6 +85,36 @@
 			</fieldset>
 			<fieldset class="row">
 				<label>
+					<div class="title">controlling</div>
+					<input
+						type="checkbox"
+						checked={controlling}
+						on:input={(e) => stage.swapControl(e.currentTarget.checked ? item : null)}
+					/>
+				</label>
+				<label>
+					<div class="title">color</div>
+					<input
+						type="color"
+						value={hslToHexString(...$color)}
+						on:input={handleTargetValue((value) => {
+							$color = hexStringToHsl(value);
+						})}
+					/>
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">ghostly</div>
+					<input type="checkbox" bind:checked={$ghostly} />
+				</label>
+				<label>
+					<div class="title">invisible</div>
+					<input type="checkbox" bind:checked={$invisible} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
 					<div class="title">speed</div>
 					<input type="number" bind:value={$speed} step={0.05} />
 				</label>
@@ -100,36 +130,6 @@
 					disabled={true}
 					title="TODO enable editing this"
 				/>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">ghostly</div>
-					<input type="checkbox" bind:checked={$ghostly} />
-				</label>
-				<label>
-					<div class="title">invisible</div>
-					<input type="checkbox" bind:checked={$invisible} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">controlling</div>
-					<input
-						type="checkbox"
-						checked={controlling}
-						on:change={() => stage.swapControl(controlling ? null : item)}
-					/>
-				</label>
-				<label>
-					<div class="title">color</div>
-					<input
-						type="color"
-						value={rgbToHexString(...hslToRgb(...$color))}
-						on:input={handleTargetValue((value) => {
-							$color = rgbToHsl(...hexStringToRgb(value));
-						})}
-					/>
-				</label>
 			</fieldset>
 			<fieldset>
 				<label>
