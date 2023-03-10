@@ -89,7 +89,7 @@
 					<input
 						type="checkbox"
 						checked={controlling}
-						on:input={(e) => stage.swapControl(e.currentTarget.checked ? item : null)}
+						on:input={(e) => stage.swapControl(e.currentTarget.checked ? item : null, true)}
 					/>
 				</label>
 				<label>

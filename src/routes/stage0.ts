@@ -269,16 +269,18 @@ export class Stage0 extends Stage {
 	timeLastSwapped: number | undefined;
 
 	swapControl(item: Item | null, force = false): boolean {
-		console.log(`swap, item, force`, item, force);
 		const {$controlled, time} = this;
 		if ($controlled === item) {
 			if (!force) return false;
 			this.timeLastSwapped = undefined;
 		}
 		if ($controlled) {
-			if (this.timeLastSwapped !== undefined) {
+			// respect the swap timer unless `force=true`
+			if (!force && this.timeLastSwapped !== undefined) {
 				const timeElapsed = time - this.timeLastSwapped;
-				if (time > CONTROL_SWAP_COOLDOWN && timeElapsed < CONTROL_SWAP_COOLDOWN) return false;
+				if (time > CONTROL_SWAP_COOLDOWN && timeElapsed < CONTROL_SWAP_COOLDOWN) {
+					return false;
+				}
 			}
 			$controlled.graphicsFillColor.set(0);
 			$controlled.graphicsFillAlpha.set(0);
@@ -286,6 +288,7 @@ export class Stage0 extends Stage {
 			$controlled.directionY = 0;
 		}
 		this.timeLastSwapped = time;
+		console.log(`setting`, item);
 		this.controlled.set(item);
 		if (item) {
 			item.graphicsFillColor.set(COLOR_PLAYER_HEX);
