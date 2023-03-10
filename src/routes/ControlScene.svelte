@@ -96,7 +96,7 @@
 	let pane1_height = 214;
 	let pane1_offset_y = pane0_height + PANE_MARGIN;
 	let pane5_width = PANE_WIDTH;
-	let pane5_height = 182;
+	let pane5_height = 202;
 	let pane5_offset_x = $layout.width - pane5_width;
 	let pane3_width = PANE_WIDTH;
 	let pane3_height = 200;

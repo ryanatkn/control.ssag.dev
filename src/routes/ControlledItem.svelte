@@ -38,20 +38,10 @@
 			no item is controlled
 		{/if}
 	</div>
-	<div class="row">
+	<div>
 		<button on:click={() => stage.swapControl(null, true)} disabled={!$controlled}>
 			release control
 		</button>
-		<button
-			on:click={selected_is_controlled || !selected
-				? null
-				: () => stage.swapControl(selected, true)}
-			disabled={selected_is_controlled || !selected}
-		>
-			control selected
-		</button>
-	</div>
-	<div class="row">
 		<button
 			disabled={!selected || selected_is_controlled}
 			on:click={selected && !selected_is_controlled
@@ -64,7 +54,7 @@
 			disabled={!last_controlled}
 			on:click={last_controlled ? () => stage.swapControl(last_controlled, true) : undefined}
 		>
-			swap to last
+			swap back
 		</button>
 	</div>
 </div>
@@ -83,6 +73,6 @@
 		align-items: center;
 	}
 	button {
-		flex: 1;
+		width: 100%;
 	}
 </style>
