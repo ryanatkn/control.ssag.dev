@@ -102,7 +102,7 @@
 	let pane3_height = 200;
 	let pane3_offset_y = pane1_offset_y + pane1_height + PANE_MARGIN;
 	let pane5_width = PANE_WIDTH;
-	let pane5_height = 256;
+	let pane5_height = 175;
 	let pane5_offset_x = pane2_offset_x;
 	let pane4_width = PANE_WIDTH;
 	let pane4_height = $layout.height - pane2_height - pane5_height - PANE_MARGIN;
@@ -152,7 +152,7 @@
 				bind:offset_y={pane5_offset_y}
 			>
 				<svelte:fragment slot="header">controlled item</svelte:fragment>
-				<ControlledItem {stage} />
+				<ControlledItem {stage} {item_selection} />
 			</Pane>
 			<Pane
 				bind:width={pane4_width}
