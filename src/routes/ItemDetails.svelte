@@ -115,6 +115,28 @@
 			</fieldset>
 			<fieldset class="row">
 				<label>
+					<div class="title">x</div>
+					<input type="number" bind:value={$x} />
+				</label>
+				<label>
+					<div class="title">y</div>
+					<input type="number" bind:value={$y} />
+				</label>
+			</fieldset>
+			{#if $type === 'polygon'}
+				<fieldset class="row">
+					<label>
+						<div class="title">scale_x</div>
+						<input type="number" bind:value={$scale_x} />
+					</label>
+					<label>
+						<div class="title">scale_y</div>
+						<input type="number" bind:value={$scale_y} />
+					</label>
+				</fieldset>
+			{/if}
+			<fieldset class="row">
+				<label>
 					<div class="title">speed</div>
 					<input type="number" bind:value={$speed} step={0.05} />
 				</label>
@@ -130,6 +152,36 @@
 					disabled={true}
 					title="TODO enable editing this"
 				/>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">text</div>
+					<input bind:value={$text} />
+				</label>
+				<label>
+					<div class="title">textFill</div>
+					<input type="color" bind:value={$textFill} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">fontSize</div>
+					<input type="number" bind:value={$fontSize} />
+				</label>
+				<label>
+					<div class="title">fontFamily</div>
+					<input bind:value={$fontFamily} />
+				</label>
+			</fieldset>
+			<fieldset class="row">
+				<label>
+					<div class="title">textOffsetX</div>
+					<input type="number" bind:value={$textOffsetX} />
+				</label>
+				<label>
+					<div class="title">textOffsetY</div>
+					<input type="number" bind:value={$textOffsetY} />
+				</label>
 			</fieldset>
 			<fieldset>
 				<label>
@@ -168,58 +220,6 @@
 				<label>
 					<div class="title">graphicsLineAlpha</div>
 					<input type="range" min={0} max={1} step={0.01} bind:value={$graphicsLineAlpha} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">x</div>
-					<input type="number" bind:value={$x} />
-				</label>
-				<label>
-					<div class="title">y</div>
-					<input type="number" bind:value={$y} />
-				</label>
-			</fieldset>
-			{#if $type === 'polygon'}
-				<fieldset class="row">
-					<label>
-						<div class="title">scale_x</div>
-						<input type="number" bind:value={$scale_x} />
-					</label>
-					<label>
-						<div class="title">scale_y</div>
-						<input type="number" bind:value={$scale_y} />
-					</label>
-				</fieldset>
-			{/if}
-			<fieldset class="row">
-				<label>
-					<div class="title">text</div>
-					<input bind:value={$text} />
-				</label>
-				<label>
-					<div class="title">textFill</div>
-					<input type="color" bind:value={$textFill} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">fontSize</div>
-					<input type="number" bind:value={$fontSize} />
-				</label>
-				<label>
-					<div class="title">fontFamily</div>
-					<input bind:value={$fontFamily} />
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<div class="title">textOffsetX</div>
-					<input type="number" bind:value={$textOffsetX} />
-				</label>
-				<label>
-					<div class="title">textOffsetY</div>
-					<input type="number" bind:value={$textOffsetY} />
 				</label>
 			</fieldset>
 		</div>

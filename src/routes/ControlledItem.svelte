@@ -7,16 +7,23 @@
 
 	$: ({controlled} = stage);
 
-	$: color = $controlled ? $controlled.color : null;
+	// these type assertions aren't great, but they're better than markup guards that just make the typechecker happy
+	$: type = $controlled ? $controlled.type : null!;
+	$: color = $controlled ? $controlled.color : null!;
+	$: x = $controlled ? $controlled.x : null!;
+	$: y = $controlled ? $controlled.y : null!;
 </script>
 
 <div class="item-details">
 	{#if $controlled}
 		<div class="info" style:--color={$color && hslToHexString(...$color)}>
-			{$controlled.$type}
+			{$type}
+			<span>
+				({Math.round($x)}, {Math.round($y)})
+			</span>
 		</div>
 	{/if}
-	<button on:click={() => ($controlled = null)} disabled={!$controlled}
+	<button on:click={() => stage.swapControl(null)} disabled={!$controlled}
 		>{#if $controlled}release control{:else}no item is controlled{/if}</button
 	>
 </div>

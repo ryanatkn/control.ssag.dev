@@ -288,7 +288,6 @@ export class Stage0 extends Stage {
 			$controlled.directionY = 0;
 		}
 		this.timeLastSwapped = time;
-		console.log(`setting`, item);
 		this.controlled.set(item);
 		if (item) {
 			item.graphicsFillColor.set(COLOR_PLAYER_HEX);
