@@ -10,18 +10,16 @@
 
 <div class="scene-details">
 	<form>
-		<div>
-			<fieldset class="row">
-				<label>
-					<div class="title">stage name</div>
-					<input value={meta.name} />
-				</label>
-				<label>
-					<div class="title">stage icon</div>
-					<input value={meta.icon} />
-				</label>
-			</fieldset>
-		</div>
+		<fieldset class="row">
+			<label>
+				<div class="title">stage name</div>
+				<input value={meta.name} />
+			</label>
+			<label>
+				<div class="title">stage icon</div>
+				<input value={meta.icon} />
+			</label>
+		</fieldset>
 	</form>
 	<div class="row">
 		<button on:click={() => stage.destroy()}> destroy stage </button>

@@ -303,16 +303,16 @@ export class Stage0 extends Stage {
 					return false;
 				}
 			}
-			$controlled.graphicsFillColor.set(0);
-			$controlled.graphicsFillAlpha.set(0);
+			$controlled.fillColor.set(0);
+			$controlled.fillAlpha.set(0);
 			$controlled.directionX = 0;
 			$controlled.directionY = 0;
 		}
 		this.timeLastSwapped = time;
 		this.controlled.set(item);
 		if (item) {
-			item.graphicsFillColor.set(COLOR_PLAYER_HEX);
-			item.graphicsFillAlpha.set(1);
+			item.fillColor.set(COLOR_PLAYER_HEX);
+			item.fillAlpha.set(1);
 			this.freezeCamera.set(item.$freezeCamera ?? false);
 		}
 		return true;
@@ -330,7 +330,7 @@ export class Stage0 extends Stage {
 			rabbit_message.x.set(rabbit.$x + 80);
 			rabbit_message.y.set(rabbit.$y + 20);
 			rabbit_message.text.set('DONT\n  press\nEscape !!');
-			rabbit_message.graphicsLineWidth.set(0);
+			rabbit_message.lineWidth.set(0);
 		}
 	}
 

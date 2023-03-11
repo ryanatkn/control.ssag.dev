@@ -10,19 +10,17 @@
 
 <div class="project-details">
 	<form>
-		<div>
-			<fieldset class="row">
-				<label>
-					<div class="title">project name</div>
-					<input bind:value={$name} />
-				</label>
-				<!-- maybe 3 emoji to represent it? -->
-				<!-- <label>
+		<fieldset class="row">
+			<label>
+				<div class="title">project name</div>
+				<input bind:value={$name} />
+			</label>
+			<!-- maybe 3 emoji to represent it? -->
+			<!-- <label>
 					<div class="title">project icon</div>
 					<input value="icon" />
 				</label> -->
-			</fieldset>
-		</div>
+		</fieldset>
 	</form>
 </div>
 

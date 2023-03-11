@@ -15,10 +15,11 @@
 	$: y = $controlled ? $controlled.y : null!;
 
 	// TODO abstract all of this with a custom store?
-	let last_controlled: Item | null; // technically `| undefined` but makes it harder to use in markup
-	let last_controlled_temp: Item | null;
-	$: update_controlled($controlled);
-	const update_controlled = (item: Item | null) => {
+	let last_controlled: Item | null = null;
+	let last_controlled_temp: Item | null = null;
+	$: update_last_controlled($controlled);
+	const update_last_controlled = (item: Item | null) => {
+		if (!item) return;
 		last_controlled = last_controlled_temp;
 		last_controlled_temp = item;
 	};
