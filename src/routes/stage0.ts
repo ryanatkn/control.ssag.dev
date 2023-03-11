@@ -258,6 +258,9 @@ export class Stage0 extends Stage {
 					this.$camera.y + direction_y * this.$camera_speed,
 				);
 			}
+
+			// TODO BLOCK check `this.pointer` collision against all other items
+			// TODO BLOCK update the pointer position
 		}
 
 		// TODO currently checks for `$freeze_camera` toggling on the rabbit's chase mode,
