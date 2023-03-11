@@ -184,7 +184,7 @@ export class Stage0 extends Stage {
 			radius: 1,
 			invisible: true,
 		});
-		this;
+		this.add_item(this.pointer);
 
 		// TODO do this better, maybe with `tags` automatically, same with `bounds`
 		for (const item of this.item_by_id.values()) {
@@ -366,13 +366,28 @@ export class Stage0 extends Stage {
 			// like we do `setup` in favor of `create_initial_data`.
 			// Should the `controller` have store values, and we do this logic in a `this.writable` callback?
 		} else {
-			const {pointer} = this;
-			// TODO BLOCK translate `x` and `y` to world coordinates
-			pointer.x.set(x);
-			pointer.y.set(y);
+			const {pointer, $camera, $viewport, $layout} = this;
+			const pointer_world_x =
+				(x - ($layout.width - $viewport.width) / 2) * ($camera.width / $viewport.width) +
+				$camera.x -
+				$camera.width / 2;
+			const pointer_world_y =
+				(y - ($layout.height - $viewport.height) / 2) * ($camera.height / $viewport.height) +
+				$camera.y -
+				$camera.height / 2;
+			pointer.x.set(pointer_world_x);
+			pointer.y.set(pointer_world_y);
+			console.log(`pointer_world_x, pointer_world_y`, pointer_world_x, pointer_world_y);
 			console.log(`pointer.$x, pointer.$y`, pointer.$x, pointer.$y);
+			// this.sim.collisions.update();
 			for (const item of this.sim.items) {
-				if (item.$body.collides(pointer.$body)) {
+				if (
+					item !== pointer &&
+					!item.$ghostly &&
+					!item.disable_simulation &&
+					item.$body.collides(pointer.$body)
+				) {
+					console.log('collides', item);
 					return item;
 				}
 			}
