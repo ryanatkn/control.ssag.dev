@@ -23,7 +23,6 @@ import {
 } from '@feltcoop/dealt';
 
 import {WORLD_SIZE} from '$routes/constants';
-import {get} from 'svelte/store';
 
 // TODO rewrite this to use a route Svelte component?
 
