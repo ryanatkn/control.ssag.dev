@@ -1,12 +1,12 @@
 <script lang="ts">
 	import {
 		type Item,
-		hexToRgb,
-		hexStringToRgb,
-		rgbToHex,
-		rgbToHexString,
-		hexStringToHsl,
-		hslToHexString,
+		hex_to_rgb,
+		hex_string_to_rgb,
+		rgb_to_hex,
+		rgb_to_hex_string,
+		hex_string_to_hsl,
+		hsl_to_hex_string,
 	} from '@feltcoop/dealt';
 	import {handleTargetValue} from '@feltjs/util/dom.js';
 
@@ -35,15 +35,15 @@
 		tags,
 		scale_x,
 		scale_y,
-		lineWidth,
-		lineColor,
-		lineAlpha,
+		line_width,
+		line_color,
+		line_alpha,
 		text,
-		textFill,
-		fontSize,
-		fontFamily,
-		textOffsetX,
-		textOffsetY,
+		text_fill,
+		font_size,
+		font_family,
+		text_offset_x,
+		text_offset_y,
 		color,
 	} = item);
 
@@ -88,16 +88,16 @@
 				<input
 					type="checkbox"
 					checked={controlling}
-					on:input={(e) => stage.swapControl(e.currentTarget.checked ? item : null, true)}
+					on:input={(e) => stage.swap_control(e.currentTarget.checked ? item : null, true)}
 				/>
 			</label>
 			<label>
 				<div class="title">color</div>
 				<input
 					type="color"
-					value={hslToHexString(...$color)}
+					value={hsl_to_hex_string(...$color)}
 					on:input={handleTargetValue((value) => {
-						$color = hexStringToHsl(value);
+						$color = hex_string_to_hsl(value);
 					})}
 				/>
 			</label>
@@ -158,63 +158,63 @@
 				<input bind:value={$text} />
 			</label>
 			<label>
-				<div class="title">textFill</div>
-				<input type="color" bind:value={$textFill} />
+				<div class="title">text_fill</div>
+				<input type="color" bind:value={$text_fill} />
 			</label>
 		</fieldset>
 		<fieldset class="row">
 			<label>
-				<div class="title">fontSize</div>
-				<input type="number" bind:value={$fontSize} />
+				<div class="title">font_size</div>
+				<input type="number" bind:value={$font_size} />
 			</label>
 			<label>
-				<div class="title">fontFamily</div>
-				<input bind:value={$fontFamily} />
-			</label>
-		</fieldset>
-		<fieldset class="row">
-			<label>
-				<div class="title">textOffsetX</div>
-				<input type="number" bind:value={$textOffsetX} />
-			</label>
-			<label>
-				<div class="title">textOffsetY</div>
-				<input type="number" bind:value={$textOffsetY} />
+				<div class="title">font_family</div>
+				<input bind:value={$font_family} />
 			</label>
 		</fieldset>
 		<fieldset class="row">
 			<label>
-				<div class="title">lineColor</div>
+				<div class="title">text_offset_x</div>
+				<input type="number" bind:value={$text_offset_x} />
+			</label>
+			<label>
+				<div class="title">text_offset_y</div>
+				<input type="number" bind:value={$text_offset_y} />
+			</label>
+		</fieldset>
+		<fieldset class="row">
+			<label>
+				<div class="title">line_color</div>
 				<input
 					type="color"
-					value={rgbToHexString(...hexToRgb($lineColor))}
+					value={rgb_to_hex_string(...hex_to_rgb($line_color))}
 					on:input={handleTargetValue((value) => {
-						$lineColor = rgbToHex(...hexStringToRgb(value));
+						$line_color = rgb_to_hex(...hex_string_to_rgb(value));
 					})}
 				/>
 			</label>
 			<label>
-				<div class="title">lineAlpha</div>
-				<input type="range" min={0} max={1} step={0.01} bind:value={$lineAlpha} />
+				<div class="title">line_alpha</div>
+				<input type="range" min={0} max={1} step={0.01} bind:value={$line_alpha} />
 			</label>
 		</fieldset>
 		<fieldset>
 			<label>
-				<div class="title">lineWidth</div>
+				<div class="title">line_width</div>
 				<div class="row">
 					<input
 						type="range"
 						min={0}
 						max={GRAPHICS_LINE_WIDTH_MAX}
 						step={1}
-						bind:value={$lineWidth}
+						bind:value={$line_width}
 					/>
 					<input
 						type="number"
 						min={0}
 						max={GRAPHICS_LINE_WIDTH_MAX}
 						step={1}
-						bind:value={$lineWidth}
+						bind:value={$line_width}
 					/>
 				</div>
 			</label>
@@ -227,7 +227,7 @@
 			</label>
 		</fieldset>
 	</form>
-	<button on:click={() => stage.removeItem(item)}>destroy {$type}</button>
+	<button on:click={() => stage.remove_item(item)}>destroy {$type}</button>
 </div>
 
 <style>

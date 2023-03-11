@@ -1,8 +1,8 @@
 <script lang="ts">
-	import {enableGlobalHotkeys, getLayout} from '@feltcoop/dealt';
+	import {enable_global_hotkeys, get_layout} from '@feltcoop/dealt';
 	import {swallow} from '@feltjs/util/dom.js';
 
-	const layout = getLayout();
+	const layout = get_layout();
 
 	export let width = 256;
 	export let height = 256;
@@ -30,7 +30,7 @@
 		const target = e.target as Element;
 		const {tagName} = target;
 		if (
-			!enableGlobalHotkeys(target) ||
+			!enable_global_hotkeys(target) ||
 			tagName === 'INPUT' ||
 			tagName === 'BUTTON' ||
 			tagName === 'LABEL' ||

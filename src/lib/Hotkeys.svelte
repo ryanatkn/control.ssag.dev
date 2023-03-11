@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {enableGlobalHotkeys} from '@feltcoop/dealt';
+	import {enable_global_hotkeys} from '@feltcoop/dealt';
 	import {swallow} from '@feltjs/util/dom.js';
 
 	import {type Hotkey, matchesHotkey} from '$lib/hotkey';
@@ -9,7 +9,7 @@
 	const handleKeydown = (key: string, target: any): boolean => {
 		for (const hotkey of hotkeys) {
 			const matched = matchesHotkey(hotkey, key);
-			if (matched && (!target || enableGlobalHotkeys(target))) {
+			if (matched && (!target || enable_global_hotkeys(target))) {
 				hotkey.action();
 				return true; // handle only the first match
 			}
