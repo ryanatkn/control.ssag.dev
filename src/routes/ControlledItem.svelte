@@ -19,7 +19,6 @@
 	let last_controlled_temp: Item | null = null;
 	$: update_last_controlled($controlled);
 	const update_last_controlled = (item: Item | null) => {
-		if (!item) return;
 		last_controlled = last_controlled_temp;
 		last_controlled_temp = item;
 	};
@@ -51,8 +50,10 @@
 			control selected
 		</button>
 		<button
-			disabled={!last_controlled}
-			on:click={last_controlled ? () => stage.swap_control(last_controlled, true) : undefined}
+			disabled={!last_controlled || last_controlled === $controlled}
+			on:click={last_controlled && last_controlled !== $controlled
+				? () => stage.swap_control(last_controlled, true)
+				: undefined}
 		>
 			swap back
 		</button>
