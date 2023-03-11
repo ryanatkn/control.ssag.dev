@@ -2,11 +2,6 @@
 	--icon: '🟣';
 }
 
-/* TODO upstream? rename? */
-.flush {
-	border-radius: 0;
-}
-
 /* TODO upstream to dealt? */
 .plain-button {
 	--button_color_hover: var(--tint_light_2) !important;

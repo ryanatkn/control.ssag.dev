@@ -231,7 +231,7 @@
 			</label>
 		</fieldset>
 	</form>
-	<button class="flush" on:click={() => stage.removeItem(item)}>destroy {$type}</button>
+	<button on:click={() => stage.removeItem(item)}>destroy {$type}</button>
 </div>
 
 <style>
