@@ -4,13 +4,13 @@
 
 	export let stage: Stage0; // TODO should this be a store? a component instance? refactor this component instead?
 
-	$: ({freezeCamera, camera, camera_speed} = stage);
+	$: ({freeze_camera, camera, camera_speed} = stage);
 
 	$: ({x, y} = $camera);
 
 	// TODO type is awkward
-	const updateX = (e: Event & {target: any}) => camera.setPosition(Number(e.target.value), y);
-	const updateY = (e: Event & {target: any}) => camera.setPosition(x, Number(e.target.value));
+	const updateX = (e: Event & {target: any}) => camera.set_position(Number(e.target.value), y);
+	const updateY = (e: Event & {target: any}) => camera.set_position(x, Number(e.target.value));
 	// TODO upstream `setScale`
 	// const updateScale = (e: Event & {target: any}) => camera.setScale(Number(e.target.value));
 </script>
@@ -19,8 +19,8 @@
 	<form>
 		<fieldset>
 			<label class="row">
-				<input type="checkbox" bind:checked={$freezeCamera} />
-				<div class="title">freezeCamera</div>
+				<input type="checkbox" bind:checked={$freeze_camera} />
+				<div class="title">freeze_camera</div>
 			</label>
 		</fieldset>
 		<fieldset class="row">

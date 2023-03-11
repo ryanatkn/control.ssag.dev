@@ -3,14 +3,14 @@
 	import {writable} from 'svelte/store';
 	import {
 		World,
-		setViewport,
+		set_viewport,
 		SurfaceWithController,
-		getPixi,
-		createCamera,
-		getLayout,
+		get_pixi,
+		create_camera,
+		get_layout,
 		type ExitStage,
 		type Item,
-		enableGlobalHotkeys,
+		enable_global_hotkeys,
 	} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
 	import {swallow} from '@feltjs/util/dom.js';
@@ -28,8 +28,8 @@
 	import ControlledItem from '$routes/ControlledItem.svelte';
 	import {Project} from '$lib/project';
 
-	export let pixi = getPixi();
-	export let layout = getLayout();
+	export let pixi = get_pixi();
+	export let layout = get_layout();
 
 	// TODO refactor
 	const project = new Project();
@@ -49,10 +49,10 @@
 	$: viewportSize = Math.min($layout.width, $layout.height);
 
 	// Scenes control the `viewport` and `camera`.
-	const viewport = setViewport(writable({width: viewportSize, height: viewportSize}));
+	const viewport = set_viewport(writable({width: viewportSize, height: viewportSize}));
 	$: viewport.set({width: viewportSize, height: viewportSize});
-	const camera = createCamera();
-	$: camera.setDimensions(WORLD_SIZE, WORLD_SIZE, $viewport.width, $viewport.height);
+	const camera = create_camera();
+	$: camera.set_dimensions(WORLD_SIZE, WORLD_SIZE, $viewport.width, $viewport.height);
 
 	let stage: Stage0 | undefined | null;
 	let setting_up: boolean | undefined;
@@ -113,7 +113,7 @@
 
 <svelte:window
 	on:keydown|capture={(e) => {
-		if (e.key === 'Escape' && enableGlobalHotkeys(e.target)) {
+		if (e.key === 'Escape' && enable_global_hotkeys(e.target)) {
 			swallow(e);
 			toggleEditMode();
 		}

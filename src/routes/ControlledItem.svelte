@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {hslToHexString, Item} from '@feltcoop/dealt';
+	import {hsl_to_hex_string, Item} from '@feltcoop/dealt';
 
 	import type {Stage0} from '$routes/stage0';
 
@@ -25,11 +25,10 @@
 	};
 
 	$: selected_is_controlled = !!selected && selected === $controlled;
-	$: console.log(`selected_is_controlled`, selected_is_controlled);
 </script>
 
-<div class="item-details">
-	<div class="info" style:--color={$controlled ? $color && hslToHexString(...$color) : null}>
+<div class="controlled-item">
+	<div class="info" style:--color={$controlled ? $color && hsl_to_hex_string(...$color) : null}>
 		{#if $controlled}
 			{$type}
 			<span>
@@ -40,20 +39,20 @@
 		{/if}
 	</div>
 	<div>
-		<button on:click={() => stage.swapControl(null, true)} disabled={!$controlled}>
+		<button on:click={() => stage.swap_control(null, true)} disabled={!$controlled}>
 			release control
 		</button>
 		<button
 			disabled={!selected || selected_is_controlled}
 			on:click={selected && !selected_is_controlled
-				? () => stage.swapControl(selected, true)
+				? () => stage.swap_control(selected, true)
 				: undefined}
 		>
-			swap to selected
+			control selected
 		</button>
 		<button
 			disabled={!last_controlled}
-			on:click={last_controlled ? () => stage.swapControl(last_controlled, true) : undefined}
+			on:click={last_controlled ? () => stage.swap_control(last_controlled, true) : undefined}
 		>
 			swap back
 		</button>
@@ -61,7 +60,7 @@
 </div>
 
 <style>
-	.item-details {
+	.controlled-item {
 		display: flex;
 		flex-direction: column;
 	}

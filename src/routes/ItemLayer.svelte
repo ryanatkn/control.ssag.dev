@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {type Item, hslToStr} from '@feltcoop/dealt';
+	import {type Item, hsl_to_string} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
 
 	export let item: Item;
@@ -16,7 +16,7 @@
 		class:selected
 		class="deselectable"
 		on:click={() => ($item_selection = selected ? null : item)}
-		style:--text_color={hslToStr(...$color)}
+		style:--text_color={hsl_to_string(...$color)}
 	>
 		{#if controlling}
 			<!-- TODO improve this -->

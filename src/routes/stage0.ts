@@ -3,13 +3,13 @@ import {
 	Item,
 	COLOR_PLAYER,
 	COLOR_EXIT,
-	updateItemDirection,
+	update_item_direction,
 	collide,
-	collisionResult,
+	cr,
 	type StageMeta,
 	type CircleBody,
 	type PolygonBody,
-	hslToHex,
+	hsl_to_hex,
 	COLOR_DEFAULT,
 	COLOR_ROOTED,
 	COLOR_DANGER,
@@ -17,8 +17,8 @@ import {
 	PLAYER_RADIUS,
 	type ItemData,
 	type StageData,
-	createItemId,
-	hslToHexString,
+	create_item_id,
+	hsl_to_hex_string,
 	type StageOptions,
 } from '@feltcoop/dealt';
 
@@ -34,7 +34,7 @@ const meta: StageMeta = {
 };
 
 const CONTROL_SWAP_COOLDOWN = 1000;
-const COLOR_PLAYER_HEX = hslToHex(...COLOR_PLAYER);
+const COLOR_PLAYER_HEX = hsl_to_hex(...COLOR_PLAYER);
 
 export class Stage0 extends Stage {
 	static override meta = meta;
@@ -55,18 +55,18 @@ export class Stage0 extends Stage {
 		this.subscribe(); // TODO hacky, shouldn't be needed, not sure how -- maybe call in `Stage.setup`?
 	}
 
-	static override createInitialData(): Partial<StageData> {
+	static override create_initial_data(): Partial<StageData> {
 		const items: Array<Partial<ItemData>> = [];
-		const data: Partial<StageData> = {freezeCamera: true, items};
+		const data: Partial<StageData> = {freeze_camera: true, items};
 
 		const controlled = {
 			type: 'circle', // TODO needs type safety, should error when omitted
-			id: createItemId(),
+			id: create_item_id(),
 			x: 100,
 			y: 147,
 			radius: PLAYER_RADIUS,
 			speed: SPEED_SLOW,
-			freezeCamera: true,
+			freeze_camera: true,
 		} satisfies Partial<ItemData>;
 		items.push(controlled);
 		data.controlled = controlled.id;
@@ -78,7 +78,7 @@ export class Stage0 extends Stage {
 			y: 100,
 			radius: PLAYER_RADIUS / 3,
 			speed: SPEED_SLOW / 2,
-			freezeCamera: true,
+			freeze_camera: true,
 		});
 
 		// create the bounds
@@ -122,14 +122,14 @@ export class Stage0 extends Stage {
 			strength: 1_000_000_000,
 			tags: ['rabbit'],
 			text: '🐰',
-			fontSize: 36,
+			font_size: 36,
 		});
 		items.push({
 			type: 'circle',
 			tags: ['rabbit_message'],
 			text: '',
-			fontSize: 24,
-			textFill: hslToHexString(...COLOR_ROOTED),
+			font_size: 24,
+			text_fill: hsl_to_hex_string(...COLOR_ROOTED),
 			ghostly: true,
 			invisible: true,
 		});
@@ -168,7 +168,7 @@ export class Stage0 extends Stage {
 			speed: 0.007,
 		});
 
-		console.log(`toInitialData`, data);
+		console.log(`create_initial_data`, data);
 
 		return data;
 	}
@@ -176,7 +176,7 @@ export class Stage0 extends Stage {
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
 		// TODO do this better, maybe with `tags` automatically, same with `bounds`
-		for (const item of this.itemById.values()) {
+		for (const item of this.item_by_id.values()) {
 			if (item.$tags?.includes('bounds')) {
 				this.bounds = item as Item<PolygonBody>;
 			} else if (item.$tags?.includes('target')) {
@@ -187,7 +187,7 @@ export class Stage0 extends Stage {
 				this.rabbit_message = item as Item<CircleBody>;
 			}
 		}
-		this.swapControl(this.$controlled, true);
+		this.swap_control(this.$controlled, true);
 		console.log('set up');
 	}
 
@@ -197,144 +197,144 @@ export class Stage0 extends Stage {
 
 		super.update(dt);
 
-		this.sim.update(dt, (itemA, itemB, result) => {
+		this.sim.update(dt, (item_a, item_b, cr) => {
 			// TODO make a better system
 			if (
-				(itemA.$color === COLOR_DEFAULT && itemB.$color === COLOR_DANGER) ||
-				(itemB.$color === COLOR_DEFAULT && itemA.$color === COLOR_DANGER)
+				(item_a.$color === COLOR_DEFAULT && item_b.$color === COLOR_DANGER) ||
+				(item_b.$color === COLOR_DEFAULT && item_a.$color === COLOR_DANGER)
 			) {
-				const destroyed = itemA.$color === COLOR_DANGER ? itemB : itemA;
+				const destroyed = item_a.$color === COLOR_DANGER ? item_b : item_a;
 				if (destroyed === $controlled) {
 					this.restart();
 				} else {
-					this.removeItem(destroyed);
+					this.remove_item(destroyed);
 				}
 			} else if (
-				(itemA === $controlled && itemB === target) ||
-				(itemB === $controlled && itemA === target)
+				(item_a === $controlled && item_b === target) ||
+				(item_b === $controlled && item_a === target)
 			) {
-				this.collideWithTarget();
+				this.collide_with_target();
 			} else if (
-				(itemA === $controlled && itemB === rabbit) ||
-				(itemB === $controlled && itemA === rabbit)
+				(item_a === $controlled && item_b === rabbit) ||
+				(item_b === $controlled && item_a === rabbit)
 			) {
-				this.collideWithRabbit();
+				this.collide_with_rabbit();
 			} else if (
-				(itemA === $controlled && itemB.$color === COLOR_DEFAULT) ||
-				(itemB === $controlled && itemA.$color === COLOR_DEFAULT)
+				(item_a === $controlled && item_b.$color === COLOR_DEFAULT) ||
+				(item_b === $controlled && item_a.$color === COLOR_DEFAULT)
 			) {
-				const item = (itemA === $controlled ? itemB : itemA) as Item<CircleBody>;
-				if (this.swapControl(item)) {
+				const item = (item_a === $controlled ? item_b : item_a) as Item<CircleBody>;
+				if (this.swap_control(item)) {
 					$controlled = this.$controlled; // is a bit hacky
 				}
 			}
-			collide(itemA, itemB, result);
+			collide(item_a, item_b, cr);
 		});
 
 		if ($controlled) {
-			updateItemDirection(controller, $controlled, this.$camera, this.$viewport, this.$layout);
+			update_item_direction(controller, $controlled, this.$camera, this.$viewport, this.$layout);
 
-			if (this.$freezeCamera) {
-				if (!this.bounds.$body.collides($controlled.$body, collisionResult)) {
-					if (this.hasAnyDanger()) {
+			if (this.$freeze_camera) {
+				if (!this.bounds.$body.collides($controlled.$body, cr)) {
+					if (this.has_any_danger()) {
 						this.restart();
 					} else {
-						this.freezeCamera.set(false);
-						$controlled.freezeCamera.set(false);
+						this.freeze_camera.set(false);
+						$controlled.freeze_camera.set(false);
 					}
 				}
 			} else {
 				// TODO different algorithms for tracking the player with the camera (`camera.follow` option?)
-				this.camera.setPosition($controlled.$x, $controlled.$y);
+				this.camera.set_position($controlled.$x, $controlled.$y);
 			}
 		} else {
-			// TODO should the camera be an `item`? could do collision if so and not need this special logic (see `updateItemDirection`)
-			const {movingLeft, movingRight, movingUp, movingDown} = controller;
-			const directionX = movingLeft && !movingRight ? -1 : movingRight && !movingLeft ? 1 : 0;
-			const directionY = movingUp && !movingDown ? -1 : movingDown && !movingUp ? 1 : 0;
-			if (directionX !== 0 || directionY !== 0) {
-				this.camera.setPosition(
-					this.$camera.x + directionX * this.$camera_speed,
-					this.$camera.y + directionY * this.$camera_speed,
+			// TODO should the camera be an `item`? could do collision if so and not need this special logic (see `update_item_direction`)
+			const {moving_left, moving_right, moving_up, moving_down} = controller;
+			const direction_x = moving_left && !moving_right ? -1 : moving_right && !moving_left ? 1 : 0;
+			const direction_y = moving_up && !moving_down ? -1 : moving_down && !moving_up ? 1 : 0;
+			if (direction_x !== 0 || direction_y !== 0) {
+				this.camera.set_position(
+					this.$camera.x + direction_x * this.$camera_speed,
+					this.$camera.y + direction_y * this.$camera_speed,
 				);
 			}
 		}
 
-		// TODO currently checks for `$freezeCamera` toggling on the rabbit's chase mode,
+		// TODO currently checks for `$freeze_camera` toggling on the rabbit's chase mode,
 		// would be better to check the rabbit against the camera, so it starts running away when onscreen,
 		// and so we'll have that reusable scriptable ability trigger, "when onscreen"
-		if (!this.$freezeCamera && !this.chasing_rabbit) {
+		if (!this.$freeze_camera && !this.chasing_rabbit) {
 			this.chasing_rabbit = true;
-			rabbit.directionX = Math.SQRT1_2;
-			rabbit.directionY = -Math.SQRT1_2;
+			rabbit.direction_x = Math.SQRT1_2;
+			rabbit.direction_y = -Math.SQRT1_2;
 		}
 
-		if (this.shouldRestart) {
+		if (this.needs_restart) {
 			this.exit({next_stage: meta.name});
 		}
 	}
 
 	// TODO rethink - maybe a more generic API?
-	hasAnyDanger(): boolean {
+	has_any_danger(): boolean {
 		for (const item of this.sim.items) {
 			if (item.$color === COLOR_DANGER) return true;
 		}
 		return false;
 	}
 
-	shouldRestart = false; // this is a flag because we want to do it after updating, otherwise disposed items get updated and throw errors
+	needs_restart = false; // this is a flag because we want to do it after updating, otherwise disposed items get updated and throw errors
 	restart(): void {
-		this.shouldRestart = true;
+		this.needs_restart = true;
 	}
 
-	timeLastSwapped: number | undefined;
+	time_last_swapped: number | undefined;
 
-	swapControl(item: Item | null, force = false): boolean {
+	swap_control(item: Item | null, force = false): boolean {
 		const {$controlled, time} = this;
 		if ($controlled === item) {
 			if (!force) return false;
-			this.timeLastSwapped = undefined;
+			this.time_last_swapped = undefined;
 		}
 		if ($controlled) {
 			// respect the swap timer unless `force=true`
-			if (!force && this.timeLastSwapped !== undefined) {
-				const timeElapsed = time - this.timeLastSwapped;
+			if (!force && this.time_last_swapped !== undefined) {
+				const timeElapsed = time - this.time_last_swapped;
 				if (time > CONTROL_SWAP_COOLDOWN && timeElapsed < CONTROL_SWAP_COOLDOWN) {
 					return false;
 				}
 			}
-			$controlled.fillColor.set(0);
-			$controlled.fillAlpha.set(0);
-			$controlled.directionX = 0;
-			$controlled.directionY = 0;
+			$controlled.fill_color.set(0);
+			$controlled.fill_alpha.set(0);
+			$controlled.direction_x = 0;
+			$controlled.direction_y = 0;
 		}
-		this.timeLastSwapped = time;
+		this.time_last_swapped = time;
 		this.controlled.set(item);
 		if (item) {
-			item.fillColor.set(COLOR_PLAYER_HEX);
-			item.fillAlpha.set(1);
-			this.freezeCamera.set(item.$freezeCamera ?? false);
+			item.fill_color.set(COLOR_PLAYER_HEX);
+			item.fill_alpha.set(1);
+			this.freeze_camera.set(item.$freeze_camera ?? false);
 		}
 		return true;
 	}
 
 	// TODO refactor these into a good system
-	collideWithRabbit(): void {
+	collide_with_rabbit(): void {
 		const {rabbit, rabbit_message} = this;
 		if (rabbit.$color !== COLOR_ROOTED) {
 			// TODO it'd be nice to stop the clock here, but we don't have it in the stage interface
 			rabbit.color.set(COLOR_ROOTED);
-			rabbit.directionX = 0;
-			rabbit.directionY = 0;
+			rabbit.direction_x = 0;
+			rabbit.direction_y = 0;
 			rabbit_message.invisible.set(false);
 			rabbit_message.x.set(rabbit.$x + 80);
 			rabbit_message.y.set(rabbit.$y + 20);
 			rabbit_message.text.set('DONT\n  press\nEscape !!');
-			rabbit_message.lineWidth.set(0);
+			rabbit_message.line_width.set(0);
 		}
 	}
 
-	collideWithTarget(): void {
+	collide_with_target(): void {
 		for (const item of this.sim.items) {
 			if (item.$color === COLOR_DANGER) {
 				item.color.set(COLOR_DEFAULT);

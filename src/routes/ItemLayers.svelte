@@ -15,7 +15,7 @@
 	// TODO is janky --s for this initial data, what would be better than this for users?
 	const toInitialItemData = (item: Item | null): ItemData | null => {
 		if (!item) return null;
-		const data = item.toData();
+		const data = item.to_data();
 		if (!data) return null;
 		const d = omit(data as any, ['id']) as any;
 		if ('x' in d) d.x += 20;
@@ -25,7 +25,7 @@
 
 	const create = (): void => {
 		const item = new Item(stage.collisions, toInitialItemData($item_selection));
-		stage.addItem(item);
+		stage.add_item(item);
 		$item_selection = item;
 	};
 </script>
