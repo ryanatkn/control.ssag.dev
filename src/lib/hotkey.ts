@@ -13,8 +13,8 @@ export type HotkeyMatch = string; // TODO add support for shift, press duration,
  * @param key event.key, see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key
  * @returns
  */
-export const matchesHotkey = (hotkey: Hotkey, key: string): boolean => {
-	const parsed = parseHotkeyMatches(hotkey);
+export const matches_hotkey = (hotkey: Hotkey, key: string): boolean => {
+	const parsed = parse_hotkey_matches(hotkey);
 	for (const p of parsed) {
 		if (p === key) {
 			return true;
@@ -23,7 +23,7 @@ export const matchesHotkey = (hotkey: Hotkey, key: string): boolean => {
 	return false;
 };
 
-const parseHotkeyMatches = (hotkey: Hotkey): HotkeyMatch[] => {
+const parse_hotkey_matches = (hotkey: Hotkey): HotkeyMatch[] => {
 	const {match} = hotkey;
 	return typeof match === 'string' ? [match] : match;
 };

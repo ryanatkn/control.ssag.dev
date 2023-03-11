@@ -2,13 +2,13 @@
 	import {enable_global_hotkeys} from '@feltcoop/dealt';
 	import {swallow} from '@feltjs/util/dom.js';
 
-	import {type Hotkey, matchesHotkey} from '$lib/hotkey';
+	import {type Hotkey, matches_hotkey} from '$lib/hotkey';
 
 	export let hotkeys: Hotkey[] = [];
 
-	const handleKeydown = (key: string, target: any): boolean => {
+	const keydown = (key: string, target: any): boolean => {
 		for (const hotkey of hotkeys) {
-			const matched = matchesHotkey(hotkey, key);
+			const matched = matches_hotkey(hotkey, key);
 			if (matched && (!target || enable_global_hotkeys(target))) {
 				hotkey.action();
 				return true; // handle only the first match
@@ -20,7 +20,7 @@
 
 <svelte:window
 	on:keydown={(e) => {
-		if (handleKeydown(e.key, e.target)) {
+		if (keydown(e.key, e.target)) {
 			swallow(e);
 		}
 	}}
