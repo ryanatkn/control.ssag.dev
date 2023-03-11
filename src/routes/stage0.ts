@@ -253,12 +253,6 @@ export class Stage0 extends Stage {
 			const {movingLeft, movingRight, movingUp, movingDown} = controller;
 			const directionX = movingLeft && !movingRight ? -1 : movingRight && !movingLeft ? 1 : 0;
 			const directionY = movingUp && !movingDown ? -1 : movingDown && !movingUp ? 1 : 0;
-			console.log(
-				`this.$camera_speed`,
-				this.$camera_speed,
-				this.camera_speed,
-				get(this.camera_speed),
-			);
 			if (directionX !== 0 || directionY !== 0) {
 				this.camera.setPosition(
 					this.$camera.x + directionX * this.$camera_speed,
