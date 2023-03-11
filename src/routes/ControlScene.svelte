@@ -117,8 +117,8 @@
 	$: if (pointer_down && stage) handle_pointer_down();
 	const handle_pointer_down = () => {
 		const item = stage!.handle_pointer_down(pointer_x, pointer_y);
-		console.log(`clicked item`, item);
 		if (item && item !== $item_selection) {
+			console.log(`clicked item`, item);
 			$item_selection = item;
 		}
 	};

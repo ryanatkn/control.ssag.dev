@@ -20,6 +20,8 @@ import {
 	create_item_id,
 	hsl_to_hex_string,
 	type StageOptions,
+	to_world_x,
+	to_world_y,
 } from '@feltcoop/dealt';
 
 import {WORLD_SIZE} from '$routes/constants';
@@ -183,6 +185,7 @@ export class Stage0 extends Stage {
 			y: undefined,
 			radius: 1,
 			invisible: true,
+			ghostly: true,
 		});
 		this.add_item(this.pointer);
 
@@ -269,9 +272,6 @@ export class Stage0 extends Stage {
 					this.$camera.y + direction_y * this.$camera_speed,
 				);
 			}
-
-			// TODO BLOCK check `this.pointer` collision against all other items
-			// TODO BLOCK update the pointer position
 		}
 
 		// TODO currently checks for `$freeze_camera` toggling on the rabbit's chase mode,
@@ -359,35 +359,40 @@ export class Stage0 extends Stage {
 
 	handle_pointer_down(x: number, y: number): Item | null {
 		if (this.$controlled) {
-			// move towards mouse
-			// TODO BLOCK this is currently all done in `update` --
+			// move towards mouse?
+			// TODO this is currently all done in `update` --
 			// what's the desired way to oraganize things?
 			// I think it makes sense to minimize `update`,
 			// like we do `setup` in favor of `create_initial_data`.
 			// Should the `controller` have store values, and we do this logic in a `this.writable` callback?
 		} else {
 			const {pointer, $camera, $viewport, $layout} = this;
-			const pointer_world_x =
-				(x - ($layout.width - $viewport.width) / 2) * ($camera.width / $viewport.width) +
-				$camera.x -
-				$camera.width / 2;
-			const pointer_world_y =
-				(y - ($layout.height - $viewport.height) / 2) * ($camera.height / $viewport.height) +
-				$camera.y -
-				$camera.height / 2;
+			// TODO extract helper?
+			const pointer_world_x = to_world_x(
+				x,
+				$layout.width,
+				$viewport.width,
+				$camera.width,
+				$camera.x,
+			);
+			const pointer_world_y = to_world_y(
+				y,
+				$layout.height,
+				$viewport.height,
+				$camera.height,
+				$camera.y,
+			);
 			pointer.x.set(pointer_world_x);
 			pointer.y.set(pointer_world_y);
-			console.log(`pointer_world_x, pointer_world_y`, pointer_world_x, pointer_world_y);
-			console.log(`pointer.$x, pointer.$y`, pointer.$x, pointer.$y);
 			// this.sim.collisions.update();
 			for (const item of this.sim.items) {
 				if (
 					item !== pointer &&
 					!item.$ghostly &&
+					!item.$invisible &&
 					!item.disable_simulation &&
 					item.$body.collides(pointer.$body)
 				) {
-					console.log('collides', item);
 					return item;
 				}
 			}
