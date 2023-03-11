@@ -4,7 +4,7 @@
 
 	export let stage: Stage0; // TODO should this be a store? a component instance? refactor this component instead?
 
-	$: ({freezeCamera, camera} = stage);
+	$: ({freezeCamera, camera, camera_speed} = stage);
 
 	$: ({x, y} = $camera);
 
@@ -17,34 +17,39 @@
 
 <div class="camera-details">
 	<form>
-		<div>
-			<fieldset>
-				<label class="row">
-					<input type="checkbox" bind:checked={$freezeCamera} />
-					<div class="title">freezeCamera</div>
-				</label>
-			</fieldset>
-			<fieldset class="row">
-				<label>
-					<span class="title">x</span>
-					<input type="number" value={x} on:input={updateX} />
-					<input type="range" value={x} on:input={updateX} min={0} max={WORLD_SIZE} />
-				</label>
-				<label>
-					<span class="title">y</span>
-					<input type="number" value={y} on:input={updateY} />
-					<input type="range" value={y} on:input={updateY} min={0} max={WORLD_SIZE} />
-				</label>
-			</fieldset>
-			<!-- TODO upstream `setScale` -->
-			<!-- <fieldset>
+		<fieldset>
+			<label class="row">
+				<input type="checkbox" bind:checked={$freezeCamera} />
+				<div class="title">freezeCamera</div>
+			</label>
+		</fieldset>
+		<fieldset class="row">
+			<label>
+				<span class="title">x</span>
+				<input type="number" value={x} on:input={updateX} />
+				<input type="range" value={x} on:input={updateX} min={0} max={WORLD_SIZE} />
+			</label>
+			<label>
+				<span class="title">y</span>
+				<input type="number" value={y} on:input={updateY} />
+				<input type="range" value={y} on:input={updateY} min={0} max={WORLD_SIZE} />
+			</label>
+		</fieldset>
+		<fieldset>
+			<label>
+				<span class="title">speed</span>
+				<input type="number" bind:value={$camera_speed} min={0} step={0.1} />
+				<input type="range" bind:value={$camera_speed} min={0} max={4} step={0.1} />
+			</label>
+		</fieldset>
+		<!-- TODO upstream `setScale` -->
+		<!-- <fieldset>
 				<label>
 					<span class="title">scale</span>
 					<input type="number" value={scale} on:input={updateScale} />
 					<input type="range" value={scale} on:input={updateScale} min={0} max={10} />
 				</label>
 			</fieldset> -->
-		</div>
 	</form>
 </div>
 
@@ -58,7 +63,7 @@
 		flex: 1;
 	}
 
-	fieldset {
+	fieldset:not(:last-child) {
 		margin-bottom: var(--spacing_md);
 	}
 </style>

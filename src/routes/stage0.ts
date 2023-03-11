@@ -19,9 +19,11 @@ import {
 	type StageData,
 	createItemId,
 	hslToHexString,
+	type StageOptions,
 } from '@feltcoop/dealt';
 
 import {WORLD_SIZE} from '$routes/constants';
+import {get} from 'svelte/store';
 
 // TODO rewrite this to use a route Svelte component?
 
@@ -44,6 +46,15 @@ export class Stage0 extends Stage {
 	rabbit!: Item<CircleBody>;
 	rabbit_message!: Item<CircleBody>;
 	chasing_rabbit = false;
+
+	$camera_speed!: number;
+	camera_speed = this.writable('camera_speed', 1.7);
+
+	constructor(options: StageOptions) {
+		super(options);
+
+		this.subscribe(); // TODO hacky, shouldn't be needed, not sure how -- maybe call in `Stage.setup`?
+	}
 
 	static override createInitialData(): Partial<StageData> {
 		const items: Array<Partial<ItemData>> = [];
@@ -236,6 +247,23 @@ export class Stage0 extends Stage {
 			} else {
 				// TODO different algorithms for tracking the player with the camera (`camera.follow` option?)
 				this.camera.setPosition($controlled.$x, $controlled.$y);
+			}
+		} else {
+			// TODO should the camera be an `item`? could do collision if so and not need this special logic (see `updateItemDirection`)
+			const {movingLeft, movingRight, movingUp, movingDown} = controller;
+			const directionX = movingLeft && !movingRight ? -1 : movingRight && !movingLeft ? 1 : 0;
+			const directionY = movingUp && !movingDown ? -1 : movingDown && !movingUp ? 1 : 0;
+			console.log(
+				`this.$camera_speed`,
+				this.$camera_speed,
+				this.camera_speed,
+				get(this.camera_speed),
+			);
+			if (directionX !== 0 || directionY !== 0) {
+				this.camera.setPosition(
+					this.$camera.x + directionX * this.$camera_speed,
+					this.$camera.y + directionY * this.$camera_speed,
+				);
 			}
 		}
 
