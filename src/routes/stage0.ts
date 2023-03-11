@@ -40,6 +40,7 @@ export class Stage0 extends Stage {
 	static override meta = meta;
 
 	// these are instantiated in `setup`
+	pointer!: Item<CircleBody>;
 	bounds!: Item<PolygonBody>;
 	target!: Item<CircleBody>;
 	rabbit!: Item<CircleBody>;
@@ -175,6 +176,16 @@ export class Stage0 extends Stage {
 
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
+		// TODO should be a point?
+		this.pointer = new Item<CircleBody>(this.collisions, {
+			type: 'circle',
+			x: undefined,
+			y: undefined,
+			radius: 1,
+			invisible: true,
+		});
+		this;
+
 		// TODO do this better, maybe with `tags` automatically, same with `bounds`
 		for (const item of this.item_by_id.values()) {
 			if (item.$tags?.includes('bounds')) {
@@ -344,5 +355,28 @@ export class Stage0 extends Stage {
 			}
 		}
 		this.target.color.set(COLOR_ROOTED);
+	}
+
+	handle_pointer_down(x: number, y: number): Item | null {
+		if (this.$controlled) {
+			// move towards mouse
+			// TODO BLOCK this is currently all done in `update` --
+			// what's the desired way to oraganize things?
+			// I think it makes sense to minimize `update`,
+			// like we do `setup` in favor of `create_initial_data`.
+			// Should the `controller` have store values, and we do this logic in a `this.writable` callback?
+		} else {
+			const {pointer} = this;
+			// TODO BLOCK translate `x` and `y` to world coordinates
+			pointer.x.set(x);
+			pointer.y.set(y);
+			console.log(`pointer.$x, pointer.$y`, pointer.$x, pointer.$y);
+			for (const item of this.sim.items) {
+				if (item.$body.collides(pointer.$body)) {
+					return item;
+				}
+			}
+		}
+		return null;
 	}
 }
