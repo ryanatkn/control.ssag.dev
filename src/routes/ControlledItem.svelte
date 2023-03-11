@@ -48,7 +48,7 @@
 				? () => stage.swap_control(selected, true)
 				: undefined}
 		>
-			swap to selected
+			control selected
 		</button>
 		<button
 			disabled={!last_controlled}
