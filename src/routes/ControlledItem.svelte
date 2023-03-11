@@ -25,10 +25,9 @@
 	};
 
 	$: selected_is_controlled = !!selected && selected === $controlled;
-	$: console.log(`selected_is_controlled`, selected_is_controlled);
 </script>
 
-<div class="item-details">
+<div class="controlled-item">
 	<div class="info" style:--color={$controlled ? $color && hslToHexString(...$color) : null}>
 		{#if $controlled}
 			{$type}
@@ -61,7 +60,7 @@
 </div>
 
 <style>
-	.item-details {
+	.controlled-item {
 		display: flex;
 		flex-direction: column;
 	}
