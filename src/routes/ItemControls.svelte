@@ -1,7 +1,9 @@
 <script lang="ts">
 	import {type Item, to_layout_x, to_layout_y} from '@feltcoop/dealt';
+	import Surface from '@feltjs/felt-ui/Surface.svelte';
 
 	import type {Stage0} from '$routes/stage0';
+	import {swallow} from '@feltjs/util';
 
 	export let item: Item;
 	export let stage: Stage0;
@@ -21,17 +23,90 @@
 	$: console.log(`$x,$y`, $x, $y);
 	$: layout_x = to_layout_x($x, layout_width, viewport_width, camera_width, camera_x);
 	$: layout_y = to_layout_y($y, layout_height, viewport_height, camera_height, camera_y);
+
+	let dragging = false;
+
+	const mousedown = (e: MouseEvent) => {
+		swallow(e);
+		pointer_down = true; // kinda hacky, updates the surface because it's not yet mounted
+		start_dragging();
+	};
+	const mouseup = (e: MouseEvent) => {
+		swallow(e);
+		stop_dragging();
+	};
+
+	let pointer_down: boolean;
+	$: if (!pointer_down) stop_dragging();
+
+	let dragging_x: number;
+	let dragging_y: number;
+
+	const start_dragging = () => {
+		if (dragging) return;
+		dragging = true;
+		dragging_x = pointer_x;
+		dragging_y = pointer_y;
+	};
+	const stop_dragging = () => {
+		if (!dragging) return;
+		dragging = false;
+		console.log('stop');
+	};
+
+	let pointer_x: number;
+	let pointer_y: number;
+	$: update_pointer(pointer_x, pointer_y);
+	const update_pointer = (x: number, y: number) => {
+		console.log(`x, y`, x, y);
+		const dx = pointer_x - dragging_x;
+		const dy = pointer_y - dragging_y;
+		// TODO BLOCK atomic update?
+		if (dx || dy) {
+			console.log(`dx, dy`, dx, dy);
+			item.x.set(item.$x + dx);
+			item.y.set(item.$y + dy);
+		}
+		dragging_x = pointer_x;
+		dragging_y = pointer_y;
+	};
 </script>
 
 <div class="item-controls" style:transform="translate3d({layout_x}px, {layout_y}px, 0)">
 	<!-- TODO handles to set item.x/y -->
-	TODO ADD HANDLES
+	<div class="handle pan-control" on:mousedown={mousedown} on:mouseup={mouseup} />
 </div>
+{#if dragging}
+	<div class="surface-wrapper">
+		<Surface bind:pointerDown={pointer_down} bind:pointerX={pointer_x} bind:pointerY={pointer_y} />
+	</div>
+{/if}
 
 <style>
 	.item-controls {
 		position: absolute;
 		left: 0;
 		top: 0;
+	}
+
+	.handle {
+		position: relative;
+		left: calc(var(--input_height) / -2);
+		top: calc(var(--input_height) / -2);
+		width: var(--input_height);
+		height: var(--input_height);
+		border-radius: 50%;
+		border: 4px double var(--tint_light_4);
+	}
+	.handle:hover {
+		border-color: var(--tint_light_5);
+	}
+	.handle:active {
+		border-color: var(--tint_light_6);
+	}
+
+	.surface-wrapper {
+		position: absolute;
+		inset: 0;
 	}
 </style>
