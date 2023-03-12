@@ -18,16 +18,16 @@
 <div class="camera-details">
 	<form>
 		<fieldset class="row" style:justify-content="space-between">
-			<span
-				class="info-icon"
-				title="Hold control and drag with the left mouse button to pan the camera when it's not frozen and nothing is controlled."
-			>
-				🛈
-			</span>
 			<label>
 				<input type="checkbox" bind:checked={$freeze_camera} />
 				<div class="title">freeze_camera</div>
 			</label>
+			<span
+				class="info-icon"
+				title="The camera can be freely moved when it's not frozen and nothing is controlled. To pan the camera, use WASD (or the arrow keys) or hold control and drag with the left mouse button."
+			>
+				🛈
+			</span>
 		</fieldset>
 		<fieldset class="row">
 			<label>

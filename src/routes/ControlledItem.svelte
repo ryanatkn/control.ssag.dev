@@ -69,7 +69,7 @@
 				({Math.round($x)}, {Math.round($y)})
 			</span>
 		{:else}
-			no item is controlled
+			<div class="w-full centered-text">no item is controlled</div>
 		{/if}
 	</div>
 	<div>
