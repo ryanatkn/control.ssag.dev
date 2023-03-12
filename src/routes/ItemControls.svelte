@@ -20,10 +20,6 @@
 	$: camera_x = $camera.x;
 	$: camera_y = $camera.y;
 
-	$: console.log(`$x,$y`, $x, $y);
-	$: layout_x = to_layout_x($x, layout_width, viewport_width, camera_width, camera_x);
-	$: layout_y = to_layout_y($y, layout_height, viewport_height, camera_height, camera_y);
-
 	let dragging = false;
 
 	const mousedown = (e: MouseEvent) => {
@@ -74,6 +70,9 @@
 			}
 		}
 	};
+
+	$: layout_x = to_layout_x($x, layout_width, viewport_width, camera_width, camera_x);
+	$: layout_y = to_layout_y($y, layout_height, viewport_height, camera_height, camera_y);
 </script>
 
 <div class="item-controls" style:transform="translate3d({layout_x}px, {layout_y}px, 0)">
