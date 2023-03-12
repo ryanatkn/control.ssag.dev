@@ -27,6 +27,7 @@
 	import ProjectDetails from '$routes/ProjectDetails.svelte';
 	import ControlledItem from '$routes/ControlledItem.svelte';
 	import {Project} from '$lib/project';
+	import ItemControls from './ItemControls.svelte';
 
 	export let pixi = get_pixi();
 	export let layout = get_layout();
@@ -121,6 +122,27 @@
 			$item_selection = item;
 		}
 	};
+
+	// TODO BLOCK upstream
+	export const to_layout_x = (
+		world_x: number,
+		layout_width: number,
+		viewport_width: number,
+		camera_width: number,
+		camera_x: number,
+	): number =>
+		(world_x - camera_x + camera_width / 2) * (viewport_width / camera_width) +
+		(layout_width - viewport_width) / 2;
+
+	export const to_layout_y = (
+		world_y: number,
+		layout_height: number,
+		viewport_height: number,
+		camera_height: number,
+		camera_y: number,
+	): number =>
+		(world_y - camera_y + camera_height / 2) * (viewport_height / camera_height) +
+		(layout_height - viewport_height) / 2;
 </script>
 
 <svelte:window
@@ -142,6 +164,15 @@
 			bind:pointer_y
 		/>
 		{#if mode === 'editing'}
+			{#if $item_selection}
+				<ItemControls
+					item={$item_selection}
+					to_layout_x={(world_x) =>
+						to_layout_x(world_x, $layout.width, $viewport.width, $camera.width, $camera.x)}
+					to_layout_y={(world_y) =>
+						to_layout_y(world_y, $layout.height, $viewport.height, $camera.height, $camera.y)}
+				/>
+			{/if}
 			<Pane bind:height={pane0_height}>
 				<svelte:fragment slot="header">project</svelte:fragment>
 				<div class="mode-buttons">
