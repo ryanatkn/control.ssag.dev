@@ -367,7 +367,6 @@ export class Stage0 extends Stage {
 			// Should the `controller` have store values, and we do this logic in a `this.writable` callback?
 		} else {
 			const {pointer, $camera, $viewport, $layout} = this;
-			// TODO extract helper?
 			const pointer_world_x = to_world_x(
 				x,
 				$layout.width,
@@ -384,7 +383,6 @@ export class Stage0 extends Stage {
 			);
 			pointer.x.set(pointer_world_x);
 			pointer.y.set(pointer_world_y);
-			// this.sim.collisions.update();
 			for (const item of this.sim.items) {
 				if (
 					item !== pointer &&
