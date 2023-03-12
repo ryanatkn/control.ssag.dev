@@ -26,7 +26,7 @@
 				last_controlled_temp = item;
 			}
 		}
-		// TODO polish this, has some unwanted behavior
+		// TODO polish this, ideally it'd swap back to the last active one, but this causes other problems
 		// else {
 		// 	const l = last_controlled;
 		// 	last_controlled = last_controlled_temp;
