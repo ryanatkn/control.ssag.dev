@@ -8,7 +8,7 @@
 
 	export let stage: Stage0;
 	export let items: Writable<Item[]> | undefined;
-	export let item_selection: Writable<Item | null>;
+	export let selected_item: Writable<Item | null>;
 
 	$: ({controlled} = stage);
 
@@ -24,9 +24,9 @@
 	};
 
 	const create = (): void => {
-		const item = new Item(stage.collisions, to_initial_item_data($item_selection));
+		const item = new Item(stage.collisions, to_initial_item_data($selected_item));
 		stage.add_item(item);
-		$item_selection = item;
+		$selected_item = item;
 	};
 </script>
 
@@ -37,7 +37,7 @@
 	<ol>
 		{#if $items}
 			{#each $items as item (item)}
-				<ItemLayer {item} {item_selection} {controlled} />
+				<ItemLayer {item} {selected_item} {controlled} />
 			{/each}
 		{/if}
 	</ol>

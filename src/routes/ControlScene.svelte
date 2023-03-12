@@ -61,7 +61,7 @@
 	let setting_up: boolean | undefined;
 
 	let items: Writable<Item[]> | undefined;
-	const item_selection: Writable<Item | null> = writable(null);
+	const selected_item: Writable<Item | null> = writable(null);
 
 	$: items = stage?.items;
 	$: controlled = stage?.controlled;
@@ -121,8 +121,8 @@
 	$: if (pointer_down && stage) handle_pointer_down();
 	const handle_pointer_down = () => {
 		const item = stage!.handle_pointer_down(pointer_x, pointer_y);
-		if (item && item !== $item_selection) {
-			$item_selection = item;
+		if (item && item !== $selected_item) {
+			$selected_item = item;
 		}
 	};
 
@@ -133,7 +133,7 @@
 	};
 
 	$: free_camera = !$freeze_camera && mode === 'editing' && !$controlled;
-	$: targetable_camera = free_camera && !!$item_selection;
+	$: targetable_camera = free_camera && !!$selected_item;
 </script>
 
 <svelte:window
@@ -151,7 +151,7 @@
 			{match: 'r', action: () => stage?.restart()},
 			{
 				match: 'c',
-				action: () => center_camera_on($item_selection),
+				action: () => center_camera_on($selected_item),
 				disabled: () => !targetable_camera,
 			},
 		]}
@@ -165,8 +165,8 @@
 			bind:pointer_y
 		/>
 		{#if mode === 'editing'}
-			{#if $item_selection && !$controlled}
-				<ItemControls item={$item_selection} {stage} />
+			{#if $selected_item && !$selected_item.destroyed && !$controlled}
+				<ItemControls item={$selected_item} {stage} />
 			{/if}
 			<Pane bind:height={pane0_height}>
 				<svelte:fragment slot="header">project</svelte:fragment>
@@ -187,7 +187,7 @@
 				bind:offset_y={pane2_offset_y}
 			>
 				<svelte:fragment slot="header">items</svelte:fragment>
-				<ItemLayers {stage} {items} {item_selection} />
+				<ItemLayers {stage} {items} {selected_item} />
 			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
 				<svelte:fragment slot="header">camera</svelte:fragment>
@@ -195,7 +195,7 @@
 			</Pane>
 			<Pane bind:width={pane5_width} bind:height={pane5_height} bind:offset_x={pane5_offset_x}>
 				<svelte:fragment slot="header">controlled item</svelte:fragment>
-				<ControlledItem {stage} selected={$item_selection} />
+				<ControlledItem {stage} selected={$selected_item} />
 			</Pane>
 			<Pane
 				bind:width={pane4_width}
@@ -204,12 +204,12 @@
 				bind:offset_y={pane4_offset_y}
 			>
 				<svelte:fragment slot="header">selected item</svelte:fragment>
-				{#if $item_selection}
-					<ItemDetails item={$item_selection} {stage}>
+				{#if $selected_item}
+					<ItemDetails item={$selected_item} {stage}>
 						<fieldset class="row">
-							<button on:click={() => ($item_selection = null)}> clear selection </button>
+							<button on:click={() => ($selected_item = null)}> clear selection </button>
 							<button
-								on:click={() => center_camera_on($item_selection)}
+								on:click={() => center_camera_on($selected_item)}
 								disabled={!targetable_camera}
 								title="center the camera on the selected item [c]"
 							>
