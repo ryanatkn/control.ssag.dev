@@ -3,11 +3,11 @@
 	import type {Writable} from 'svelte/store';
 
 	export let item: Item;
-	export let item_selection: Writable<Item | null>;
+	export let selected_item: Writable<Item | null>;
 	export let controlled: Writable<Item | null> | undefined = undefined;
 
 	$: ({type, color, tags} = item);
-	$: selected = item === $item_selection;
+	$: selected = item === $selected_item;
 	$: controlling = item === $controlled;
 </script>
 
@@ -15,7 +15,7 @@
 	<button
 		class:selected
 		class="deselectable"
-		on:click={() => ($item_selection = selected ? null : item)}
+		on:click={() => ($selected_item = selected ? null : item)}
 		style:--text_color={hsl_to_string(...$color)}
 	>
 		{#if controlling}

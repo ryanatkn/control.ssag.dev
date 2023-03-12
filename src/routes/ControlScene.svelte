@@ -27,7 +27,7 @@
 	import ProjectDetails from '$routes/ProjectDetails.svelte';
 	import ControlledItem from '$routes/ControlledItem.svelte';
 	import {Project} from '$lib/project';
-	import ItemControls from './ItemControls.svelte';
+	import ItemControls from '$routes/ItemControls.svelte';
 
 	export let pixi = get_pixi();
 	export let layout = get_layout();
@@ -59,10 +59,12 @@
 	let setting_up: boolean | undefined;
 
 	let items: Writable<Item[]> | undefined;
-	const item_selection: Writable<Item | null> = writable(null);
+	const selected_item: Writable<Item | null> = writable(null);
 
 	$: items = stage?.items;
+	$: controller = stage?.controller;
 	$: controlled = stage?.controlled;
+	$: freeze_camera = stage?.freeze_camera;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -101,7 +103,7 @@
 	let pane5_height = 202;
 	let pane5_offset_x = $layout.width - pane5_width;
 	let pane3_width = PANE_WIDTH;
-	let pane3_height = 297;
+	let pane3_height = 275;
 	let pane3_offset_y = pane1_offset_y + pane1_height + PANE_MARGIN;
 	let pane2_width = PANE_WIDTH;
 	let pane2_height = 384;
@@ -112,16 +114,67 @@
 	let pane4_offset_x = pane2_offset_x;
 	let pane4_offset_y = pane2_offset_y + pane2_height + PANE_MARGIN;
 
-	let pointer_down: boolean;
+	let pointer_down: boolean | undefined;
 	let pointer_x: number;
 	let pointer_y: number;
 	$: if (pointer_down && stage) handle_pointer_down();
 	const handle_pointer_down = () => {
-		const item = stage!.handle_pointer_down(pointer_x, pointer_y);
-		if (item && item !== $item_selection) {
-			$item_selection = item;
+		if (free_camera && controller?.pressing_ctrl) {
+			start_dragging();
+		} else {
+			const item = stage!.handle_pointer_down(pointer_x, pointer_y);
+			if (item && item !== $selected_item) {
+				$selected_item = item;
+			}
 		}
 	};
+
+	let dragging = false;
+	$: if (pointer_down === false) stop_dragging();
+
+	// TODO abstract, see `ItemControls`
+	let dragging_x: number | null = null; // world coordinates
+	let dragging_y: number | null = null; // world coordinates
+
+	const start_dragging = () => {
+		if (dragging) return;
+		dragging = true;
+		dragging_x = null;
+		dragging_y = null;
+	};
+	const stop_dragging = () => {
+		if (!dragging) return;
+		dragging = false;
+	};
+
+	$: update_pointer(pointer_x, pointer_y);
+	const update_pointer = (pointer_x: number, pointer_y: number) => {
+		if (!dragging) return;
+		// This `relative_world_x` is correct only in relative terms, which is all we need for dragging.
+		// Using `to_relative_world_x` doesn't work because feeding the camera position into the calculation
+		// causes jank every other frame, because this function updates the camera position.
+		// (maybe there's a fix I didn't see, but in any case, all we need is the relative values)
+		const relative_world_x = pointer_x / $camera.scale;
+		const relative_world_y = pointer_y / $camera.scale;
+		if (dragging_x !== null) {
+			const dx = relative_world_x - dragging_x;
+			const dy = relative_world_y - dragging_y!;
+			if (dx || dy) {
+				camera.set_position($camera.x - dx, $camera.y - dy);
+			}
+		}
+		dragging_x = relative_world_x;
+		dragging_y = relative_world_y;
+	};
+
+	// TODO were does this belong?
+	const center_camera_on = (item: Item | null | undefined): void => {
+		if (!item) return;
+		camera.set_position(item.$x, item.$y);
+	};
+
+	$: free_camera = !$freeze_camera && mode === 'editing' && !$controlled;
+	$: targetable_camera = free_camera && !!$selected_item;
 </script>
 
 <svelte:window
@@ -134,6 +187,16 @@
 />
 
 {#if stage}
+	<Hotkeys
+		hotkeys={[
+			{match: 'r', action: () => stage?.restart()},
+			{
+				match: 'c',
+				action: () => center_camera_on($selected_item),
+				disabled: () => !targetable_camera,
+			},
+		]}
+	/>
 	{#key stage}
 		<World {stage} {pixi} />
 		<SurfaceWithController
@@ -143,8 +206,8 @@
 			bind:pointer_y
 		/>
 		{#if mode === 'editing'}
-			{#if $item_selection && !$controlled}
-				<ItemControls item={$item_selection} {stage} />
+			{#if $selected_item && !$selected_item.destroyed && !$controlled}
+				<ItemControls item={$selected_item} {stage} />
 			{/if}
 			<Pane bind:height={pane0_height}>
 				<svelte:fragment slot="header">project</svelte:fragment>
@@ -165,7 +228,7 @@
 				bind:offset_y={pane2_offset_y}
 			>
 				<svelte:fragment slot="header">items</svelte:fragment>
-				<ItemLayers {stage} {items} {item_selection} />
+				<ItemLayers {stage} {items} {selected_item} />
 			</Pane>
 			<Pane bind:width={pane3_width} bind:height={pane3_height} bind:offset_y={pane3_offset_y}>
 				<svelte:fragment slot="header">camera</svelte:fragment>
@@ -173,7 +236,7 @@
 			</Pane>
 			<Pane bind:width={pane5_width} bind:height={pane5_height} bind:offset_x={pane5_offset_x}>
 				<svelte:fragment slot="header">controlled item</svelte:fragment>
-				<ControlledItem {stage} selected={$item_selection} />
+				<ControlledItem {stage} selected={$selected_item} />
 			</Pane>
 			<Pane
 				bind:width={pane4_width}
@@ -182,14 +245,24 @@
 				bind:offset_y={pane4_offset_y}
 			>
 				<svelte:fragment slot="header">selected item</svelte:fragment>
-				{#if $item_selection}
-					<ItemDetails item={$item_selection} {stage} />
+				{#if $selected_item}
+					<ItemDetails item={$selected_item} {stage}>
+						<fieldset class="row">
+							<button on:click={() => ($selected_item = null)}> clear selection </button>
+							<button
+								on:click={() => center_camera_on($selected_item)}
+								disabled={!targetable_camera}
+								title="center the camera on the selected item [c]"
+							>
+								center camera
+							</button>
+						</fieldset>
+					</ItemDetails>
 				{/if}
 				<!-- TODO text-overflow -->
 			</Pane>
 		{/if}
 	{/key}
-	<Hotkeys hotkeys={[{match: 'r', action: () => stage?.restart()}]} />
 {/if}
 
 <style>
@@ -203,5 +276,10 @@
 		min-height: var(--input_height_sm);
 		padding-top: 0;
 		padding-bottom: 0;
+	}
+
+	/* TODO extract to style.css probably */
+	fieldset {
+		margin-bottom: var(--spacing_md);
 	}
 </style>

@@ -9,7 +9,7 @@
 	const keydown = (key: string, target: any): boolean => {
 		for (const hotkey of hotkeys) {
 			const matched = matches_hotkey(hotkey, key);
-			if (matched && (!target || enable_global_hotkeys(target))) {
+			if (matched && (!target || enable_global_hotkeys(target)) && !hotkey.disabled?.()) {
 				hotkey.action();
 				return true; // handle only the first match
 			}

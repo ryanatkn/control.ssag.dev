@@ -10,7 +10,7 @@
 	} from '@feltcoop/dealt';
 	import {handleTargetValue} from '@feltjs/util/dom.js';
 
-	import type {Stage0} from './stage0';
+	import type {Stage0} from '$routes/stage0';
 
 	export let item: Item;
 	export let stage: Stage0;
@@ -52,6 +52,7 @@
 
 <div class="item-details">
 	<form>
+		<slot />
 		<fieldset class="row">
 			<label>
 				<div class="title">type</div>
@@ -137,7 +138,7 @@
 		<fieldset class="row">
 			<label>
 				<div class="title">speed</div>
-				<input type="number" bind:value={$speed} step={0.05} />
+				<input type="number" bind:value={$speed} step={0.001} min={0} max={1} />
 			</label>
 			<label>
 				<div class="title">strength</div>
