@@ -9,10 +9,10 @@
 	$: ({x, y} = $camera);
 
 	// TODO type is awkward
-	const updateX = (e: Event & {target: any}) => camera.set_position(Number(e.target.value), y);
-	const updateY = (e: Event & {target: any}) => camera.set_position(x, Number(e.target.value));
-	// TODO upstream `setScale`
-	// const updateScale = (e: Event & {target: any}) => camera.setScale(Number(e.target.value));
+	const update_x = (e: Event & {target: any}) => camera.set_position(Number(e.target.value), y);
+	const update_y = (e: Event & {target: any}) => camera.set_position(x, Number(e.target.value));
+	// TODO upstream `set_scale`
+	// const update_scale = (e: Event & {target: any}) => camera.set_scale(Number(e.target.value));
 </script>
 
 <div class="camera-details">
@@ -26,13 +26,13 @@
 		<fieldset class="row">
 			<label>
 				<span class="title">x</span>
-				<input type="number" value={x} on:input={updateX} />
-				<input type="range" value={x} on:input={updateX} min={0} max={WORLD_SIZE} />
+				<input type="number" value={x} on:input={update_x} />
+				<input type="range" value={x} on:input={update_x} min={0} max={WORLD_SIZE} />
 			</label>
 			<label>
 				<span class="title">y</span>
-				<input type="number" value={y} on:input={updateY} />
-				<input type="range" value={y} on:input={updateY} min={0} max={WORLD_SIZE} />
+				<input type="number" value={y} on:input={update_y} />
+				<input type="range" value={y} on:input={update_y} min={0} max={WORLD_SIZE} />
 			</label>
 		</fieldset>
 		<fieldset>
@@ -44,12 +44,12 @@
 				</div>
 			</label>
 		</fieldset>
-		<!-- TODO upstream `setScale` -->
+		<!-- TODO upstream `set_scale` -->
 		<!-- <fieldset>
 				<label>
 					<span class="title">scale</span>
-					<input type="number" value={scale} on:input={updateScale} />
-					<input type="range" value={scale} on:input={updateScale} min={0} max={10} />
+					<input type="number" value={scale} on:input={update_scale} />
+					<input type="range" value={scale} on:input={update_scale} min={0} max={10} />
 				</label>
 			</fieldset> -->
 	</form>
