@@ -17,7 +17,13 @@
 
 <div class="camera-details">
 	<form>
-		<fieldset>
+		<fieldset class="row" style:justify-content="space-between">
+			<span
+				class="info-icon"
+				title="Hold control and left click to pan the camera when it's not frozen and nothing is controlled."
+			>
+				🛈
+			</span>
 			<label>
 				<input type="checkbox" bind:checked={$freeze_camera} />
 				<div class="title">freeze_camera</div>

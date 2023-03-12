@@ -103,7 +103,7 @@
 	let pane5_height = 202;
 	let pane5_offset_x = $layout.width - pane5_width;
 	let pane3_width = PANE_WIDTH;
-	let pane3_height = 297;
+	let pane3_height = 275;
 	let pane3_offset_y = pane1_offset_y + pane1_height + PANE_MARGIN;
 	let pane2_width = PANE_WIDTH;
 	let pane2_height = 384;
@@ -120,7 +120,6 @@
 	$: if (pointer_down && stage) handle_pointer_down();
 	const handle_pointer_down = () => {
 		if (free_camera && controller?.pressing_ctrl) {
-			// TODO BLOCK janky dragging
 			start_dragging();
 		} else {
 			const item = stage!.handle_pointer_down(pointer_x, pointer_y);
