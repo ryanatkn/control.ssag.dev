@@ -592,7 +592,7 @@ button {
 	line-height: 1;
 	color: var(--text_color);
 	min-height: var(--input_height);
-	padding: var(--input_padding_v) var(--input_padding_h);
+	padding: 0 var(--input_padding_h);
 	background: var(--button_color);
 	border-width: var(--border_width);
 	border-style: var(--border_style);
