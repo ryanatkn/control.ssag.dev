@@ -47,28 +47,27 @@
 	const stop_dragging = () => {
 		if (!dragging) return;
 		dragging = false;
+		dragging_x = null;
+		dragging_y = null;
 	};
 
 	let pointer_x: number;
 	let pointer_y: number;
-	$: update_pointer(
-		to_world_x(pointer_x, layout_width, viewport_width, camera_width, camera_x),
-		to_world_y(pointer_y, layout_height, viewport_height, camera_height, camera_y),
-	);
-	const update_pointer = (world_x: number, world_y: number) => {
-		if (dragging_x === null) {
-			dragging_x = world_x;
-			dragging_y = world_y;
-		} else {
+	$: update_pointer(pointer_x, pointer_y);
+	const update_pointer = (pointer_x: number, pointer_y: number) => {
+		if (!dragging) return;
+		const world_x = to_world_x(pointer_x, layout_width, viewport_width, camera_width, camera_x);
+		const world_y = to_world_y(pointer_y, layout_height, viewport_height, camera_height, camera_y);
+		if (dragging_x !== null) {
 			const dx = world_x - dragging_x;
 			const dy = world_y - dragging_y!;
 			if (dx || dy) {
 				$x += dx;
 				$y += dy;
-				dragging_x = world_x;
-				dragging_y = world_y;
 			}
 		}
+		dragging_x = world_x;
+		dragging_y = world_y;
 	};
 
 	$: layout_x = to_layout_x($x, layout_width, viewport_width, camera_width, camera_x);
