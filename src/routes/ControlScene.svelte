@@ -132,7 +132,8 @@
 		camera.set_position(item.$x, item.$y);
 	};
 
-	$: free_camera = !$freeze_camera && mode === 'editing' && !$controlled && !!$item_selection;
+	$: free_camera = !$freeze_camera && mode === 'editing' && !$controlled;
+	$: targetable_camera = free_camera && !!$item_selection;
 </script>
 
 <svelte:window
@@ -151,7 +152,7 @@
 			{
 				match: 'c',
 				action: () => center_camera_on($item_selection),
-				disabled: () => !free_camera,
+				disabled: () => !targetable_camera,
 			},
 		]}
 	/>
@@ -209,7 +210,7 @@
 							<button on:click={() => ($item_selection = null)}> clear selection </button>
 							<button
 								on:click={() => center_camera_on($item_selection)}
-								disabled={!free_camera}
+								disabled={!targetable_camera}
 								title="center the camera on the selected item [c]"
 							>
 								center camera
