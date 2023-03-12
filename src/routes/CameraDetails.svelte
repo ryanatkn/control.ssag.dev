@@ -20,7 +20,7 @@
 		<fieldset class="row" style:justify-content="space-between">
 			<span
 				class="info-icon"
-				title="Hold control and left click to pan the camera when it's not frozen and nothing is controlled."
+				title="Hold control and drag with the left mouse button to pan the camera when it's not frozen and nothing is controlled."
 			>
 				🛈
 			</span>
