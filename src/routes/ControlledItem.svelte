@@ -20,46 +20,18 @@
 	let last_controlled_temp: Item | null = null;
 	$: update_last_controlled($controlled);
 	const update_last_controlled = (item: Item | null) => {
-		console.log(`\n\nupdate_last_controlled item`, item);
-		// TODO BLOCK release + control + release + control + swap
-		console.log(
-			`before`,
-			'\n',
-			item?.color_str + item?.$radius,
-			'\n',
-			last_controlled?.color_str + last_controlled?.$radius,
-			'\n',
-			last_controlled_temp?.color_str + last_controlled_temp?.$radius,
-		);
 		if (item) {
 			if (item !== last_controlled_temp) {
 				last_controlled = last_controlled_temp || item;
 				last_controlled_temp = item;
 			}
 		}
+		// TODO polish this, has some unwanted behavior
 		// else {
 		// 	const l = last_controlled;
 		// 	last_controlled = last_controlled_temp;
 		// 	last_controlled_temp = l;
 		// }
-		// if (item) {
-		// 	// if (item === last_controlled_temp) {
-
-		// 	// } else {
-
-		// 	// }
-		// 	last_controlled = last_controlled_temp || item;
-		// 	last_controlled_temp = item;
-		// } else {
-		// }
-		console.log(
-			`after`,
-			'\n',
-			'\n',
-			last_controlled?.color_str + last_controlled?.$radius,
-			'\n',
-			last_controlled_temp?.color_str + last_controlled_temp?.$radius,
-		);
 	};
 
 	$: selected_is_controlled = !!selected && selected === $controlled;
@@ -72,14 +44,13 @@
 	$: enable_swap_back = !!last_controlled && last_controlled !== $controlled;
 
 	const release_control = (): void => {
-		if (enable_release_control) console.log('release_control'), stage.swap_control(null, true);
+		if (enable_release_control) stage.swap_control(null, true);
 	};
 	const control_selected = (): void => {
-		if (enable_control_selected)
-			console.log('control_selected'), stage.swap_control(selected, true);
+		if (enable_control_selected) stage.swap_control(selected, true);
 	};
 	const swap_back = (): void => {
-		if (enable_swap_back) console.log('swap_back'), stage.swap_control(last_controlled, true);
+		if (enable_swap_back) stage.swap_control(last_controlled, true);
 	};
 </script>
 
