@@ -11,3 +11,5 @@ export interface SceneData {
 export class Project extends Core {
 	name = this.writable('name', 'project_name');
 }
+
+// TODO BLOCK `to_data` and `load_data` (or constructor?))
