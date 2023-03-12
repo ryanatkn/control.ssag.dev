@@ -73,8 +73,7 @@
 </script>
 
 <div class="item-controls" style:transform="translate3d({layout_x}px, {layout_y}px, 0)">
-	<!-- TODO handles to set item.x/y -->
-	<div class="handle pan-control" on:mousedown={mousedown} on:mouseup={mouseup} />
+	<div class="handle" class:dragging on:mousedown={mousedown} on:mouseup={mouseup} />
 </div>
 {#if dragging}
 	<div class="surface-wrapper">
@@ -97,12 +96,14 @@
 		height: var(--input_height);
 		border-radius: 50%;
 		border: 4px double var(--tint_light_4);
+		box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.4);
 	}
 	.handle:hover {
 		border-color: var(--tint_light_5);
 	}
-	.handle:active {
+	.handle.dragging {
 		border-color: var(--tint_light_6);
+		box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.4) inset;
 	}
 
 	.surface-wrapper {
