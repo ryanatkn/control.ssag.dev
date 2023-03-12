@@ -11,8 +11,6 @@
 		type ExitStage,
 		type Item,
 		enable_global_hotkeys,
-		to_world_x,
-		to_world_y,
 	} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
 	import {swallow} from '@feltjs/util/dom.js';
@@ -39,8 +37,6 @@
 
 	// TODO resizable pane component
 	// TODO contextmenu to enable dragging on windows
-
-	// TODO BLOCK drag to pan
 
 	// TODO where does this belong?
 	type SceneMode = 'playing' | 'editing';
@@ -155,29 +151,21 @@
 	$: update_pointer(pointer_x, pointer_y);
 	const update_pointer = (pointer_x: number, pointer_y: number) => {
 		if (!dragging) return;
-		console.log(`\n\npointer_x, pointer_y`, pointer_x, pointer_y);
-		const world_x = to_world_x(pointer_x, $layout.width, $viewport.width, $camera.width, $camera.x);
-		const world_y = to_world_y(
-			pointer_y,
-			$layout.height,
-			$viewport.height,
-			$camera.height,
-			$camera.y,
-		);
-		console.log(`$camera.y`, $camera.y);
-		console.log(`$camera.scale`, $camera.scale);
-		console.log(`world_x, world_y`, world_x, world_y);
+		// This `relative_world_x` is correct only in relative terms, which is all we need for dragging.
+		// Using `to_relative_world_x` doesn't work because feeding the camera position into the calculation
+		// causes jank every other frame, because this function updates the camera position.
+		// (maybe there's a fix I didn't see, but in any case, all we need is the relative values)
+		const relative_world_x = pointer_x / $camera.scale;
+		const relative_world_y = pointer_y / $camera.scale;
 		if (dragging_x !== null) {
-			const dx = world_x - dragging_x;
-			const dy = world_y - dragging_y!;
-			console.log(`dx, dy`, dx, dy);
+			const dx = relative_world_x - dragging_x;
+			const dy = relative_world_y - dragging_y!;
 			if (dx || dy) {
-				console.log(`setting $camera.y`, $camera.y - dy);
 				camera.set_position($camera.x - dx, $camera.y - dy);
 			}
 		}
-		dragging_x = world_x;
-		dragging_y = world_y;
+		dragging_x = relative_world_x;
+		dragging_y = relative_world_y;
 	};
 
 	// TODO were does this belong?
