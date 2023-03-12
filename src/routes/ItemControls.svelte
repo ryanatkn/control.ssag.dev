@@ -91,20 +91,23 @@
 		top: 0;
 	}
 
+	/* TODO extract component */
 	.handle {
 		position: relative;
 		left: calc(var(--input_height) / -2);
 		top: calc(var(--input_height) / -2);
 		width: var(--input_height);
 		height: var(--input_height);
-		border-radius: 50%;
+		background-color: var(--tint_light_1);
 		border: 4px double var(--tint_light_4);
+		border-radius: 50%;
 		box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.4);
 	}
 	.handle:hover {
 		border-color: var(--tint_light_5);
 	}
 	.handle.dragging {
+		background-color: var(--tint_light_2);
 		border-color: var(--tint_light_6);
 		box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.4) inset;
 	}
