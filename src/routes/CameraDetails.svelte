@@ -18,7 +18,7 @@
 <div class="camera-details">
 	<form>
 		<fieldset>
-			<label class="row">
+			<label>
 				<input type="checkbox" bind:checked={$freeze_camera} />
 				<div class="title">freeze_camera</div>
 			</label>
@@ -38,8 +38,10 @@
 		<fieldset>
 			<label>
 				<span class="title">speed</span>
-				<input type="number" bind:value={$camera_speed} min={0} step={0.1} />
-				<input type="range" bind:value={$camera_speed} min={0} max={4} step={0.1} />
+				<div class="row">
+					<input type="range" bind:value={$camera_speed} min={0} max={4} step={0.1} />
+					<input type="number" bind:value={$camera_speed} min={0} step={0.1} />
+				</div>
 			</label>
 		</fieldset>
 		<!-- TODO upstream `setScale` -->
