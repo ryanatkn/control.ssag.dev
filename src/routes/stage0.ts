@@ -20,6 +20,8 @@ import {
 	create_item_id,
 	hsl_to_hex_string,
 	type StageOptions,
+	to_world_x,
+	to_world_y,
 } from '@feltcoop/dealt';
 
 import {WORLD_SIZE} from '$routes/constants';
@@ -40,6 +42,7 @@ export class Stage0 extends Stage {
 	static override meta = meta;
 
 	// these are instantiated in `setup`
+	pointer!: Item<CircleBody>;
 	bounds!: Item<PolygonBody>;
 	target!: Item<CircleBody>;
 	rabbit!: Item<CircleBody>;
@@ -175,6 +178,17 @@ export class Stage0 extends Stage {
 
 	// TODO not calling `setup` first is error-prone
 	override async setup(): Promise<void> {
+		// TODO should be a point?
+		this.pointer = new Item<CircleBody>(this.collisions, {
+			type: 'circle',
+			x: undefined,
+			y: undefined,
+			radius: 1,
+			invisible: true,
+			ghostly: true,
+		});
+		this.add_item(this.pointer);
+
 		// TODO do this better, maybe with `tags` automatically, same with `bounds`
 		for (const item of this.item_by_id.values()) {
 			if (item.$tags?.includes('bounds')) {
@@ -341,5 +355,46 @@ export class Stage0 extends Stage {
 			}
 		}
 		this.target.color.set(COLOR_ROOTED);
+	}
+
+	handle_pointer_down(x: number, y: number): Item | null {
+		if (this.$controlled) {
+			// move towards mouse?
+			// TODO this is currently all done in `update` --
+			// what's the desired way to oraganize things?
+			// I think it makes sense to minimize `update`,
+			// like we do `setup` in favor of `create_initial_data`.
+			// Should the `controller` have store values, and we do this logic in a `this.writable` callback?
+		} else {
+			const {pointer, $camera, $viewport, $layout} = this;
+			const pointer_world_x = to_world_x(
+				x,
+				$layout.width,
+				$viewport.width,
+				$camera.width,
+				$camera.x,
+			);
+			const pointer_world_y = to_world_y(
+				y,
+				$layout.height,
+				$viewport.height,
+				$camera.height,
+				$camera.y,
+			);
+			pointer.x.set(pointer_world_x);
+			pointer.y.set(pointer_world_y);
+			for (const item of this.sim.items) {
+				if (
+					item !== pointer &&
+					!item.$ghostly &&
+					!item.$invisible &&
+					!item.disable_simulation &&
+					item.$body.collides(pointer.$body)
+				) {
+					return item;
+				}
+			}
+		}
+		return null;
 	}
 }

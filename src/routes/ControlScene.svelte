@@ -109,6 +109,18 @@
 	let pane4_height = $layout.height - pane2_height - pane5_height - PANE_MARGIN;
 	let pane4_offset_x = pane2_offset_x;
 	let pane4_offset_y = pane2_offset_y + pane2_height + PANE_MARGIN;
+
+	let pointer_down: boolean;
+	let pointer_x: number;
+	let pointer_y: number;
+	$: if (pointer_down && stage) handle_pointer_down();
+	const handle_pointer_down = () => {
+		const item = stage!.handle_pointer_down(pointer_x, pointer_y);
+		if (item && item !== $item_selection) {
+			console.log(`clicked item`, item);
+			$item_selection = item;
+		}
+	};
 </script>
 
 <svelte:window
@@ -123,7 +135,12 @@
 {#if stage}
 	{#key stage}
 		<World {stage} {pixi} />
-		<SurfaceWithController controller={stage.controller} />
+		<SurfaceWithController
+			controller={stage.controller}
+			bind:pointer_down
+			bind:pointer_x
+			bind:pointer_y
+		/>
 		{#if mode === 'editing'}
 			<Pane bind:height={pane0_height}>
 				<svelte:fragment slot="header">project</svelte:fragment>
