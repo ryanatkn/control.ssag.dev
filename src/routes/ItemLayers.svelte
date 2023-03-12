@@ -13,7 +13,7 @@
 	$: ({controlled} = stage);
 
 	// TODO is janky --s for this initial data, what would be better than this for users?
-	const toInitialItemData = (item: Item | null): ItemData | null => {
+	const to_initial_item_data = (item: Item | null): ItemData | null => {
 		if (!item) return null;
 		const data = item.to_data();
 		if (!data) return null;
@@ -24,7 +24,7 @@
 	};
 
 	const create = (): void => {
-		const item = new Item(stage.collisions, toInitialItemData($item_selection));
+		const item = new Item(stage.collisions, to_initial_item_data($item_selection));
 		stage.add_item(item);
 		$item_selection = item;
 	};
