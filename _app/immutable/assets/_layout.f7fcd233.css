@@ -432,6 +432,11 @@ input[type='color'] {
 	cursor: pointer;
 }
 
+option {
+	color: var(--text_color);
+	background-color: var(--bg);
+}
+
 :is(input, textarea, select):hover {
 	--border_color: var(--border_color_dark);
 }
@@ -1012,4 +1017,10 @@ a:active {
 /* TODO upstream to dealt? */
 .plain-button {
 	--button_color_hover: var(--tint_light_2) !important;
+}
+
+.info-icon {
+	cursor: help;
+	font-size: var(--font_size_xl);
+	padding: 0 var(--spacing_xl);
 }
