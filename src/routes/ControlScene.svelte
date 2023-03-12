@@ -27,6 +27,7 @@
 	import ProjectDetails from '$routes/ProjectDetails.svelte';
 	import ControlledItem from '$routes/ControlledItem.svelte';
 	import {Project} from '$lib/project';
+	import ItemControls from './ItemControls.svelte';
 
 	export let pixi = get_pixi();
 	export let layout = get_layout();
@@ -61,6 +62,7 @@
 	const item_selection: Writable<Item | null> = writable(null);
 
 	$: items = stage?.items;
+	$: controlled = stage?.controlled;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -117,7 +119,6 @@
 	const handle_pointer_down = () => {
 		const item = stage!.handle_pointer_down(pointer_x, pointer_y);
 		if (item && item !== $item_selection) {
-			console.log(`clicked item`, item);
 			$item_selection = item;
 		}
 	};
@@ -142,6 +143,9 @@
 			bind:pointer_y
 		/>
 		{#if mode === 'editing'}
+			{#if $item_selection && !$controlled}
+				<ItemControls item={$item_selection} {stage} />
+			{/if}
 			<Pane bind:height={pane0_height}>
 				<svelte:fragment slot="header">project</svelte:fragment>
 				<div class="mode-buttons">

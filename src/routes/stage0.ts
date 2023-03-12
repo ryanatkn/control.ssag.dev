@@ -86,6 +86,7 @@ export class Stage0 extends Stage {
 
 		// create the bounds
 		items.push({
+			tags: ['bounds'],
 			type: 'polygon',
 			x: 0,
 			y: 0,
@@ -99,11 +100,11 @@ export class Stage0 extends Stage {
 			ghostly: true,
 			scale_x: WORLD_SIZE,
 			scale_y: WORLD_SIZE,
-			tags: ['bounds'],
 		});
 
 		// create the target
 		items.push({
+			tags: ['target'],
 			type: 'circle',
 			x: 230,
 			y: 15,
@@ -111,11 +112,11 @@ export class Stage0 extends Stage {
 			color: COLOR_EXIT,
 			speed: 0,
 			strength: 100_000_000,
-			tags: ['target'],
 		});
 
 		// create the rabbit
 		items.push({
+			tags: ['rabbit'],
 			type: 'circle',
 			x: 310,
 			y: -10,
@@ -123,13 +124,12 @@ export class Stage0 extends Stage {
 			color: COLOR_EXIT,
 			speed: (SPEED_SLOW / 2) * 1.01, // unfair D:
 			strength: 1_000_000_000,
-			tags: ['rabbit'],
 			text: '🐰',
 			font_size: 36,
 		});
 		items.push({
-			type: 'circle',
 			tags: ['rabbit_message'],
+			type: 'circle',
 			text: '',
 			font_size: 24,
 			text_fill: hsl_to_hex_string(...COLOR_ROOTED),
@@ -171,15 +171,9 @@ export class Stage0 extends Stage {
 			speed: 0.007,
 		});
 
-		console.log(`create_initial_data`, data);
-
-		return data;
-	}
-
-	// TODO not calling `setup` first is error-prone
-	override async setup(): Promise<void> {
 		// TODO should be a point?
-		this.pointer = new Item<CircleBody>(this.collisions, {
+		items.push({
+			tags: ['pointer'],
 			type: 'circle',
 			x: undefined,
 			y: undefined,
@@ -187,8 +181,14 @@ export class Stage0 extends Stage {
 			invisible: true,
 			ghostly: true,
 		});
-		this.add_item(this.pointer);
 
+		console.log(`create_initial_data`, data);
+
+		return data;
+	}
+
+	// TODO not calling `setup` first is error-prone
+	override async setup(): Promise<void> {
 		// TODO do this better, maybe with `tags` automatically, same with `bounds`
 		for (const item of this.item_by_id.values()) {
 			if (item.$tags?.includes('bounds')) {
@@ -199,6 +199,8 @@ export class Stage0 extends Stage {
 				this.rabbit = item as Item<CircleBody>;
 			} else if (item.$tags?.includes('rabbit_message')) {
 				this.rabbit_message = item as Item<CircleBody>;
+			} else if (item.$tags?.includes('pointer')) {
+				this.pointer = item as Item<CircleBody>;
 			}
 		}
 		this.swap_control(this.$controlled, true);
