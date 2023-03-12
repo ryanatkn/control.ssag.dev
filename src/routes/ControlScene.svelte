@@ -136,6 +136,7 @@
 />
 
 {#if stage}
+	<Hotkeys hotkeys={[{match: 'r', action: () => stage?.restart()}]} />
 	{#key stage}
 		<World {stage} {pixi} />
 		<SurfaceWithController
@@ -191,7 +192,6 @@
 			</Pane>
 		{/if}
 	{/key}
-	<Hotkeys hotkeys={[{match: 'r', action: () => stage?.restart()}]} />
 {/if}
 
 <style>
