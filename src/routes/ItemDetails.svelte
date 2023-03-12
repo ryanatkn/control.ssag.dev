@@ -10,7 +10,7 @@
 	} from '@feltcoop/dealt';
 	import {handleTargetValue} from '@feltjs/util/dom.js';
 
-	import type {Stage0} from './stage0';
+	import type {Stage0} from '$routes/stage0';
 
 	export let item: Item;
 	export let stage: Stage0;

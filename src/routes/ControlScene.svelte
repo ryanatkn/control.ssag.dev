@@ -27,7 +27,7 @@
 	import ProjectDetails from '$routes/ProjectDetails.svelte';
 	import ControlledItem from '$routes/ControlledItem.svelte';
 	import {Project} from '$lib/project';
-	import ItemControls from './ItemControls.svelte';
+	import ItemControls from '$routes/ItemControls.svelte';
 
 	export let pixi = get_pixi();
 	export let layout = get_layout();
