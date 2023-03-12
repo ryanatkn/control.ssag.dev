@@ -65,6 +65,7 @@
 
 	$: items = stage?.items;
 	$: controlled = stage?.controlled;
+	$: freeze_camera = stage?.freeze_camera;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -125,10 +126,13 @@
 		}
 	};
 
-	const center_camera_on = (item: Item | null | undefined) => {
+	// TODO were does this belong?
+	const center_camera_on = (item: Item | null | undefined): void => {
 		if (!item) return;
 		camera.set_position(item.$x, item.$y);
 	};
+
+	$: free_camera = !$freeze_camera && mode === 'editing' && !$controlled && !!$item_selection;
 </script>
 
 <svelte:window
@@ -147,7 +151,7 @@
 			{
 				match: 'c',
 				action: () => center_camera_on($item_selection),
-				disabled: () => mode !== 'editing' && !$controlled && !!$item_selection,
+				disabled: () => !free_camera,
 			},
 		]}
 	/>
@@ -200,7 +204,18 @@
 			>
 				<svelte:fragment slot="header">selected item</svelte:fragment>
 				{#if $item_selection}
-					<ItemDetails item={$item_selection} {stage} />
+					<ItemDetails item={$item_selection} {stage}>
+						<fieldset class="row">
+							<button on:click={() => ($item_selection = null)}> clear selection </button>
+							<button
+								on:click={() => center_camera_on($item_selection)}
+								disabled={!free_camera}
+								title="center the camera on the selected item [c]"
+							>
+								center camera
+							</button>
+						</fieldset>
+					</ItemDetails>
 				{/if}
 				<!-- TODO text-overflow -->
 			</Pane>
@@ -219,5 +234,10 @@
 		min-height: var(--input_height_sm);
 		padding-top: 0;
 		padding-bottom: 0;
+	}
+
+	/* TODO extract to style.css probably */
+	fieldset {
+		margin-bottom: var(--spacing_md);
 	}
 </style>
