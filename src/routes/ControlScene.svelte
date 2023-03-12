@@ -124,6 +124,11 @@
 			$item_selection = item;
 		}
 	};
+
+	const center_camera_on = (item: Item | null | undefined) => {
+		if (!item) return;
+		camera.set_position(item.$x, item.$y);
+	};
 </script>
 
 <svelte:window
@@ -136,7 +141,16 @@
 />
 
 {#if stage}
-	<Hotkeys hotkeys={[{match: 'r', action: () => stage?.restart()}]} />
+	<Hotkeys
+		hotkeys={[
+			{match: 'r', action: () => stage?.restart()},
+			{
+				match: 'c',
+				action: () => center_camera_on($item_selection),
+				disabled: () => mode !== 'editing' && !$controlled && !!$item_selection,
+			},
+		]}
+	/>
 	{#key stage}
 		<World {stage} {pixi} />
 		<SurfaceWithController

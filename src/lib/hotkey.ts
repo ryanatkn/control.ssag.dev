@@ -2,6 +2,7 @@
 export interface Hotkey {
 	match: HotkeyMatch | HotkeyMatch[];
 	action: () => void;
+	disabled?: () => boolean;
 }
 
 export type HotkeyMatch = string; // TODO add support for shift, press duration, ...
