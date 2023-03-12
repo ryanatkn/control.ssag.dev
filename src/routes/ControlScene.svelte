@@ -155,6 +155,7 @@
 	$: update_pointer(pointer_x, pointer_y);
 	const update_pointer = (pointer_x: number, pointer_y: number) => {
 		if (!dragging) return;
+		console.log(`\n\npointer_x, pointer_y`, pointer_x, pointer_y);
 		const world_x = to_world_x(pointer_x, $layout.width, $viewport.width, $camera.width, $camera.x);
 		const world_y = to_world_y(
 			pointer_y,
@@ -163,11 +164,15 @@
 			$camera.height,
 			$camera.y,
 		);
+		console.log(`$camera.y`, $camera.y);
+		console.log(`$camera.scale`, $camera.scale);
+		console.log(`world_x, world_y`, world_x, world_y);
 		if (dragging_x !== null) {
 			const dx = world_x - dragging_x;
 			const dy = world_y - dragging_y!;
 			console.log(`dx, dy`, dx, dy);
 			if (dx || dy) {
+				console.log(`setting $camera.y`, $camera.y - dy);
 				camera.set_position($camera.x - dx, $camera.y - dy);
 			}
 		}
