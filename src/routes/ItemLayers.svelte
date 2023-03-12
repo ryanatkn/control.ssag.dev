@@ -32,7 +32,7 @@
 
 <div class="item-layers">
 	{#if $items && $items.length > 5}
-		<button on:click={create}>create item</button>
+		<button on:click={create}>create new item</button>
 	{/if}
 	<ol>
 		{#if $items}
@@ -41,7 +41,7 @@
 			{/each}
 		{/if}
 	</ol>
-	<button on:click={create}>create item</button>
+	<button on:click={create}>create new item</button>
 </div>
 
 <style>

@@ -1,26 +1,72 @@
 <script lang="ts">
-	import type {Project} from '$lib/project';
+	import {DEFAULT_PROJECT_NAME, DEFAULT_SCENE_NAME, type Project} from '$lib/project';
+	import type {App} from '$lib/app';
 
+	export let app: App; // TODO should this be a store? a component instance? refactor this component instead?
 	export let project: Project; // TODO should this be a store? a component instance? refactor this component instead?
 
-	// TODO
+	$: ({selected_project_id, projects} = app);
+	$: ({name, scenes, selected_scene_id} = project);
 
-	$: ({name} = project);
+	// TODO BLOCK keep `name` in sync below with `app.projects` metadata, but how?
+
+	const create_project = () => {
+		projects.update(($p) => $p.concat({id: crypto.randomUUID(), name: DEFAULT_PROJECT_NAME}));
+	};
+
+	const create_scene = () => {
+		scenes.update(($p) => $p.concat({id: crypto.randomUUID(), name: DEFAULT_SCENE_NAME}));
+	};
 </script>
 
 <div class="project-details">
 	<form>
+		<fieldset>
+			<label>
+				<div class="title">selected_project</div>
+				<select bind:value={$selected_project_id}>
+					{#each $projects as project (project)}
+						<option value={project.id}>{project.name}</option>
+					{/each}
+				</select>
+			</label>
+			<button on:click={() => create_project()}>create new project</button>
+		</fieldset>
 		<fieldset class="row">
 			<label>
 				<div class="title">project name</div>
 				<input bind:value={$name} />
 			</label>
-			<!-- maybe 3 emoji to represent it? -->
-			<!-- <label>
-					<div class="title">project icon</div>
-					<input value="icon" />
-				</label> -->
 		</fieldset>
+		<fieldset>
+			<button
+				on:click={() => {
+					// TODO BLOCK hacky
+					app.save();
+					project.save();
+				}}>save changes</button
+			>
+		</fieldset>
+		<fieldset>
+			<label>
+				<div class="title">selected_scene</div>
+				<select bind:value={$selected_scene_id}>
+					{#each $scenes as scene (scene)}
+						<option value={scene.id}>{scene.name}</option>
+					{/each}
+				</select>
+			</label>
+			<button on:click={() => create_scene()}>create new scene</button>
+		</fieldset>
+		<!-- <fieldset>
+			<div class="title">selected_project</div>
+			<select bind:value={$selected_project_id}>
+				{#each $projects as project (project)}
+					<option value={project.id}>{project.name}</option>
+				{/each}
+			</select>
+			<button>create project</button>
+		</fieldset> -->
 	</form>
 </div>
 
