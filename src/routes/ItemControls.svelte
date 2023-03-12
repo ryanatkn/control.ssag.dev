@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {type Item, to_layout_x, to_layout_y} from '@feltcoop/dealt';
+	import {type Item, to_layout_x, to_layout_y, to_world_x, to_world_y} from '@feltcoop/dealt';
 	import Surface from '@feltjs/felt-ui/Surface.svelte';
 
 	import type {Stage0} from '$routes/stage0';
@@ -36,39 +36,43 @@
 		stop_dragging();
 	};
 
-	let pointer_down: boolean;
-	$: if (!pointer_down) stop_dragging();
+	let pointer_down: boolean | undefined;
+	$: if (pointer_down === false) stop_dragging();
 
-	let dragging_x: number;
-	let dragging_y: number;
+	let dragging_x: number | null = null; // world coordinates
+	let dragging_y: number | null = null; // world coordinates
 
 	const start_dragging = () => {
 		if (dragging) return;
 		dragging = true;
-		dragging_x = pointer_x;
-		dragging_y = pointer_y;
+		dragging_x = null;
+		dragging_y = null;
 	};
 	const stop_dragging = () => {
 		if (!dragging) return;
 		dragging = false;
-		console.log('stop');
 	};
 
 	let pointer_x: number;
 	let pointer_y: number;
-	$: update_pointer(pointer_x, pointer_y);
-	const update_pointer = (x: number, y: number) => {
-		console.log(`x, y`, x, y);
-		const dx = pointer_x - dragging_x;
-		const dy = pointer_y - dragging_y;
-		// TODO BLOCK atomic update?
-		if (dx || dy) {
-			console.log(`dx, dy`, dx, dy);
-			item.x.set(item.$x + dx);
-			item.y.set(item.$y + dy);
+	$: update_pointer(
+		to_world_x(pointer_x, layout_width, viewport_width, camera_width, camera_x),
+		to_world_y(pointer_y, layout_height, viewport_height, camera_height, camera_y),
+	);
+	const update_pointer = (world_x: number, world_y: number) => {
+		if (dragging_x === null) {
+			dragging_x = world_x;
+			dragging_y = world_y;
+		} else {
+			const dx = world_x - dragging_x;
+			const dy = world_y - dragging_y!;
+			if (dx || dy) {
+				$x += dx;
+				$y += dy;
+				dragging_x = world_x;
+				dragging_y = world_y;
+			}
 		}
-		dragging_x = pointer_x;
-		dragging_y = pointer_y;
 	};
 </script>
 
