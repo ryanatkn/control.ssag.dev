@@ -62,6 +62,7 @@
 	const item_selection: Writable<Item | null> = writable(null);
 
 	$: items = stage?.items;
+	$: controlled = stage?.controlled;
 
 	const exit: ExitStage = (outcome) => {
 		console.log(`exit outcome`, outcome);
@@ -143,7 +144,7 @@
 			bind:pointer_y
 		/>
 		{#if mode === 'editing'}
-			{#if $item_selection}
+			{#if $item_selection && !$controlled}
 				<ItemControls item={$item_selection} {stage} />
 			{/if}
 			<Pane bind:height={pane0_height}>
