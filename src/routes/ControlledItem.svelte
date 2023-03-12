@@ -54,6 +54,13 @@
 	};
 </script>
 
+<Hotkeys
+	hotkeys={[
+		{match: '1', action: control_selected},
+		{match: '2', action: release_control},
+		{match: '3', action: swap_back},
+	]}
+/>
 <div class="controlled-item">
 	<div class="info" style:--color={$controlled ? $color && hsl_to_hex_string(...$color) : null}>
 		{#if $controlled}
@@ -67,18 +74,18 @@
 	</div>
 	<div>
 		<button
-			on:click={release_control}
-			disabled={!enable_release_control}
-			title="release control of this {controlled_name} [1]"
-		>
-			release control
-		</button>
-		<button
 			disabled={!enable_control_selected}
 			on:click={control_selected}
-			title="control this {controlled_name} [2]"
+			title="control this {controlled_name} [1]"
 		>
 			control selected
+		</button>
+		<button
+			on:click={release_control}
+			disabled={!enable_release_control}
+			title="release control of this {controlled_name} [2]"
+		>
+			release control
 		</button>
 		<button
 			disabled={!enable_swap_back}
@@ -89,13 +96,6 @@
 		</button>
 	</div>
 </div>
-<Hotkeys
-	hotkeys={[
-		{match: '1', action: release_control},
-		{match: '2', action: control_selected},
-		{match: '3', action: swap_back},
-	]}
-/>
 
 <style>
 	.controlled-item {
