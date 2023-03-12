@@ -113,7 +113,6 @@
 	let pointer_down: boolean;
 	let pointer_x: number;
 	let pointer_y: number;
-	// TODO should this be called on pointer position changes too?
 	$: if (pointer_down && stage) handle_pointer_down();
 	const handle_pointer_down = () => {
 		const item = stage!.handle_pointer_down(pointer_x, pointer_y);
