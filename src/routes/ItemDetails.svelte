@@ -138,7 +138,7 @@
 		<fieldset class="row">
 			<label>
 				<div class="title">speed</div>
-				<input type="number" bind:value={$speed} step={0.05} min={0} max={1} />
+				<input type="number" bind:value={$speed} step={0.001} min={0} max={1} />
 			</label>
 			<label>
 				<div class="title">strength</div>
