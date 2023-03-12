@@ -47,8 +47,6 @@
 	const stop_dragging = () => {
 		if (!dragging) return;
 		dragging = false;
-		dragging_x = null;
-		dragging_y = null;
 	};
 
 	let pointer_x: number;

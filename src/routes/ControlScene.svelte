@@ -11,6 +11,8 @@
 		type ExitStage,
 		type Item,
 		enable_global_hotkeys,
+		to_world_x,
+		to_world_y,
 	} from '@feltcoop/dealt';
 	import type {Writable} from 'svelte/store';
 	import {swallow} from '@feltjs/util/dom.js';
@@ -64,6 +66,7 @@
 	const selected_item: Writable<Item | null> = writable(null);
 
 	$: items = stage?.items;
+	$: controller = stage?.controller;
 	$: controlled = stage?.controlled;
 	$: freeze_camera = stage?.freeze_camera;
 
@@ -115,15 +118,61 @@
 	let pane4_offset_x = pane2_offset_x;
 	let pane4_offset_y = pane2_offset_y + pane2_height + PANE_MARGIN;
 
-	let pointer_down: boolean;
+	let pointer_down: boolean | undefined;
 	let pointer_x: number;
 	let pointer_y: number;
 	$: if (pointer_down && stage) handle_pointer_down();
 	const handle_pointer_down = () => {
-		const item = stage!.handle_pointer_down(pointer_x, pointer_y);
-		if (item && item !== $selected_item) {
-			$selected_item = item;
+		if (free_camera && controller?.pressing_ctrl) {
+			// TODO BLOCK janky dragging
+			start_dragging();
+		} else {
+			const item = stage!.handle_pointer_down(pointer_x, pointer_y);
+			if (item && item !== $selected_item) {
+				$selected_item = item;
+			}
 		}
+	};
+
+	let dragging = false;
+	$: if (pointer_down === false) stop_dragging();
+
+	// TODO abstract, see `ItemControls`
+	let dragging_x: number | null = null; // world coordinates
+	let dragging_y: number | null = null; // world coordinates
+
+	const start_dragging = () => {
+		if (dragging) return;
+		dragging = true;
+		dragging_x = null;
+		dragging_y = null;
+	};
+	const stop_dragging = () => {
+		if (!dragging) return;
+		dragging = false;
+	};
+
+	$: update_pointer(pointer_x, pointer_y);
+	const update_pointer = (pointer_x: number, pointer_y: number) => {
+		if (!dragging) return;
+		const world_x = to_world_x(pointer_x, $layout.width, $viewport.width, $camera.width, $camera.x);
+		const world_y = to_world_y(
+			pointer_y,
+			$layout.height,
+			$viewport.height,
+			$camera.height,
+			$camera.y,
+		);
+		if (dragging_x !== null) {
+			const dx = world_x - dragging_x;
+			const dy = world_y - dragging_y!;
+			console.log(`dx, dy`, dx, dy);
+			if (dx || dy) {
+				camera.set_position($camera.x - dx, $camera.y - dy);
+			}
+		}
+		dragging_x = world_x;
+		dragging_y = world_y;
 	};
 
 	// TODO were does this belong?
