@@ -1,5 +1,6 @@
 <script lang="ts">
-	import {DEFAULT_PROJECT_NAME, DEFAULT_SCENE_NAME, type Project} from '$lib/project';
+	import {DEFAULT_PROJECT_NAME, type Project} from '$lib/project';
+	import {DEFAULT_SCENE_NAME} from '$lib/scene';
 	import type {App} from '$lib/app';
 
 	export let app: App; // TODO should this be a store? a component instance? refactor this component instead?
@@ -35,6 +36,7 @@
 		<fieldset class="row">
 			<label>
 				<div class="title">project name</div>
+				<!-- TODO app metadata gets out of sync with this -- should it have its live list of projects instead? -->
 				<input bind:value={$name} />
 			</label>
 		</fieldset>

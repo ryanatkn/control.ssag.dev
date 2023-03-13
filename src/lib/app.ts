@@ -2,7 +2,7 @@ import {Core, load_from_storage, set_in_storage} from '@feltcoop/dealt';
 import {EMPTY_OBJECT, type Flavored, type Uuid} from '@feltjs/util';
 import {derived, type Readable} from 'svelte/store';
 
-import {type ProjectMetadata, DEFAULT_PROJECT_NAME} from '$lib/project';
+import {type ProjectMetadata, DEFAULT_PROJECT_NAME, type ProjectId} from '$lib/project';
 
 export type AppId = Flavored<string, 'AppId'>;
 const DEFAULT_APP_ID: AppId = 'app';
@@ -12,27 +12,15 @@ export type SceneId = Flavored<Uuid, 'SceneId'>;
 export interface AppData {
 	id: AppId;
 	projects: ProjectMetadata[];
-	selected_project_id: Uuid | null;
+	selected_project_id: ProjectId | null;
 }
 
 export class App extends Core {
 	id: AppId;
 
-	$projects!: ProjectMetadata[];
-	projects = this.writable<ProjectMetadata[]>('projects', []);
-
-	$selected_project_id!: Uuid | null;
-	selected_project_id = this.writable<Uuid | null>('selected_project_id', null);
-
-	selected_project: Readable<ProjectMetadata | null> = derived(
-		[this.projects, this.selected_project_id],
-		([$projects, $selected_project_id]) =>
-			$projects.find((s) => s.id === $selected_project_id) ?? null,
-	);
-
 	constructor(data?: Partial<AppData> | null) {
 		super();
-		console.log(`App data`, data);
+		console.log(`new App data`, data);
 
 		const {
 			id = DEFAULT_APP_ID,
@@ -46,6 +34,18 @@ export class App extends Core {
 
 		this.subscribe();
 	}
+
+	$projects!: ProjectMetadata[];
+	projects = this.writable<ProjectMetadata[]>('projects', []);
+
+	$selected_project_id!: ProjectId | null;
+	selected_project_id = this.writable<ProjectId | null>('selected_project_id', null);
+
+	selected_project: Readable<ProjectMetadata | null> = derived(
+		[this.projects, this.selected_project_id],
+		([$projects, $selected_project_id]) =>
+			$projects.find((s) => s.id === $selected_project_id) ?? null,
+	);
 
 	to_data(): AppData {
 		return {
@@ -65,7 +65,7 @@ export class App extends Core {
 	}
 
 	static to_storage_key(id: string): string {
-		return 'app__' + id;
+		return 'app:' + id;
 	}
 }
 

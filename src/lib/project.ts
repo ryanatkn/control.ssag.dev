@@ -2,9 +2,9 @@ import {Core, load_from_storage, set_in_storage} from '@feltcoop/dealt';
 import {EMPTY_OBJECT, type Flavored, type Uuid} from '@feltjs/util';
 import {derived, type Readable} from 'svelte/store';
 
-export type ProjectId = Flavored<Uuid, 'ProjectId'>;
+import {DEFAULT_SCENE_NAME, type SceneData} from '$lib/scene';
 
-export type SceneId = Flavored<Uuid, 'SceneId'>;
+export type ProjectId = Flavored<Uuid, 'ProjectId'>;
 
 export interface ProjectMetadata {
 	id: string;
@@ -18,35 +18,14 @@ export interface ProjectData {
 	selected_scene_id: Uuid | null;
 }
 
-// TODO BLOCK extract to `scene.ts`?
-export interface SceneData {
-	id: SceneId;
-	name: string;
-	// stage: string; // TODO ?
-}
-
 export const DEFAULT_PROJECT_NAME = 'new project';
-export const DEFAULT_SCENE_NAME = 'new scene'; // TODO refactor
 
 export class Project extends Core {
 	id: ProjectId;
 
-	$name!: string;
-	name = this.writable('name', '');
-
-	$scenes!: SceneData[];
-	scenes = this.writable<SceneData[]>('scenes', []);
-
-	$selected_scene_id!: Uuid | null;
-	selected_scene_id = this.writable<Uuid | null>('selected_scene_id', null);
-
-	selected_scene: Readable<SceneData | null> = derived(
-		[this.scenes, this.selected_scene_id],
-		([$scenes, $selected_scene_id]) => $scenes.find((s) => s.id === $selected_scene_id) ?? null,
-	);
-
 	constructor(data?: Partial<ProjectData> | null) {
 		super();
+		console.log(`new Project data`, data);
 
 		const {
 			id = crypto.randomUUID(),
@@ -62,6 +41,20 @@ export class Project extends Core {
 
 		this.subscribe();
 	}
+
+	$name!: string;
+	name = this.writable('name', '');
+
+	$scenes!: SceneData[];
+	scenes = this.writable<SceneData[]>('scenes', []);
+
+	$selected_scene_id!: Uuid | null;
+	selected_scene_id = this.writable<Uuid | null>('selected_scene_id', null);
+
+	selected_scene: Readable<SceneData | null> = derived(
+		[this.scenes, this.selected_scene_id],
+		([$scenes, $selected_scene_id]) => $scenes.find((s) => s.id === $selected_scene_id) ?? null,
+	);
 
 	to_data(): ProjectData {
 		return {
@@ -82,7 +75,7 @@ export class Project extends Core {
 	}
 
 	static to_storage_key(id: string): string {
-		return 'project__' + id;
+		return 'project:' + id;
 	}
 }
 

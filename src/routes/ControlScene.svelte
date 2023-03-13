@@ -38,7 +38,9 @@
 	console.log(`app`, app);
 	$: selected_project_id = app.selected_project_id;
 	// TODO BLOCK should this be handled by the app?
-	$: project = new Project($selected_project_id && Project.load($selected_project_id));
+	$: project = new Project(
+		$selected_project_id ? Project.load($selected_project_id) || {id: $selected_project_id} : null,
+	);
 
 	// TODO resizable pane component
 	// TODO contextmenu to enable dragging on windows
