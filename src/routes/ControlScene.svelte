@@ -219,7 +219,7 @@
 			<Pane bind:height={pane0_height}>
 				<svelte:fragment slot="header">project</svelte:fragment>
 				<div class="mode-buttons">
-					<button class="selected" title="you are editing this project"> edit </button>
+					<button class="selected" title="currently editing this project"> edit </button>
 					<button on:click={() => (mode = 'playing')} title="resume playing this project">
 						play
 					</button>
