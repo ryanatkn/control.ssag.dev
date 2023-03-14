@@ -228,7 +228,7 @@
 			</label>
 		</fieldset>
 	</form>
-	<button on:click={() => stage.remove_item(item)}>destroy {$type}</button>
+	<button on:click={() => stage.remove_item(item)}>destroy item</button>
 </div>
 
 <style>

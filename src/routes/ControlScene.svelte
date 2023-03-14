@@ -26,14 +26,28 @@
 	import Hotkeys from '$lib/Hotkeys.svelte';
 	import ProjectDetails from '$routes/ProjectDetails.svelte';
 	import ControlledItem from '$routes/ControlledItem.svelte';
-	import {Project} from '$lib/project';
+	import {Project, type ProjectId} from '$lib/project';
 	import ItemControls from '$routes/ItemControls.svelte';
+	import {App} from '$lib/app';
 
 	export let pixi = get_pixi();
 	export let layout = get_layout();
 
-	// TODO refactor
-	const project = new Project();
+	// TODO BLOCK refactor -- hoist?
+	const app = new App(App.load());
+	console.log(`app`, app);
+	$: selected_project_id = app.selected_project_id;
+	// TODO BLOCK should this be handled by the app?
+	let project: Project | null = null;
+	$: update_project($selected_project_id);
+
+	const update_project = (project_id: ProjectId | null) => {
+		if (project) {
+			console.log(`destroy project`, project);
+			project.destroy();
+		}
+		project = new Project(project_id ? Project.load(project_id) || {id: project_id} : null);
+	};
 
 	// TODO resizable pane component
 	// TODO contextmenu to enable dragging on windows
@@ -96,7 +110,7 @@
 	// TODO refactor to be data-driven
 	const PANE_MARGIN = 3;
 	const PANE_WIDTH = 256;
-	let pane0_height = 160;
+	let pane0_height = 500;
 	let pane1_height = 214;
 	let pane1_offset_y = pane0_height + PANE_MARGIN;
 	let pane5_width = PANE_WIDTH;
@@ -186,7 +200,7 @@
 	}}
 />
 
-{#if stage}
+{#if project && stage}
 	<Hotkeys
 		hotkeys={[
 			{match: 'r', action: () => stage?.restart()},
@@ -212,10 +226,12 @@
 			<Pane bind:height={pane0_height}>
 				<svelte:fragment slot="header">project</svelte:fragment>
 				<div class="mode-buttons">
-					<button class="selected"> edit </button>
-					<button on:click={() => (mode = 'playing')}> play </button>
+					<button class="selected" title="currently editing this project"> edit </button>
+					<button on:click={() => (mode = 'playing')} title="resume playing this project">
+						play
+					</button>
 				</div>
-				<ProjectDetails {project} />
+				<ProjectDetails {app} {project} />
 			</Pane>
 			<Pane bind:height={pane1_height} bind:offset_y={pane1_offset_y}>
 				<svelte:fragment slot="header">scene</svelte:fragment>
