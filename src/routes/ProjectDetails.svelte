@@ -34,7 +34,7 @@
 		<fieldset>
 			<button
 				on:click={() => {
-					// TODO BLOCK hacky
+					// TODO BLOCK hacky, or is it? app currently knows nothing about project instances (just the saveable data)
 					app.save();
 					project.save();
 				}}>save changes</button
