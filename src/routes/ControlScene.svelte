@@ -26,7 +26,7 @@
 	import Hotkeys from '$lib/Hotkeys.svelte';
 	import ProjectDetails from '$routes/ProjectDetails.svelte';
 	import ControlledItem from '$routes/ControlledItem.svelte';
-	import {Project} from '$lib/project';
+	import {Project, type ProjectId} from '$lib/project';
 	import ItemControls from '$routes/ItemControls.svelte';
 	import {App} from '$lib/app';
 
@@ -38,9 +38,15 @@
 	console.log(`app`, app);
 	$: selected_project_id = app.selected_project_id;
 	// TODO BLOCK should this be handled by the app?
-	$: project = new Project(
-		$selected_project_id ? Project.load($selected_project_id) || {id: $selected_project_id} : null,
-	);
+	let project: Project | null = null;
+	$: update_project($selected_project_id);
+
+	const update_project = (project_id: ProjectId | null) => {
+		if (project) {
+			project.destroy();
+		}
+		project = new Project(project_id ? Project.load(project_id) || {id: project_id} : null);
+	};
 
 	// TODO resizable pane component
 	// TODO contextmenu to enable dragging on windows
@@ -193,7 +199,7 @@
 	}}
 />
 
-{#if stage}
+{#if project && stage}
 	<Hotkeys
 		hotkeys={[
 			{match: 'r', action: () => stage?.restart()},
