@@ -1,8 +1,9 @@
 import {Core, load_from_storage, set_in_storage} from '@feltcoop/dealt';
 import {EMPTY_OBJECT, type Flavored, type Uuid} from '@feltjs/util';
-import {derived, type Readable} from 'svelte/store';
+import {derived, get, type Readable} from 'svelte/store';
 
-import {type ProjectMetadata, DEFAULT_PROJECT_NAME, type ProjectId} from '$lib/project';
+import {type ProjectMetadata, DEFAULT_PROJECT_NAME, type ProjectId, Project} from '$lib/project';
+import {next_unique_name} from '$lib/item_helpers';
 
 export type AppId = Flavored<string, 'AppId'>;
 const DEFAULT_APP_ID: AppId = 'app';
@@ -15,6 +16,7 @@ export interface AppData {
 	selected_project_id: ProjectId | null;
 }
 
+// TODO maybe reduce the scope to `projects`? does the selection belong in the UI?
 export class App extends Core {
 	id: AppId;
 
@@ -66,6 +68,25 @@ export class App extends Core {
 
 	static to_storage_key(id: string): string {
 		return 'app:' + id;
+	}
+
+	create_project(): ProjectMetadata {
+		const project: ProjectMetadata = {
+			id: crypto.randomUUID(),
+			name: next_unique_name(this.$projects, DEFAULT_PROJECT_NAME),
+		};
+		this.projects.update((p) => p.concat(project));
+		return project;
+	}
+
+	delete_project(id: ProjectId): boolean {
+		const project = this.$projects.find((p) => p.id === id);
+		if (!project) return false;
+		if (this.$selected_project_id === id) {
+			this.selected_project_id.set(null);
+		}
+		this.projects.update((p) => p.filter((p) => p.id !== id));
+		return true;
 	}
 }
 

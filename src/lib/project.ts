@@ -3,6 +3,7 @@ import {EMPTY_OBJECT, type Flavored, type Uuid} from '@feltjs/util';
 import {derived, type Readable} from 'svelte/store';
 
 import {DEFAULT_SCENE_NAME, type SceneData} from '$lib/scene';
+import {next_unique_name} from '$lib/item_helpers';
 
 export type ProjectId = Flavored<Uuid, 'ProjectId'>;
 
@@ -76,6 +77,15 @@ export class Project extends Core {
 
 	static to_storage_key(id: string): string {
 		return 'project:' + id;
+	}
+
+	create_scene(): SceneData {
+		const scene: SceneData = {
+			id: crypto.randomUUID(),
+			name: next_unique_name(this.$scenes, DEFAULT_SCENE_NAME),
+		};
+		this.scenes.update((s) => s.concat(scene));
+		return scene;
 	}
 }
 

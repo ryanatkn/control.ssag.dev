@@ -1,8 +1,6 @@
 <script lang="ts">
-	import {DEFAULT_PROJECT_NAME, type Project} from '$lib/project';
-	import {DEFAULT_SCENE_NAME} from '$lib/scene';
+	import type {Project} from '$lib/project';
 	import type {App} from '$lib/app';
-	import {next_unique_name} from '$lib/item_helpers';
 
 	export let app: App; // TODO should this be a store? a component instance? refactor this component instead?
 	export let project: Project; // TODO should this be a store? a component instance? refactor this component instead?
@@ -11,16 +9,6 @@
 	$: ({name, scenes, selected_scene_id} = project);
 
 	// TODO BLOCK keep `name` in sync below with `app.projects` metadata, but how?
-
-	const create_project = () => {
-		const name = next_unique_name($projects, DEFAULT_PROJECT_NAME);
-		projects.update(($p) => $p.concat({id: crypto.randomUUID(), name}));
-	};
-
-	const create_scene = () => {
-		const name = next_unique_name($scenes, DEFAULT_SCENE_NAME);
-		scenes.update(($p) => $p.concat({id: crypto.randomUUID(), name}));
-	};
 </script>
 
 <div class="project-details">
@@ -34,7 +22,7 @@
 					{/each}
 				</select>
 			</label>
-			<button on:click={() => create_project()}>create new project</button>
+			<button on:click={() => app.create_project()}>create new project</button>
 		</fieldset>
 		<fieldset class="row">
 			<label>
@@ -61,7 +49,10 @@
 					{/each}
 				</select>
 			</label>
-			<button on:click={() => create_scene()}>create new scene</button>
+			<button on:click={() => project.create_scene()}>create new scene</button>
+		</fieldset>
+		<fieldset>
+			<button on:click={() => app.delete_project($project.id)}>delete project</button>
 		</fieldset>
 		<!-- <fieldset>
 			<div class="title">selected_project</div>
