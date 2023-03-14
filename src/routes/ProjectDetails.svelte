@@ -2,6 +2,7 @@
 	import {DEFAULT_PROJECT_NAME, type Project} from '$lib/project';
 	import {DEFAULT_SCENE_NAME} from '$lib/scene';
 	import type {App} from '$lib/app';
+	import {next_unique_name} from '$lib/item_helpers';
 
 	export let app: App; // TODO should this be a store? a component instance? refactor this component instead?
 	export let project: Project; // TODO should this be a store? a component instance? refactor this component instead?
@@ -12,11 +13,13 @@
 	// TODO BLOCK keep `name` in sync below with `app.projects` metadata, but how?
 
 	const create_project = () => {
-		projects.update(($p) => $p.concat({id: crypto.randomUUID(), name: DEFAULT_PROJECT_NAME}));
+		const name = next_unique_name($projects, DEFAULT_PROJECT_NAME);
+		projects.update(($p) => $p.concat({id: crypto.randomUUID(), name}));
 	};
 
 	const create_scene = () => {
-		scenes.update(($p) => $p.concat({id: crypto.randomUUID(), name: DEFAULT_SCENE_NAME}));
+		const name = next_unique_name($scenes, DEFAULT_SCENE_NAME);
+		scenes.update(($p) => $p.concat({id: crypto.randomUUID(), name}));
 	};
 </script>
 
