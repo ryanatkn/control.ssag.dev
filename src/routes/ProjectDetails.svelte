@@ -52,7 +52,7 @@
 			<button on:click={() => project.create_scene()}>create new scene</button>
 		</fieldset>
 		<fieldset>
-			<button on:click={() => app.delete_project($project.id)}>delete project</button>
+			<button on:click={() => app.delete_project(project.id)}>delete project</button>
 		</fieldset>
 		<!-- <fieldset>
 			<div class="title">selected_project</div>
