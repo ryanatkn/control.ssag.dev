@@ -1,8 +1,8 @@
 import {Core, load_from_storage, set_in_storage} from '@feltcoop/dealt';
 import {EMPTY_OBJECT, type Flavored, type Uuid} from '@feltjs/util';
-import {derived, get, type Readable} from 'svelte/store';
+import {derived, type Readable} from 'svelte/store';
 
-import {type ProjectMetadata, DEFAULT_PROJECT_NAME, type ProjectId, Project} from '$lib/project';
+import {type ProjectMetadata, DEFAULT_PROJECT_NAME, type ProjectId} from '$lib/project';
 import {next_unique_name} from '$lib/item_helpers';
 
 export type AppId = Flavored<string, 'AppId'>;
