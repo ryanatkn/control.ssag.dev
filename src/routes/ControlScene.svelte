@@ -43,6 +43,7 @@
 
 	const update_project = (project_id: ProjectId | null) => {
 		if (project) {
+			console.log(`destroy project`, project);
 			project.destroy();
 		}
 		project = new Project(project_id ? Project.load(project_id) || {id: project_id} : null);
